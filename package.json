@@ -1,8 +1,22 @@
 {
+  "scripts": {
+    "start": "tsx src/cli"
+  },
   "dependencies": {
-    "@inquirer/prompts": "^5.3.8"
+    "-": "0.0.1",
+    "@inquirer/prompts": "^5.3.8",
+    "@types/node": "22.5.2",
+    "chalk": "5.3.0",
+    "D": "1.0.0"
   },
   "devDependencies": {
-    "tsx": "^4.19.0"
+    "@biomejs/biome": "1.8.3",
+    "tsx": "^4.19.0",
+    "typescript": "5.5.4"
+  },
+  "imports": {
+    "#core/entities": "./src/core/entities/index.ts",
+    "#core/use-cases": "./src/core/use-cases/index.ts",
+    "#core/interfaces": "./src/core/interfaces/index.ts"
   }
 }
