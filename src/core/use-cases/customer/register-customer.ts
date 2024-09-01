@@ -1,23 +1,21 @@
-import { Cpf, Customer } from '../../entities'
-import type { Prompt } from '../../interfaces'
+import { Cpf, Customer, Phone, Rg } from '../../entities'
+import type { Input, Output } from '../../interfaces'
 import { Register } from '../register'
 
 export class RegisterCustomer extends Register {
   private customers: Customer[]
-  private prompt: Prompt
 
-  constructor(customers: Customer[], prompt: Prompt) {
-    super()
+  constructor(customers: Customer[], input: Input, output: Output) {
+    super(input, output)
     this.customers = customers
-    this.prompt = prompt
   }
 
   public async register(): Promise<void> {
-    const name = await this.prompt.input('Nome do cliente: ')
-    const socialName = await this.prompt.input('Nome social do cliente: ')
-    const gender = await this.prompt.select('Gênero:', [['masculino'], ['feminino']])
-    const cpfValue = await this.prompt.input('CPF: ')
-    const cpfIssueDate = await this.prompt.input('date de emissão do CPF (dd/mm/yyyy): ')
+    const name = await this.input.text('Nome do cliente:')
+    const socialName = await this.input.text('Nome social do cliente:')
+    const gender = await this.input.select('Gênero:', [['masculino'], ['feminino']])
+    const cpfValue = await this.input.text('CPF:')
+    const cpfIssueDate = await this.input.text('date de emissão do CPF (dd/mm/yyyy):')
 
     const customer = new Customer({
       name,
@@ -26,6 +24,23 @@ export class RegisterCustomer extends Register {
       cpf: new Cpf(cpfValue, cpfIssueDate),
     })
 
+    const rgsCount = await this.input.number("Quantidade de RG's:")
+
+    for (let count = 0; count < rgsCount; count++) {
+      const value = await this.input.text(`Por favor, informe o RG ${count}:`)
+      const issueDate = await this.input.text('Data de emissão do RG (dd/mm/yyyy):')
+      customer.rgs.push(new Rg(value, issueDate))
+    }
+
+    const phonesCount = await this.input.number('Quantidade de telefones:')
+
+    for (let count = 0; count < phonesCount; count++) {
+      const codeArea = await this.input.text('DDD:')
+      const number = await this.input.text('Número:')
+      customer.phones.push(new Phone(codeArea, number))
+    }
+
     this.customers.push(customer)
+    this.output.success('Cliente cadastrado com sucesso')
   }
 }
