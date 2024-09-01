@@ -1,11 +1,11 @@
 export class Phone {
   constructor(
-    private _ddd: string,
+    private _codeArea: string,
     private _number: string,
   ) {}
 
-  public get ddd(): string {
-    return this._ddd
+  public get codeArea(): string {
+    return this._codeArea
   }
 
   public get number(): string {
