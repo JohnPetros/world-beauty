@@ -18,12 +18,15 @@ export class ListCustomers extends List {
 
     this.output.table(
       this.customers.map((customer) => ({
+        ID: customer.id,
         Nome: customer.name,
         CPF: customer.cpf.value,
         Gênero: customer.gender,
+        Telefones: customer.phones.map((phone) => phone.number).join(', '),
         'Nome social': customer.socialName,
         "RG's": customer.rgs.map((rg) => rg.value).join(', '),
-        Telefones: customer.phones.map((phone) => phone.number).join(', '),
+        'Qtd. de produtos ou serviços consumidos':
+          customer.consumedProductsOrServicesCount,
       })),
     )
   }
