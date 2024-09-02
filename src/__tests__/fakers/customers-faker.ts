@@ -2,13 +2,14 @@ import { Cpf, Customer } from '@/core/entities'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import dayjs from 'dayjs'
 
+import type { CustomerProps } from '@/core/entities/customer'
 import { PhonesFaker } from './phones-faker'
 import { RgsFaker } from './rgs-faker'
 import { ProductsFaker } from './products-faker'
 import { ServicesFaker } from './services-faker'
 
 export class CustomersFaker {
-  static fake() {
+  static fake(props?: Partial<CustomerProps>) {
     return new Customer({
       name: faker.person.firstName(),
       socialName: faker.person.lastName(),
@@ -21,10 +22,11 @@ export class CustomersFaker {
       rgs: RgsFaker.fakeMany(1),
       consumedProducts: ProductsFaker.fakeMany(faker.number.int({ min: 0, max: 10 })),
       consumedServices: ServicesFaker.fakeMany(faker.number.int({ min: 0, max: 5 })),
+      ...props,
     })
   }
 
-  static fakeMany(count: number) {
-    return Array.from({ length: count }).map(() => CustomersFaker.fake())
+  static fakeMany(count: number, props?: Partial<CustomerProps>) {
+    return Array.from({ length: count }).map(() => CustomersFaker.fake(props))
   }
 }

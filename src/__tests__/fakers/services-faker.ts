@@ -6,6 +6,7 @@ export class ServicesFaker {
     return new Service({
       name: faker.company.name(),
       price: parseFloat(faker.commerce.price()),
+      description: faker.commerce.productDescription().slice(0, 50),
     })
   }
 

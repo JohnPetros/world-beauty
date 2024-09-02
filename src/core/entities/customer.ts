@@ -5,7 +5,7 @@ import type { Rg } from './rg'
 import type { Service } from './service'
 import { EntityWithId } from './entity-with-id'
 
-type CustomerProps = {
+export type CustomerProps = {
   name: string
   socialName: string
   cpf: Cpf

@@ -9,9 +9,9 @@ type CompanyProps = {
 }
 
 export class Company {
-  private _customers: Customer[] = []
-  private _products: Product[] = []
-  private _services: Service[] = []
+  private _customers: Customer[]
+  private _products: Product[]
+  private _services: Service[]
 
   constructor(props: CompanyProps) {
     this._customers = props.customers
@@ -19,8 +19,20 @@ export class Company {
     this._services = props.services
   }
 
+  getProductByIndex(index: number): Product {
+    return this.products[index]
+  }
+
+  getServiceByIndex(index: number) {
+    return this.services[index]
+  }
+
   get customers(): Customer[] {
     return this._customers
+  }
+
+  set customers(customers: Customer[]) {
+    this._customers = customers
   }
 
   get products(): Product[] {

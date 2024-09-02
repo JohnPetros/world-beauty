@@ -6,6 +6,7 @@ export class ProductsFaker {
     return new Product({
       name: faker.commerce.productName(),
       price: parseFloat(faker.commerce.price()),
+      description: faker.commerce.productDescription().slice(0, 50),
     })
   }
 
