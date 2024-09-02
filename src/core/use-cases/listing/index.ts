@@ -1,2 +1,5 @@
 export { ListCustomers } from './list-customers'
 export { ListCustomersByGender } from './list-customers-by-gender'
+export { ListCustomersByMostProductsOrServicesConsumption } from './list-customers-by-most-products-or-services-consumption'
+export { ListProducts } from './list-products'
+export { ListServices } from './list-services'
