@@ -13,13 +13,13 @@ export class ListCustomersByMostProductsOrServicesConsumption extends List {
 
   public list(): void {
     const customers = this.customers
-      .slice(0, 10)
-      .sort((fisrtCustomer, secondCustomer) => {
-        return (
-          fisrtCustomer.consumedProductsOrServicesCount -
-          secondCustomer.consumedProductsOrServicesCount
-        )
-      })
+    .sort((fisrtCustomer, secondCustomer) => {
+      return (
+        secondCustomer.consumedProductsOrServicesCount -
+        fisrtCustomer.consumedProductsOrServicesCount 
+      )
+    })
+    .slice(0, 10)
 
     const useCase = new ListCustomers(customers, this.input, this.output)
     useCase.list()

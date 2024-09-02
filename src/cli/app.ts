@@ -1,12 +1,19 @@
 import { RegisterCustomer } from '@/core/use-cases/customer/register-customer'
-import { ListCustomers, ListCustomersByGender } from '@/core/use-cases/listing'
+import {
+  ListCustomers,
+  ListCustomersByGender,
+  ListCustomersByMostProductsOrServicesConsumption,
+  ListProducts,
+  ListServices,
+} from '@/core/use-cases/listing'
+import type { Company } from '@/core/entities/company'
 import { InquirerInput } from './inquirer-input'
 import { ChalkOutput } from './chalk-output'
-import { Company } from '@/core/entities/company'
-import { CustomersFaker } from '@/__tests__/fakers'
+import { CompanyFaker } from '@/__tests__/fakers'
+import { DeleteProduct, RegisterProduct, UpdateProduct } from '@/core/use-cases/products'
+import { DeleteService, RegisterService, UpdateService } from '@/core/use-cases/services'
 
 export class App {
-  private isRunning = true
   private input: InquirerInput
   private output: ChalkOutput
   private company: Company
@@ -14,11 +21,7 @@ export class App {
   constructor() {
     this.input = new InquirerInput()
     this.output = new ChalkOutput()
-    this.company = new Company({
-      customers: CustomersFaker.fakeMany(30),
-      products: [],
-      services: [],
-    })
+    this.company = CompanyFaker.fake()
   }
 
   public async start() {
@@ -26,28 +29,42 @@ export class App {
 
     while (true) {
       const option = await this.input.select('Escolha uma das opções:', [
-        ['clientes'],
-        ['produtos'],
-        ['serviços'],
-        ['listagens'],
+        ['Clientes'],
+        ['Produtos'],
+        ['Serviços'],
+        ['Listagens'],
+        ['Sair'],
       ])
 
       switch (option) {
-        case 'clientes':
-          await this.handleCustomerOptions()
+        case 'Clientes':
+          await this.handleCustomersOptions()
           break
-        case 'listagens':
+        case 'Produtos':
+          await this.handleProductsOptions()
+          break
+        case 'Serviços':
+          await this.handleServicesOptions()
+          break
+        case 'Listagens':
           await this.handleListingOptions()
+          break
+        case 'Sair':
+          this.exit()
+          break
+        default:
+          this.unknownCommand()
       }
     }
   }
 
-  private async handleCustomerOptions() {
+  private async handleCustomersOptions() {
     const option = await this.input.select('Escolha uma das opções:', [
       ['Cadastrar cliente', 'register'],
       ['Deletar o cadastro de um cliente', 'delete'],
       ['Atualizar um cliente', 'update'],
       ['Listar todos os clientes', 'list'],
+      ['Voltar', 'back'],
     ])
 
     switch (option) {
@@ -65,6 +82,95 @@ export class App {
         useCase.list()
         break
       }
+      case 'back':
+        this.output.clear()
+        break
+      default:
+        this.unknownCommand()
+    }
+  }
+
+  private async handleProductsOptions() {
+    const option = await this.input.select('Escolha uma das opções:', [
+      ['Cadastrar produto', 'register'],
+      ['Deletar o cadastro de um produto', 'delete'],
+      ['Atualizar um produto', 'update'],
+      ['Listar todos os produtos', 'list'],
+      ['Voltar', 'back'],
+    ])
+
+    switch (option) {
+      case 'register': {
+        const useCase = new RegisterProduct(
+          this.company.products,
+          this.input,
+          this.output,
+        )
+        await useCase.register()
+        break
+      }
+      case 'update': {
+        const useCase = new UpdateProduct(this.company.products, this.input, this.output)
+        await useCase.update()
+        break
+      }
+      case 'delete': {
+        const useCase = new DeleteProduct(this.company.products, this.input, this.output)
+        await useCase.delete()
+        break
+      }
+      case 'list': {
+        const useCase = new ListProducts(this.company.products, this.input, this.output)
+        useCase.list()
+        break
+      }
+      case 'back':
+        this.output.clear()
+        break
+      default:
+        this.unknownCommand()
+    }
+  }
+
+  private async handleServicesOptions() {
+    const option = await this.input.select('Escolha uma das opções:', [
+      ['Cadastrar serviço', 'register'],
+      ['Deletar o cadastro de um serviço', 'delete'],
+      ['Atualizar um serviço', 'update'],
+      ['Listar todos os serviços', 'list'],
+      ['Voltar', 'back'],
+    ])
+
+    switch (option) {
+      case 'register': {
+        const useCase = new RegisterService(
+          this.company.services,
+          this.input,
+          this.output,
+        )
+        await useCase.register()
+        break
+      }
+      case 'update': {
+        const useCase = new UpdateService(this.company.services, this.input, this.output)
+        await useCase.update()
+        break
+      }
+      case 'delete': {
+        const useCase = new DeleteService(this.company.services, this.input, this.output)
+        await useCase.delete()
+        break
+      }
+      case 'list': {
+        const useCase = new ListServices(this.company.services, this.input, this.output)
+        useCase.list()
+        break
+      }
+      case 'back':
+        this.output.clear()
+        break
+      default:
+        this.unknownCommand()
     }
   }
 
@@ -91,6 +197,7 @@ export class App {
         'Listar os 5 clientes que mais consumiram em valor',
         'list-customers-by-most-spending',
       ],
+      ['Sair', 'back'],
     ])
 
     switch (option) {
@@ -103,6 +210,29 @@ export class App {
         useCase.list()
         break
       }
+      case 'list-customers-by-most-products-or-services-consumption': {
+        const useCase = new ListCustomersByMostProductsOrServicesConsumption(
+          this.company.customers,
+          this.input,
+          this.output,
+        )
+        useCase.list()
+        break
+      }
+      case 'back':
+        this.output.clear()
+        break
+      default:
+        this.unknownCommand()
     }
+  }
+
+  async unknownCommand() {
+    this.output.error('Comando desconhecido')
+  }
+
+  async exit() {
+    this.output.success('Até a próxima')
+    process.exit(0)
   }
 }
