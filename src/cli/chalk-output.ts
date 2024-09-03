@@ -33,4 +33,8 @@ export class ChalkOutput implements Output {
   breakLine(): void {
     console.log('\n')
   }
+
+  unknownCommand(): void {
+    this.error('Opção inválida')
+  }
 }

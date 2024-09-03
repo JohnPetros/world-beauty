@@ -1,4 +1,4 @@
-import { RegisterCustomer } from '@/core/use-cases/customer/register-customer'
+import { RegisterCustomer } from '@/core/use-cases/customers/register-customer'
 import {
   ListCustomers,
   ListCustomersByGender,
@@ -12,6 +12,7 @@ import { ChalkOutput } from './chalk-output'
 import { CompanyFaker } from '@/__tests__/fakers'
 import { DeleteProduct, RegisterProduct, UpdateProduct } from '@/core/use-cases/products'
 import { DeleteService, RegisterService, UpdateService } from '@/core/use-cases/services'
+import { DeleteCustomer, UpdateCustomer } from '@/core/use-cases/customers'
 
 export class App {
   private input: InquirerInput
@@ -61,8 +62,8 @@ export class App {
   private async handleCustomersOptions() {
     const option = await this.input.select('Escolha uma das opções:', [
       ['Cadastrar cliente', 'register'],
-      ['Deletar o cadastro de um cliente', 'delete'],
       ['Atualizar um cliente', 'update'],
+      ['Deletar o cadastro de um cliente', 'delete'],
       ['Listar todos os clientes', 'list'],
       ['Voltar', 'back'],
     ])
@@ -75,6 +76,24 @@ export class App {
           this.output,
         )
         await useCase.register()
+        break
+      }
+      case 'update': {
+        const useCase = new UpdateCustomer(
+          this.company.customers,
+          this.input,
+          this.output,
+        )
+        await useCase.update()
+        break
+      }
+      case 'delete': {
+        const useCase = new DeleteCustomer(
+          this.company.customers,
+          this.input,
+          this.output,
+        )
+        await useCase.delete()
         break
       }
       case 'list': {
@@ -232,6 +251,7 @@ export class App {
   }
 
   async exit() {
+    this.output.clear()
     this.output.success('Até a próxima')
     process.exit(0)
   }

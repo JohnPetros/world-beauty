@@ -13,6 +13,7 @@ export class DeleteProduct extends Delete {
   }
 
   public async delete(): Promise<void> {
+    this.output.clear()
     const productsList = new ListProducts(this.products, this.input, this.output)
     productsList.list()
 
@@ -37,6 +38,7 @@ export class DeleteProduct extends Delete {
     )
     this.products.splice(productIndex, 1)
 
+    this.output.clear()
     this.output.success('Produto deletado com sucesso')
   }
 }

@@ -13,6 +13,7 @@ export class UpdateProduct extends Update {
   }
 
   public async update(): Promise<void> {
+    this.output.clear()
     const productsList = new ListProducts(this.products, this.input, this.output)
     productsList.list()
 
@@ -31,7 +32,7 @@ export class UpdateProduct extends Update {
     }
   }
 
-  public async updateProduct(product: Product): Promise<void> {
+  private async updateProduct(product: Product): Promise<void> {
     const option = await this.input.select('Escolha uma opção para atualizar:', [
       ['Nome', 'name'],
       ['Descrição', 'description'],

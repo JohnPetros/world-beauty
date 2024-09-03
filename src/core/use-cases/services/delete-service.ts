@@ -37,6 +37,7 @@ export class DeleteService extends Delete {
     )
     this.services.splice(serviceIndex, 1)
 
+    this.output.clear()
     this.output.success('Produto deletado com sucesso')
   }
 }

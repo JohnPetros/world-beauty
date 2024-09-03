@@ -11,6 +11,7 @@ export class RegisterProduct extends Register {
   }
 
   public async register(): Promise<void> {
+    this.output.clear()
     const name = await this.input.text('Nome do produto: ')
     const description = await this.input.text('Descrição do produto: ')
     const price = await this.input.number('Preço do produto: ')
@@ -18,6 +19,7 @@ export class RegisterProduct extends Register {
     const product = new Product({ name, description, price })
 
     this.products.push(product)
+    this.output.clear()
     this.output.success('Produto cadastrado com sucesso')
   }
 }

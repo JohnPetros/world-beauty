@@ -31,7 +31,7 @@ export class UpdateService extends Update {
     }
   }
 
-  public async updateService(service: Service): Promise<void> {
+  private async updateService(service: Service): Promise<void> {
     const option = await this.input.select('Escolha uma opção para atualizar:', [
       ['Nome', 'name'],
       ['Descrição', 'description'],
@@ -60,6 +60,7 @@ export class UpdateService extends Update {
     )
     this.services.splice(serviceIndex, 1, service)
 
+    this.output.clear()
     this.output.success('Produto atualizado com sucesso')
   }
 }

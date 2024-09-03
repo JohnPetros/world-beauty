@@ -18,6 +18,7 @@ export class RegisterService extends Register {
     const service = new Service({ name, description, price })
 
     this.services.push(service)
+    this.output.clear()
     this.output.success('Produto cadastrado com sucesso')
   }
 }

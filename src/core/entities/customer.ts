@@ -56,6 +56,10 @@ export class Customer extends EntityWithId {
     return this._cpf
   }
 
+  public set cpf(cpf: Cpf) {
+    this._cpf = cpf
+  }
+
   public get rgs(): Rg[] {
     return this._rgs
   }

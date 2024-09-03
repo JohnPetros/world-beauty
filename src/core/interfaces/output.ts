@@ -5,4 +5,5 @@ export interface Output {
   table(rows: Record<string, unknown>[]): void
   clear(): void
   breakLine(): void
+  unknownCommand(): void
 }
