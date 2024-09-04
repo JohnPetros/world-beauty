@@ -54,16 +54,4 @@ export class ListCustomersByMostProductsOrServicesConsumption extends List {
     this.output.title('Serviços mais consumidos')
     servicesList.list()
   }
-
-  private isProductConsumed(product: Product): boolean {
-    return this.consumedProducts.some((currentProduct) =>
-      currentProduct.isEqualTo(product),
-    )
-  }
-
-  private isServiceConsumed(service: Service): boolean {
-    return this.consumedServices.some((currentService) =>
-      currentService.isEqualTo(service),
-    )
-  }
 }

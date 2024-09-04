@@ -12,16 +12,18 @@ export class ListCustomersByMostProductsOrServicesConsumption extends List {
   }
 
   public list(): void {
-    const customers = this.customers
-    .sort((fisrtCustomer, secondCustomer) => {
-      return (
-        secondCustomer.consumedProductsOrServicesCount -
-        fisrtCustomer.consumedProductsOrServicesCount 
-      )
-    })
-    .slice(0, 10)
+    const sortedProducts = [...this.customers]
+      .sort((fisrtCustomer, secondCustomer) => {
+        return (
+          secondCustomer.consumedProductsOrServicesCount -
+          fisrtCustomer.consumedProductsOrServicesCount
+        )
+      })
+      .slice(0, 10)
 
-    const useCase = new ListCustomers(customers, this.input, this.output)
+    console.log({ sortedProducts })
+
+    const useCase = new ListCustomers(this.customers, this.input, this.output)
     useCase.list()
   }
 }

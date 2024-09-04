@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "tsx src/cli"
+    "start": "tsx src/cli",
+    "test": "vitest"
   },
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
