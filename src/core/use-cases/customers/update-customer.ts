@@ -17,7 +17,7 @@ export class UpdateCustomer extends Update {
     const customersList = new ListCustomers(this.customers, this.input, this.output)
     customersList.list()
 
-    while (this.isRunning) {
+    while (this.customers.length && this.isRunning) {
       const id = await this.input.text('ID do cliente:')
 
       const customer = this.customers.find((customer) => customer.id === id)
@@ -93,7 +93,7 @@ export class UpdateCustomer extends Update {
         ]),
       ])
 
-      const phone = customer.phones[Number(phoneIndex)]
+      const phone = customer.phones[Number(phoneIndex) - 1]
 
       if (!phone) {
         this.output.error('Telefone não encontrado')
@@ -115,7 +115,7 @@ export class UpdateCustomer extends Update {
             phone.number = await this.input.text('Novo número do telefone:')
             isRunning = false
             break
-          case 'issueDate':
+          case 'codeArea':
             phone.codeArea = await this.input.text('date de emissão do CPF (dd/mm/yyyy):')
             isRunning = false
             break
