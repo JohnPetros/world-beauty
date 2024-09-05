@@ -37,6 +37,10 @@ export class Product extends EntityWithId {
     return formatter.format(this._price)
   }
 
+  public get priceAsNumber() {
+    return Number(this._price)
+  }
+
   public set price(price: number) {
     this._price = price
   }

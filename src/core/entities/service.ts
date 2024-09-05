@@ -35,6 +35,10 @@ export class Service extends EntityWithId {
     this._price = price
   }
 
+  public get priceAsNumber() {
+    return Number(this._price)
+  }
+
   public get description() {
     return this._description
   }
