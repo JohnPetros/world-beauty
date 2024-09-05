@@ -18,6 +18,7 @@ export class ListServices extends List {
 
     this.output.table(
       this.services.map((service) => ({
+        ID: service.id,
         Nome: service.name,
         Preco: service.price,
         Descrição: service.description,

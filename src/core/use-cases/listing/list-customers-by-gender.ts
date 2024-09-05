@@ -3,8 +3,6 @@ import type { Input, Output } from '../../interfaces'
 import { List } from './list'
 import { ListCustomers } from './list-customers'
 
-type Gender = 'masculino' | 'feminino'
-
 export class ListCustomersByGender extends List {
   private customers: Customer[]
 

@@ -1,27 +1,27 @@
-import { ListCustomersByMostProductsOrServicesConsumption } from '@/core/use-cases/listing'
+import { ListCustomersByLessConsumption } from '@/core/use-cases/listing'
 import { describe, it, beforeEach, expect } from 'vitest'
-import { CustomersFaker, ProductsFaker, ServicesFaker } from '../fakers'
-import { InputMock, OutputMock } from '../mocks'
+import { CustomersFaker, ProductsFaker, ServicesFaker } from '../../fakers'
+import { InputMock, OutputMock } from '../../mocks'
 
 let inputMock: InputMock
 let outputMock: OutputMock
 
-describe('List Customers By Most Products Or Services Consumption Use Case', () => {
+describe('List Customers By Lest Products Or Services Consumption Use Case', () => {
   beforeEach(() => {
     inputMock = new InputMock()
     outputMock = new OutputMock()
   })
 
-  it('should list customers by products consumption', () => {
-    const customerB = CustomersFaker.fake({
-      name: 'B',
-      consumedProducts: ProductsFaker.fakeMany(2),
-      consumedServices: ServicesFaker.fakeMany(2),
-    })
+  it('should list customers by products consumption in an descending order', () => {
     const customerA = CustomersFaker.fake({
       name: 'A',
       consumedProducts: ProductsFaker.fakeMany(3),
       consumedServices: ServicesFaker.fakeMany(3),
+    })
+    const customerB = CustomersFaker.fake({
+      name: 'B',
+      consumedProducts: ProductsFaker.fakeMany(2),
+      consumedServices: ServicesFaker.fakeMany(2),
     })
     const customerC = CustomersFaker.fake({
       name: 'C',
@@ -29,18 +29,14 @@ describe('List Customers By Most Products Or Services Consumption Use Case', () 
       consumedServices: ServicesFaker.fakeMany(1),
     })
 
-    const customers = [customerB, customerC, customerA]
+    const customers = [customerA, customerB, customerC]
 
-    const useCase = new ListCustomersByMostProductsOrServicesConsumption(
-      customers,
-      inputMock,
-      outputMock,
-    )
+    const useCase = new ListCustomersByLessConsumption(customers, inputMock, outputMock)
     useCase.list()
 
     const customersTable = outputMock.tables[0]
 
-    const correctCustomersList = [customerA, customerB, customerC]
+    const correctCustomersList = [customerC, customerB, customerA]
 
     expect(customersTable).toEqual(
       correctCustomersList.map((customer) => ({

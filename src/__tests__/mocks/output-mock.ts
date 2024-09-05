@@ -4,25 +4,17 @@ export class OutputMock implements Output {
   tables: Record<string, unknown>[][] = []
   lastErrorMessage = ''
 
-  title(message: string): void {
-    throw new Error('Method not implemented.')
-  }
+  title(message: string): void {}
   success(message: string): void {
     this.lastErrorMessage = message
   }
   error(message: string): void {
-    throw new Error('Method not implemented.')
+    this.lastErrorMessage = message
   }
   table(rows: Record<string, unknown>[]): void {
     this.tables.push(rows)
   }
-  clear(): void {
-    throw new Error('Method not implemented.')
-  }
-  breakLine(): void {
-    throw new Error('Method not implemented.')
-  }
-  unknownCommand(): void {
-    throw new Error('Method not implemented.')
-  }
+  clear(): void {}
+  breakLine(): void {}
+  unknownCommand(): void {}
 }

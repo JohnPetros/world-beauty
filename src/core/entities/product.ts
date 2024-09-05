@@ -1,6 +1,7 @@
 import { EntityWithId } from './entity-with-id'
 
-type ProductProps = {
+export type ProductProps = {
+  id?: string
   name: string
   price: number
   description: string
@@ -12,7 +13,7 @@ export class Product extends EntityWithId {
   private _description: string
 
   constructor(props: ProductProps) {
-    super()
+    super(props.id)
     this._name = props.name
     this._price = props.price
     this._description = props.description

@@ -3,7 +3,7 @@ import type { Input, Output } from '../../interfaces'
 import { List } from './list'
 import { ListCustomers } from './list-customers'
 
-export class ListCustomersByMostProductsOrServicesConsumption extends List {
+export class ListCustomersByMostConsumption extends List {
   private customers: Customer[]
 
   constructor(customers: Customer[], input: Input, output: Output) {
@@ -21,9 +21,7 @@ export class ListCustomersByMostProductsOrServicesConsumption extends List {
       })
       .slice(0, 10)
 
-    console.log({ sortedProducts })
-
-    const useCase = new ListCustomers(this.customers, this.input, this.output)
+    const useCase = new ListCustomers(sortedProducts, this.input, this.output)
     useCase.list()
   }
 }
