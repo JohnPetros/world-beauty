@@ -27,7 +27,7 @@ export class RegisterCustomer extends Register {
     const rgsCount = await this.input.number("Quantidade de RG's:")
 
     for (let count = 0; count < rgsCount; count++) {
-      const value = await this.input.text(`Por favor, informe o RG ${count}:`)
+      const value = await this.input.text(`Por favor, informe o RG ${count + 1}:`)
       const issueDate = await this.input.text('Data de emissão do RG (dd/mm/yyyy):')
       customer.rgs.push(new Rg(value, issueDate))
     }
@@ -41,6 +41,7 @@ export class RegisterCustomer extends Register {
     }
 
     this.customers.push(customer)
+    this.output.clear()
     this.output.success('Cliente cadastrado com sucesso')
   }
 }

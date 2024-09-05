@@ -16,7 +16,11 @@ import { ChalkOutput } from './chalk-output'
 import { CompanyFaker } from '@/__tests__/fakers'
 import { DeleteProduct, RegisterProduct, UpdateProduct } from '@/core/use-cases/products'
 import { DeleteService, RegisterService, UpdateService } from '@/core/use-cases/services'
-import { DeleteCustomer, UpdateCustomer } from '@/core/use-cases/customers'
+import {
+  ConsumeProductrOrService,
+  DeleteCustomer,
+  UpdateCustomer,
+} from '@/core/use-cases/customers'
 
 export class App {
   private input: InquirerInput
@@ -69,6 +73,7 @@ export class App {
       ['Atualizar um cliente', 'update'],
       ['Deletar o cadastro de um cliente', 'delete'],
       ['Listar todos os clientes', 'list'],
+      ['Consumir produto ou serviço', 'consume-product-or-service'],
       ['Voltar', 'back'],
     ])
 
@@ -103,6 +108,17 @@ export class App {
       case 'list': {
         const useCase = new ListCustomers(this.company.customers, this.input, this.output)
         useCase.list()
+        break
+      }
+      case 'consume-product-or-service': {
+        const useCase = new ConsumeProductrOrService(
+          this.company.customers,
+          this.company.products,
+          this.company.services,
+          this.input,
+          this.output,
+        )
+        await useCase.consume()
         break
       }
       case 'back':
@@ -242,7 +258,7 @@ export class App {
         useCase.list()
         break
       }
-      case 'list-customers-by-most-consumption-and-gender': {
+      case 'list-by-most-consumption-and-gender': {
         const useCase = new ListCustomersByMostConsumptionAndGenderUseCase(
           this.company.customers,
           this.input,

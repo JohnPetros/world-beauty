@@ -36,6 +36,7 @@ export class ListProductsAndServicesByMostConsumption extends List {
 
     for (const customer of this.customers) {
       for (const service of customer.consumedServices) {
+        if (!service) continue
         const isIncluded = services.some((currentService) =>
           currentService.isEqualTo(service),
         )
