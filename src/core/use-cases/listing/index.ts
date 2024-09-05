@@ -1,5 +1,10 @@
 export { ListCustomers } from './list-customers'
 export { ListCustomersByGender } from './list-customers-by-gender'
-export { ListCustomersByMostProductsOrServicesConsumption } from './list-customers-by-most-products-or-services-consumption'
+export { ListCustomersByMostConsumptionAndGenderUseCase } from './list-customers-by-most-consumption-and-gender'
+export { ListProductsAndServicesByMostConsumption } from './list-products-and-services-by-most-comsumption'
+export { ListCustomersByMostConsumption } from './list-customers-by-most-consumption'
+export { ListCustomersByLessConsumption } from './list-customers-by-less-consumption'
+export { ListCustomersByMostSpeding } from './list-customers-by-most-spending'
+
 export { ListProducts } from './list-products'
 export { ListServices } from './list-services'

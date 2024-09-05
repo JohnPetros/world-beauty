@@ -32,6 +32,6 @@ export class Document {
     const year = Number(dateParts[2])
     const month = Number(dateParts[1])
     const day = Number(dateParts[0])
-    return new Date(year, month, day)
+    return new Date(year, month - 1, day)
   }
 }

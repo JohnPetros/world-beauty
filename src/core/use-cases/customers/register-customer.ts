@@ -15,7 +15,7 @@ export class RegisterCustomer extends Register {
     const socialName = await this.input.text('Nome social do cliente:')
     const gender = await this.input.select('Gênero:', [['masculino'], ['feminino']])
     const cpfValue = await this.input.text('CPF:')
-    const cpfIssueDate = await this.input.text('date de emissão do CPF (dd/mm/yyyy):')
+    const cpfIssueDate = await this.input.text('Data de emissão do CPF (dd/mm/yyyy):')
 
     const customer = new Customer({
       name,
