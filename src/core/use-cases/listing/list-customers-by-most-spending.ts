@@ -12,13 +12,13 @@ export class ListCustomersByMostSpeding extends List {
   }
 
   public list(): void {
-    const sortedProducts = [...this.customers]
+    const sortedCustomers = [...this.customers]
       .sort((fisrtCustomer, secondCustomer) => {
-        return secondCustomer.spending - fisrtCustomer.spending
+        return secondCustomer.spendingAsNumber - fisrtCustomer.spendingAsNumber
       })
       .slice(0, 5)
 
-    const useCase = new ListCustomers(sortedProducts, this.input, this.output)
+    const useCase = new ListCustomers(sortedCustomers, this.input, this.output)
     useCase.list()
   }
 }

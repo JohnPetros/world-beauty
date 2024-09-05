@@ -44,16 +44,20 @@ export class Customer extends EntityWithId {
     return this.consumedProductsCount + this.consumedServicesCount
   }
 
+  public get spending(): string {
+    return (this.spendingInProducts + this.spendingInServices).toFixed(2)
+  }
+
+  public get spendingAsNumber(): number {
+    return this.spendingInProducts + this.spendingInServices
+  }
+
   public get consumedProductsCount(): number {
     return this.consumedProducts.reduce((count) => count + 1, 0)
   }
 
   public get consumedServicesCount(): number {
     return this.consumedServices.reduce((count) => count + 1, 0)
-  }
-
-  public get spending(): number {
-    return this.spendingInProducts + this.spendingInServices
   }
 
   public get spendingInProducts(): number {

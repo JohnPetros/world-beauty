@@ -29,7 +29,7 @@ export class CompanyFaker {
       for (let index = 0; index < faker.number.int({ min: 0, max: 5 }); index++) {
         fakeServices.push(
           company.getServiceByIndex(
-            faker.number.int({ min: 0, max: company.products.length - 1 }),
+            faker.number.int({ min: 0, max: company.services.length - 1 }),
           ),
         )
       }

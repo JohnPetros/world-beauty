@@ -27,6 +27,8 @@ export class CustomersFaker {
   }
 
   static fakeMany(count: number, props?: Partial<CustomerProps>) {
-    return Array.from({ length: count }).map(() => CustomersFaker.fake(props))
+    return count === 0
+      ? []
+      : Array.from({ length: count }).map(() => CustomersFaker.fake(props))
   }
 }

@@ -68,8 +68,8 @@ describe('List Customers By Most Products Or Services Consumption And Gender Use
         Telefones: customer.phones.map((phone) => phone.number).join(', '),
         'Nome social': customer.socialName,
         "RG's": customer.rgs.map((rg) => rg.value).join(', '),
-        'Qtd. de produtos ou serviços consumidos':
-          customer.consumedProductsOrServicesCount,
+        'Consumo em quantidade': customer.consumedProductsOrServicesCount,
+        'Consumo em R$': customer.spending,
       })),
     )
   })
@@ -106,8 +106,8 @@ describe('List Customers By Most Products Or Services Consumption And Gender Use
         Telefones: customer.phones.map((phone) => phone.number).join(', '),
         'Nome social': customer.socialName,
         "RG's": customer.rgs.map((rg) => rg.value).join(', '),
-        'Qtd. de produtos ou serviços consumidos':
-          customer.consumedProductsOrServicesCount,
+        'Consumo em quantidade': customer.consumedProductsOrServicesCount,
+        'Consumo em R$': customer.spending,
       })),
     )
   })

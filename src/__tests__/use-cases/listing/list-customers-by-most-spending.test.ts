@@ -53,6 +53,8 @@ describe('List Customers By Most Spending Use Case', () => {
 
     const correctCustomersList = [customerB, customerC, customerA, customerE, customerF]
 
+    console.log(customersTable)
+
     expect(customersTable).toHaveLength(5)
     expect(customersTable).toEqual(
       correctCustomersList.map((customer) => ({
@@ -63,8 +65,8 @@ describe('List Customers By Most Spending Use Case', () => {
         Telefones: customer.phones.map((phone) => phone.number).join(', '),
         'Nome social': customer.socialName,
         "RG's": customer.rgs.map((rg) => rg.value).join(', '),
-        'Qtd. de produtos ou serviços consumidos':
-          customer.consumedProductsOrServicesCount,
+        'Consumo em quantidade': customer.consumedProductsOrServicesCount,
+        'Consumo em R$': customer.spending,
       })),
     )
   })

@@ -68,6 +68,7 @@ export class App {
   }
 
   private async handleCustomersOptions() {
+    this.output.clear()
     const option = await this.input.select('Escolha uma das opções:', [
       ['Cadastrar cliente', 'register'],
       ['Atualizar um cliente', 'update'],
@@ -130,6 +131,7 @@ export class App {
   }
 
   private async handleProductsOptions() {
+    this.output.clear()
     const option = await this.input.select('Escolha uma das opções:', [
       ['Cadastrar produto', 'register'],
       ['Deletar o cadastro de um produto', 'delete'],
@@ -172,6 +174,7 @@ export class App {
   }
 
   private async handleServicesOptions() {
+    this.output.clear()
     const option = await this.input.select('Escolha uma das opções:', [
       ['Cadastrar serviço', 'register'],
       ['Deletar o cadastro de um serviço', 'delete'],
@@ -214,6 +217,7 @@ export class App {
   }
 
   private async handleListingOptions() {
+    this.output.clear()
     const option = await this.input.select('Escolha uma das opções:', [
       ['Listar clientes por gênero', 'list-customer-by-gender'],
       [
@@ -277,7 +281,7 @@ export class App {
         break
       }
       case 'list-customers-by-less-consumption': {
-        const useCase = new ListCustomersByMostConsumption(
+        const useCase = new ListCustomersByLessConsumption(
           this.company.customers,
           this.input,
           this.output,
@@ -286,7 +290,7 @@ export class App {
         break
       }
       case 'list-customers-by-most-spending': {
-        const useCase = new ListCustomersByMostConsumption(
+        const useCase = new ListCustomersByMostSpeding(
           this.company.customers,
           this.input,
           this.output,
