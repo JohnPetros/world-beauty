@@ -17,6 +17,8 @@ describe('Register Customer Use Case', () => {
     const customers = CustomersFaker.fakeMany(5)
     const newCustomer = CustomersFaker.fake()
 
+    expect(customers).toHaveLength(5)
+
     const rgInputs = newCustomer.rgs.reduce((rgValues: string[], rg) => {
       rgValues.push(rg.value)
       rgValues.push(rg.issueDate)
