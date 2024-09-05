@@ -52,6 +52,24 @@ export class Customer extends EntityWithId {
     return this.consumedServices.reduce((count) => count + 1, 0)
   }
 
+  public get spending(): number {
+    return this.spendingInProducts + this.spendingInServices
+  }
+
+  public get spendingInProducts(): number {
+    return this.consumedServices.reduce(
+      (spending, product) => spending + product.price,
+      0,
+    )
+  }
+
+  public get spendingInServices(): number {
+    return this.consumedServices.reduce(
+      (spending, service) => spending + service.price,
+      0,
+    )
+  }
+
   public get cpf(): Cpf {
     return this._cpf
   }
