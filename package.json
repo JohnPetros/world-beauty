@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "tsx src/cli",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+
   },
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
@@ -13,6 +15,7 @@
     "@biomejs/biome": "1.8.3",
     "@faker-js/faker": "8.4.1",
     "@types/node": "22.5.2",
+    "@vitest/coverage-v8": "2.0.5",
     "tsx": "^4.19.0",
     "typescript": "5.5.4",
     "vitest": "2.0.5"
