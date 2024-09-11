@@ -27,8 +27,14 @@ export class Service extends EntityWithId {
     this._name = name
   }
 
-  public get price() {
-    return this._price
+  public get price(): string {
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+    return formatter.format(this._price)
   }
 
   public set price(price: number) {

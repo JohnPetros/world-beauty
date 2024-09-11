@@ -61,15 +61,15 @@ export class Customer extends EntityWithId {
   }
 
   public get spendingInProducts(): number {
-    return this.consumedServices.reduce(
-      (spending, product) => spending + product.price,
+    return this.consumedProducts.reduce(
+      (spending, product) => spending + product.priceAsNumber,
       0,
     )
   }
 
   public get spendingInServices(): number {
     return this.consumedServices.reduce(
-      (spending, service) => spending + service.price,
+      (spending, service) => spending + service.priceAsNumber,
       0,
     )
   }
