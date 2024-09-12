@@ -1,22 +1,30 @@
 {
+  "name": "world-beauty",
+  "private": true,
   "scripts": {
-    "start": "tsx src/cli",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage"
-
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "start": "turbo start"
   },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@10.7.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "dependencies": {
-    "@inquirer/prompts": "^5.3.8",
-    "chalk": "5.3.0",
-    "console-table-printer": "2.12.1",
-    "dayjs": "1.11.13"
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/uuid": "^10.0.0",
     "@biomejs/biome": "1.8.3",
-    "@faker-js/faker": "8.4.1",
     "@types/node": "22.5.2",
     "@vitest/coverage-v8": "2.0.5",
-    "tsx": "^4.19.0",
+    "@faker-js/faker": "8.4.1",
+    "turbo": "^2.1.1",
     "typescript": "5.5.4",
     "vitest": "2.0.5"
   }
