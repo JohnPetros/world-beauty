@@ -51,7 +51,8 @@
         "useLiteralKeys": "warn",
         "useSimplifiedLogicExpression": "off",
         "useOptionalChain": "warn",
-        "noStaticOnlyClass": "off"
+        "noStaticOnlyClass": "off",
+        "noUselessConstructor": "off"
       },
       "a11y": {
         "noSvgWithoutTitle": "warn",
