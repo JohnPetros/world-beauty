@@ -15,15 +15,17 @@
     "packages/*"
   ],
   "dependencies": {
+    "@nextui-org/react": "2.4.6",
+    "framer-motion": "11.5.4",
     "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/uuid": "^10.0.0",
     "@biomejs/biome": "1.8.3",
-    "@types/node": "22.5.2",
-    "@vitest/coverage-v8": "2.0.5",
     "@faker-js/faker": "8.4.1",
+    "@types/node": "22.5.2",
+    "@types/uuid": "^10.0.0",
+    "@vitest/coverage-v8": "2.0.5",
     "turbo": "^2.1.1",
     "typescript": "5.5.4",
     "vitest": "2.0.5"
