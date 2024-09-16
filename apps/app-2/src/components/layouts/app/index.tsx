@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Outlet } from 'react-router-dom'
 import { NavMenu } from './navbar'
 
@@ -14,7 +14,7 @@ export class AppLayout extends Component {
             <NavMenu />
           </div>
         </div>
-        <main>
+        <main className='w-full p-8'>
           <Outlet />
         </main>
       </div>

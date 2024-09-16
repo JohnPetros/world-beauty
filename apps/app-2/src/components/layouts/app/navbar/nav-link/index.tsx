@@ -1,7 +1,7 @@
 import { Component } from 'react'
-import type { IconName } from '../../../../shared/icon/types'
 import { Link } from '@nextui-org/react'
-import { Icon } from '../../../../shared/icon'
+import type { IconName } from '@/components/commons/icon/types'
+import { Icon } from '@/components/commons/icon'
 
 type NavLinkProps = {
   icon: IconName
