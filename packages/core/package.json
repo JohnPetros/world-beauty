@@ -1,0 +1,14 @@
+{
+  "name": "@world-beauty/core",
+  "devDependencies": {
+    "@world-beauty/typescript-config": "*"
+  },
+  "exports": {
+    "./entities": "./src/domain/entities/index.ts",
+    "./structs": "./src/domain/structs/index.ts",
+    "./interfaces": "./src/interfaces/index.ts",
+    "./dtos": "./src/dtos/index.ts",
+    "./use-cases": "./src/use-cases/index.ts",
+    "./fakers": "./src/__tests__/fakers/index.ts"
+  }
+}

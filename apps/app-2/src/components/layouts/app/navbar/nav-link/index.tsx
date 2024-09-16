@@ -14,7 +14,7 @@ export class NavLink extends Component<NavLinkProps> {
     return (
       <Link
         href={this.props.link}
-        className='flex items-center gap-1 w-full px-3 py-2 rounded-md text-md font-medium hover:bg-zinc-200'
+        className='flex items-center gap-1 w-full px-3 py-2 rounded-md text-md text-zinc-700 font-medium hover:bg-zinc-200'
       >
         <Icon name={this.props.icon} className='text-zinc-700' size={20} />
         {this.props.title}

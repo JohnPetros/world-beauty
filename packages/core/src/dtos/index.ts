@@ -1,0 +1,5 @@
+export { CustomerDto } from './customer-dto'
+export { DocumentDto } from './document-dto'
+export { ProductDto } from './product-dto'
+export { ServiceDto } from './service-dto'
+export { PhoneDto } from './phone-dto'
