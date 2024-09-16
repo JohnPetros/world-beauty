@@ -30,9 +30,15 @@ export class CustomersFaker {
     }
   }
 
-  static fakeManyDto(count: number, dto?: Partial<CustomerDto>) {
+  static fakeMany(count: number, dto?: Partial<CustomerDto>) {
     return count === 0
       ? []
       : Array.from({ length: count }).map(() => CustomersFaker.fake(dto))
+  }
+
+  static fakeManyDto(count: number, dto?: Partial<CustomerDto>) {
+    return count === 0
+      ? []
+      : Array.from({ length: count }).map(() => CustomersFaker.fakeDto(dto))
   }
 }
