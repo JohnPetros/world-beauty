@@ -11,15 +11,19 @@ import {
   Tooltip,
 } from '@nextui-org/react'
 
-import { ListCustomersUseCase } from '@world-beauty/core/use-cases'
+import {
+  ListCustomersUseCase,
+  RegisterCustomerUseCase,
+} from '@world-beauty/core/use-cases'
 import type { Customer } from '@world-beauty/core/entities'
+import type { CustomerDto } from '@world-beauty/core/dtos'
 
 import { customersRepository } from '@/database'
 import { PageTitle } from '@/components/commons/title'
 import { PAGINATION } from '@world-beauty/core/constants'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
-import { Input } from 'postcss'
+import { RegisterCustomerForm } from './register-customer-form'
 
 type CustomersPageState = {
   customers: Customer[]
@@ -28,7 +32,10 @@ type CustomersPageState = {
 }
 
 export class CustomersPage extends Component<any, CustomersPageState> {
-  private readonly useCase = new ListCustomersUseCase(customersRepository)
+  private readonly listCustomersUseCase = new ListCustomersUseCase(customersRepository)
+  private readonly registerCustomerUseCase = new RegisterCustomerUseCase(
+    customersRepository,
+  )
 
   constructor(props: any) {
     super(props)
@@ -40,7 +47,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
   }
 
   async fetchCustomers(page: number) {
-    const response = await this.useCase.execute(page)
+    const response = await this.listCustomersUseCase.execute(page)
     this.setState({
       customers: response.items,
       pagesCount: response.itemsCount / PAGINATION.itemsPerPage,
@@ -50,6 +57,11 @@ export class CustomersPage extends Component<any, CustomersPageState> {
 
   async handlePageChange(page: number) {
     await this.fetchCustomers(page)
+  }
+
+  async handleSubmit(customerDto: CustomerDto, closeDialog: VoidFunction) {
+    // await this.registerCustomerUseCase.execute(customerDto)
+    closeDialog()
   }
 
   async componentDidMount() {
@@ -62,24 +74,21 @@ export class CustomersPage extends Component<any, CustomersPageState> {
         <PageTitle>Clientes</PageTitle>
 
         <Dialog
+          title='Adicionar cliente'
           trigger={
             <Button
-              endContent={<Icon name='register' size={20} />}
+              endContent={<Icon name='add' size={20} />}
               className='bg-zinc-800 text-zinc-50 w-max'
             >
               Cadastrar cliente
             </Button>
           }
         >
-          <>
-            <Input autoFocus label='Nome' placeholder='Rodrigo Faro' variant='bordered' />
-            <Input
-              autoFocus
-              label='E-mail'
-              placeholder='nome@provedor.com'
-              variant='bordered'
+          {(closeDialog) => (
+            <RegisterCustomerForm
+              onSubmit={(customerDto) => this.handleSubmit(customerDto, closeDialog)}
             />
-          </>
+          )}
         </Dialog>
 
         {this.state.pagesCount && (

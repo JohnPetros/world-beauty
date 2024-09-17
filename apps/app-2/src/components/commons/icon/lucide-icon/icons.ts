@@ -21,5 +21,5 @@ export const ICONS: Record<
   customer: SquareUser,
   edit: Pencil,
   delete: Trash,
-  register: Plus,
+  add: Plus,
 }
