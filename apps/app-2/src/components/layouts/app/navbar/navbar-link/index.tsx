@@ -9,7 +9,7 @@ type NavLinkProps = {
   link: string
 }
 
-export class NavLink extends Component<NavLinkProps> {
+export class NavbarLink extends Component<NavLinkProps> {
   render() {
     return (
       <Link

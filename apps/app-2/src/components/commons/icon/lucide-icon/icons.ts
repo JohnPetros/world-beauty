@@ -3,6 +3,9 @@ import {
   ScrollText,
   ShoppingBasket,
   SquareUser,
+  Pencil,
+  Trash,
+  Plus,
   type LucideProps,
 } from 'lucide-react'
 import type { ForwardRefExoticComponent, RefAttributes } from 'react'
@@ -16,4 +19,7 @@ export const ICONS: Record<
   product: ShoppingBasket,
   service: HandPlatter,
   customer: SquareUser,
+  edit: Pencil,
+  delete: Trash,
+  register: Plus,
 }

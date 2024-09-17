@@ -1,1 +1,8 @@
-export type IconName = 'customer' | 'product' | 'service' | 'list'
+export type IconName =
+  | 'customer'
+  | 'product'
+  | 'service'
+  | 'list'
+  | 'register'
+  | 'edit'
+  | 'delete'
