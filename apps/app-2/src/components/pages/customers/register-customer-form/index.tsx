@@ -3,6 +3,8 @@ import { Component, type FormEvent } from 'react'
 
 import type { CustomerDto, DocumentDto, PhoneDto } from '@world-beauty/core/dtos'
 import { Icon } from '@/components/commons/icon'
+import { Dialog } from '@/components/commons/dialog'
+import { ServicesDialog } from './services-dialog'
 
 type RegisterCustomerFormProps = {
   onSubmit: (customer: CustomerDto) => void
@@ -10,14 +12,8 @@ type RegisterCustomerFormProps = {
 }
 
 type RegisterCustomerFormState = {
-  name: string
-  socialName: string
-  email: string
-  cpf: DocumentDto
-  rgs: DocumentDto[]
-  phones: PhoneDto[]
-  rgFields: number[]
-  phoneFields: number[]
+  rgFieldsCount: number
+  phoneFieldsCount: number
 }
 
 export class RegisterCustomerForm extends Component<
@@ -27,107 +23,97 @@ export class RegisterCustomerForm extends Component<
   constructor(props: RegisterCustomerFormProps) {
     super(props)
     this.state = {
-      name: '',
-      cpf: { value: '', issueDate: '' },
-      email: '',
-      socialName: '',
-      rgs: [],
-      phones: [],
-      rgFields: [1],
-      phoneFields: [1],
+      rgFieldsCount: 1,
+      phoneFieldsCount: 1,
     }
   }
 
-  handleEmailChange(email: string) {
-    this.setState({ ...this.state, email })
-  }
-
-  handleNameChange(name: string) {
-    this.setState({ ...this.state, name })
-  }
-
-  handleSocialNameChange(socialName: string) {
-    this.setState({ ...this.state, socialName })
-  }
-
-  handleCpfValueChange(cpfValue: string) {
-    this.setState({ ...this.state, cpf: { ...this.state.cpf, value: cpfValue } })
-  }
-
-  handleCpfIssueDateChange(cpfIssueDate: string) {
-    this.setState({ ...this.state, cpf: { ...this.state.cpf, issueDate: cpfIssueDate } })
-  }
-
   handleAppendRgFieldButtonClick() {
-    this.state.rgFields.push(1)
-    this.setState({ ...this.state, rgFields: this.state.rgFields })
+    this.setState({ ...this.state, rgFieldsCount: this.state.rgFieldsCount + 1 })
   }
 
-  handlePopRgFieldButtonClick(index: number) {
-    alert(index)
-    this.state.rgFields.splice(index, 1)
-    this.setState({ ...this.state, rgFields: this.state.rgFields })
-  }
-
-  handleRgValueChange(rgValue: string, index: number) {
-    this.state.rgs[index].value = rgValue
-    this.setState({ ...this.state })
-  }
-
-  handleRgIssueDateChange(issueDate: string, index: number) {
-    this.state.rgs[index].issueDate = issueDate
-    this.setState({ ...this.state })
+  handlePopRgFieldButtonClick() {
+    this.setState({ ...this.state, rgFieldsCount: this.state.rgFieldsCount - 1 })
   }
 
   async handleSubmit(event: FormEvent) {
     event.preventDefault()
+
+    // @ts-ignore
+    const formData = new FormData(event.target)
+
+    const name = formData.get('name')
+    const email = formData.get('email')
+    const cpfValue = formData.get('cpf-value')
+    const cpfIssueDate = formData.get('cpf-issue-date')
+    const socialName = formData.get('social-name')
+    const gender = formData.get('gender')
+
+    const cpf = { value: String(cpfValue), issueDate: String(cpfIssueDate) }
+
+    const rgNames = formData.getAll('rg-name[]')
+    const rgIssueDates = formData.getAll('rg-issue-date[]')
+
+    const phoneCodesArea = formData.getAll('phone-code-area[]')
+    const phoneNumbers = formData.getAll('phone-number[]')
+
+    const rgs: DocumentDto[] = []
+    for (let index = 0; index < rgNames.length; index++) {
+      rgs.push({ value: String(rgNames[0]), issueDate: String(rgIssueDates[0]) })
+    }
+
+    const phones: PhoneDto[] = []
+    for (let index = 0; index < phoneCodesArea.length; index++) {
+      phones.push({
+        codeArea: String(phoneCodesArea[0]),
+        number: String(phoneNumbers[0]),
+      })
+    }
+
+    const customerDto: CustomerDto = {
+      email: String(email),
+      gender: String(gender),
+      name: String(name),
+      socialName: String(socialName),
+      cpf,
+      phones,
+      rgs,
+      consumedProducts: [],
+      consumedServices: [],
+    }
+
+    console.log(customerDto)
   }
 
   render() {
     return (
       <form onSubmit={(event) => this.handleSubmit(event)} className='space-y-3'>
         <div className='grid grid-cols-2 gap-3'>
-          <Input
-            autoFocus
-            label='Nome'
-            variant='bordered'
-            value={this.state.name}
-            onChange={(event) => this.handleNameChange(event.currentTarget.value)}
-          />
-          <Input
-            label='Nome social'
-            variant='bordered'
-            value={this.state.socialName}
-            onChange={(event) => this.handleSocialNameChange(event.currentTarget.value)}
-          />
+          <Input autoFocus label='Nome' name='name' variant='bordered' required />
+          <Input label='Nome social' name='social-name' variant='bordered' required />
         </div>
         <div className='grid grid-cols-2 gap-3'>
-          <Input
-            type='email'
-            label='E-mail'
-            value={this.state.email}
-            variant='bordered'
-            onChange={(event) => this.handleEmailChange(event.currentTarget.value)}
-          />
-          <RadioGroup label='Gênero' orientation='horizontal' defaultValue='male'>
+          <Input type='email' name='email' label='E-mail' variant='bordered' required />
+          <RadioGroup
+            name='gender'
+            label='Gênero'
+            orientation='horizontal'
+            defaultValue='male'
+            isRequired
+          >
             <Radio value='male'>Masculino</Radio>
             <Radio value='female'>Feminino</Radio>
           </RadioGroup>
         </div>
         <Divider />
         <div className='grid grid-cols-2'>
+          <Input name='cpf-value' label='CPF' variant='bordered' required />
           <Input
-            label='CPF'
-            variant='bordered'
-            value={this.state.cpf.value}
-            onChange={(event) => this.handleCpfValueChange(event.currentTarget.value)}
-          />
-          <Input
+            name='cpf-issue-date'
             type='date'
             label='Data de emissão'
             variant='bordered'
-            value={this.state.cpf.issueDate}
-            onChange={(event) => this.handleCpfIssueDateChange(event.currentTarget.value)}
+            required
           />
         </div>
         <Divider />
@@ -145,36 +131,28 @@ export class RegisterCustomerForm extends Component<
             </ButtonGroup>
           </div>
           <div className='mt-1 space-y-1'>
-            {this.state.rgFields.map((_, index) => (
-              <div
-                key={this.state.rgs[index]?.value}
-                className='grid grid-cols-[1fr_1fr_0.1fr]'
-              >
+            {Array.from({ length: this.state.rgFieldsCount }).map((_, index) => (
+              <div key={String(index)} className='grid grid-cols-[1fr_1fr_0.1fr]'>
                 <Input
                   label='RG'
+                  name='rg-name[]'
                   variant='bordered'
                   radius='sm'
-                  value={this.state.rgs[index]?.value}
-                  onChange={(event) =>
-                    this.handleRgValueChange(event.currentTarget.value, index)
-                  }
+                  required
                 />
                 <Input
                   type='date'
+                  name='rg-issue-date[]'
                   label='Data de emissão'
                   variant='bordered'
                   radius='sm'
-                  value={this.state.rgs[index]?.issueDate}
-                  onChange={(event) =>
-                    this.handleRgIssueDateChange(event.currentTarget.value, index)
-                  }
+                  required
                 />
                 <Button
                   isIconOnly
                   variant='bordered'
                   radius='sm'
                   className='h-full text-red-600'
-                  onClick={() => this.handlePopRgFieldButtonClick(index)}
                 >
                   <Icon name='delete' size={16} />
                 </Button>
@@ -193,28 +171,22 @@ export class RegisterCustomerForm extends Component<
             </ButtonGroup>
           </div>
           <div className='mt-1 space-y-1'>
-            {this.state.phoneFields.map((_, index) => (
-              <div
-                key={this.state.phones[index]?.codeArea}
-                className='grid grid-cols-[1fr_1fr_0.1fr]'
-              >
+            {Array.from({ length: this.state.phoneFieldsCount }).map((_, index) => (
+              <div key={String(index)} className='grid grid-cols-[1fr_1fr_0.1fr]'>
                 <Input
                   type='number'
                   label='DDD'
+                  name='phone-code-area[]'
                   variant='bordered'
-                  value={this.state.phones[index]?.codeArea}
+                  required
                 />
-                <Input
-                  label='Data de emissão'
-                  variant='bordered'
-                  value={this.state.phones[index]?.number}
-                />
+                <Input label='Número' name='phone-number[]' variant='bordered' required />
                 <Button
                   isIconOnly
                   variant='bordered'
                   radius='sm'
                   className='h-full text-red-600'
-                  onClick={() => this.handlePopRgFieldButtonClick(index)}
+                  onClick={() => this.handlePopRgFieldButtonClick()}
                 >
                   <Icon name='delete' size={16} />
                 </Button>
@@ -222,8 +194,14 @@ export class RegisterCustomerForm extends Component<
             ))}
           </div>
         </div>
+        <Divider />
+        <div>
+          <Dialog title='Serviços' trigger={<Button>Serviços</Button>}>
+            {() => <ServicesDialog defaultServicesIds={[]} onChange={() => {}} />}
+          </Dialog>
+        </div>
         <div className='flex items-center gap-2'>
-          <Button color='primary' className='mt-3'>
+          <Button type='submit' color='primary' className='mt-3'>
             Cadastrar
           </Button>
           <Button color='danger' onClick={this.props.onCancel} className='mt-3'>
@@ -234,3 +212,18 @@ export class RegisterCustomerForm extends Component<
     )
   }
 }
+
+/**
+ * - O use case vai receber o dto do lançamento
+ * - Dentro do dto do laçamento há o id do produto
+ * - Com esse id você vai buscar o produto utilizando o findById do products repository
+ * - Se o produto não existir vc lança um erro not found
+ * - Lembrando que um produto sempre será retornado com seus lotes
+ * - Você vai usar o reduceStock do produto que vc pego com findById
+ * - depois vc vai pegar os lotes atualizados pelo método updatedBatches da entidade produto
+ * - você vai atulizar o estoque desses lotes no banco de dados passando esses lotes no método updateManyItemsCount do batchesRepository
+ * - depois vc vai pegar os lotes com estoque zero pelo método batchesWithoutStock da entidade produto
+ * - Você vai deletar esses lotes passando esses lotes no método deleteMany do batchesRepository passando somente os ids desses lotes
+ * - Depois você vai criar a um objeto da entidade InventoryMovements passando o inventotyMovementDto no método create
+ * - Por fim vc vai passar esse objeto da entidade InventoryMovements no método add do inventoryMovementsRepository para criá-lo no banco de dados
+ */

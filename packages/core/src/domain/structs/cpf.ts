@@ -5,4 +5,11 @@ export class Cpf extends Document {
   static create(dto: DocumentDto): Cpf {
     return new Cpf(dto.value, dto.issueDate)
   }
+
+  get dto(): DocumentDto {
+    return {
+      issueDate: this.issueDate.toDateString(),
+      value: this.value,
+    }
+  }
 }

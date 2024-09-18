@@ -9,6 +9,7 @@ import type { CustomerDto } from '../../dtos'
 export type CustomerProps = {
   name: string
   socialName: string
+  email: string
   cpf: Cpf
   gender: string
   rgs?: Rg[]
@@ -24,6 +25,7 @@ export class Customer extends Entity<CustomerProps> {
         name: dto.name,
         gender: dto.gender,
         socialName: dto.socialName,
+        email: dto.email,
         cpf: Cpf.create(dto.cpf),
         phones: dto.phones?.map(Phone.create),
         consumedProducts: dto.consumedProducts.map(Product.create),
@@ -76,6 +78,10 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.socialName
   }
 
+  get email(): string {
+    return this.props.email
+  }
+
   get gender(): string {
     return this.props.gender
   }
@@ -112,10 +118,11 @@ export class Customer extends Entity<CustomerProps> {
     return {
       id: this.id,
       name: this.name,
+      email: this.email,
       socialName: this.socialName,
       gender: this.gender,
-      cpf: this.cpf,
-      rgs: this.rgs,
+      cpf: this.cpf.dto,
+      rgs: this.rgs.map((rg) => rg.dto),
       phones: this.phones,
       consumedProducts: this.consumedProducts.map((product) => product.dto),
       consumedServices: this.consumedProducts.map((product) => product.dto),
