@@ -7,6 +7,7 @@ export type CustomerDto = {
   id?: string
   name: string
   socialName: string
+  email: string
   gender: string
   cpf: DocumentDto
   rgs: DocumentDto[]

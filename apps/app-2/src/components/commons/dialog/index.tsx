@@ -1,6 +1,6 @@
 import { Component, type ReactNode } from 'react'
 import { Slot } from '@radix-ui/react-slot'
-import { Modal, ModalContent, ModalHeader } from '@nextui-org/react'
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
 
 type DialogProps = {
   title: string
@@ -20,22 +20,32 @@ export class Dialog extends Component<DialogProps, DialogState> {
     }
   }
 
-  handleTriggerClick() {
+  close() {
+    this.setState({
+      isOpen: false,
+    })
+  }
+
+  open() {
     this.setState({
       isOpen: true,
     })
+  }
+
+  handleTriggerClick() {
+    this.open()
   }
 
   render() {
     return (
       <>
         <Slot onClick={() => this.handleTriggerClick()}>{this.props.trigger}</Slot>
-        <Modal isOpen={this.state.isOpen} size='lg'>
+        <Modal isOpen={this.state.isOpen} onOpenChange={this.close} size='lg'>
           <ModalContent className='p-6'>
             {(onClose: VoidFunction) => (
               <>
                 <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
-                <div className='mt-6'>{this.props.children(onClose)}</div>
+                <ModalBody className='mt-6'>{this.props.children(onClose)}</ModalBody>
               </>
             )}
           </ModalContent>
