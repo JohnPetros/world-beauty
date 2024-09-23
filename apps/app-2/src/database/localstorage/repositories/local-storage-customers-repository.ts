@@ -53,6 +53,17 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       )
     },
 
+    async removeMany(customersIds: string[]) {
+      const constumers = await this.findAll()
+
+      localStorage.set(
+        KEYS.customers,
+        constumers
+          .filter((customer) => !customersIds.includes(customer.id))
+          .map((customer) => customer.dto),
+      )
+    },
+
     async removeAll() {
       localStorage.remove(KEYS.customers)
     },
