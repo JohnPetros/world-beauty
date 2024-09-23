@@ -1,22 +1,22 @@
 import { Component, type FormEvent } from 'react'
 import { Button, Divider, Input, Textarea } from '@nextui-org/react'
 
-import type { ProductDto } from '@world-beauty/core/dtos'
-import type { Product } from '@world-beauty/core/entities'
+import type { ServiceDto } from '@world-beauty/core/dtos'
+import type { Service } from '@world-beauty/core/entities'
 
-type ProductFormProps = {
-  product?: Product
-  onSubmit: (Product: ProductDto) => void
+type ServiceFormProps = {
+  service?: Service
+  onSubmit: (Service: ServiceDto) => void
   onCancel: () => void
 }
 
-type ProductFormState = {
+type ServiceFormState = {
   rgFieldsCount: number
   phoneFieldsCount: number
 }
 
-export class ProductForm extends Component<ProductFormProps, ProductFormState> {
-  constructor(props: ProductFormProps) {
+export class ServiceForm extends Component<ServiceFormProps, ServiceFormState> {
+  constructor(props: ServiceFormProps) {
     super(props)
     this.state = {
       rgFieldsCount: 1,
@@ -34,19 +34,19 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
     const price = Number(formData.get('price'))
     const description = String(formData.get('description'))
 
-    const ProductDto: ProductDto = {
+    const serviceDto: ServiceDto = {
       name,
       price,
       description,
     }
 
-    if (this.props.product) {
-      const updatedProduct = this.props.product.update(ProductDto)
-      this.props.onSubmit(updatedProduct.dto)
+    if (this.props.service) {
+      const updatedService = this.props.service.update(serviceDto)
+      this.props.onSubmit(updatedService.dto)
       return
     }
 
-    this.props.onSubmit(ProductDto)
+    this.props.onSubmit(serviceDto)
   }
 
   render() {
@@ -57,14 +57,14 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
             autoFocus
             label='Nome'
             name='name'
-            defaultValue={this.props.product?.name}
+            defaultValue={this.props.service?.name}
             variant='bordered'
             required
           />
           <Input
             label='Preço'
             name='price'
-            defaultValue={this.props.product?.priceAsNumber.toString()}
+            defaultValue={this.props.service?.priceAsNumber.toString()}
             variant='bordered'
             required
           />
@@ -74,7 +74,7 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
           label='Descrição'
           name='description'
           variant='bordered'
-          defaultValue={this.props.product?.description}
+          defaultValue={this.props.service?.description}
         />
         <div className='flex items-center gap-2'>
           <Button type='submit' color='primary' className='mt-3'>

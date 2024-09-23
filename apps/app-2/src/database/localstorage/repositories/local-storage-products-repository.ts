@@ -33,10 +33,13 @@ export const LocalStorageProductsRepository = (): IProductsRepository => {
 
     async add(product: Product) {
       const products = await this.findAll()
-      localStorage.set(KEYS.products, [
-        product.dto,
-        ...products.map((product) => product.dto),
-      ])
+
+      products.unshift(product)
+
+      localStorage.set(
+        KEYS.products,
+        products.map((product) => product.dto),
+      )
     },
 
     async update(product: Product) {

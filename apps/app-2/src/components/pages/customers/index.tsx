@@ -59,7 +59,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
     const response = await this.listCustomersUseCase.execute(page)
     this.setState({
       customers: response.items,
-      pagesCount: Math.round(response.itemsCount / PAGINATION.itemsPerPage),
+      pagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
       page,
     })
   }

@@ -55,7 +55,7 @@ export class ProductsPage extends Component<any, ProductsPageState> {
     const response = await this.listProductsUseCase.execute(page)
     this.setState({
       products: response.items,
-      pagesCount: Math.round(response.itemsCount / PAGINATION.itemsPerPage),
+      pagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
       page,
     })
   }

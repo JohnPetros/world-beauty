@@ -1,5 +1,5 @@
 import { Entity } from '../abstracts'
-import type { ProductDto, ServiceDto } from '../../dtos'
+import type { ServiceDto } from '../../dtos'
 
 export type ServiceProps = {
   id?: string
@@ -14,6 +14,10 @@ export class Service extends Entity<ServiceProps> {
       { name: dto.name, description: dto.description, price: dto.price },
       dto.id,
     )
+  }
+
+  update(dto: ServiceDto): Service {
+    return Service.create({ ...this.dto, ...dto })
   }
 
   get price(): string {
@@ -38,7 +42,7 @@ export class Service extends Entity<ServiceProps> {
     return this.props.name
   }
 
-  get dto(): ProductDto {
+  get dto(): ServiceDto {
     return {
       id: this.id,
       description: this.description,

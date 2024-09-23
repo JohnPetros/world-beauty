@@ -31,12 +31,37 @@ export const LocalStorageServicesRepository = (): IServicesRepository => {
       return constumers.length
     },
 
-    async add(service) {
-      const constumers = await this.findAll()
-      localStorage.set(KEYS.services, [
-        service.dto,
-        ...constumers.map((service) => service.dto),
-      ])
+    async add(service: Service) {
+      const services = await this.findAll()
+
+      services.unshift(service)
+
+      localStorage.set(
+        KEYS.services,
+        services.map((service) => service.dto),
+      )
+    },
+
+    async update(service: Service) {
+      const services = await this.findAll()
+
+      localStorage.set(
+        KEYS.services,
+        services.map((currentService) => {
+          return currentService.isEqualTo(service) ? service.dto : currentService.dto
+        }),
+      )
+    },
+
+    async removeMany(servicesIds: string[]) {
+      const services = await this.findAll()
+
+      localStorage.set(
+        KEYS.services,
+        services
+          .filter((service) => !servicesIds.includes(service.id))
+          .map((service) => service.dto),
+      )
     },
 
     async removeAll() {

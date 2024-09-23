@@ -16,6 +16,12 @@ export class ServicesFaker {
     }
   }
 
+  static fakeMany(count: number, dto?: Partial<ServiceDto>) {
+    return count === 0
+      ? []
+      : Array.from({ length: count }).map(() => ServicesFaker.fake(dto))
+  }
+
   static fakeManyDto(count: number, dto?: Partial<ServiceDto>) {
     return Array.from({ length: count }).map(() => ServicesFaker.fakeDto(dto))
   }
