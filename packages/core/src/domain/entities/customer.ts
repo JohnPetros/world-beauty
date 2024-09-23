@@ -9,7 +9,6 @@ import type { CustomerDto } from '../../dtos'
 export type CustomerProps = {
   name: string
   socialName: string
-  email: string
   cpf: Cpf
   gender: string
   rgs?: Rg[]
@@ -25,15 +24,22 @@ export class Customer extends Entity<CustomerProps> {
         name: dto.name,
         gender: dto.gender,
         socialName: dto.socialName,
-        email: dto.email,
         cpf: Cpf.create(dto.cpf),
         phones: dto.phones?.map(Phone.create),
-        consumedProducts: dto.consumedProducts.map(Product.create),
-        consumedServices: dto.consumedServices.map(Service.create),
+        consumedProducts: dto.consumedProducts
+          ? dto.consumedProducts.map(Product.create)
+          : [],
+        consumedServices: dto.consumedServices
+          ? dto.consumedServices.map(Service.create)
+          : [],
         rgs: dto.rgs.map(Rg.create),
       },
       dto.id,
     )
+  }
+
+  update(dto: CustomerDto): Customer {
+    return Customer.create({ ...this.dto, ...dto })
   }
 
   get consumedProductsOrServicesCount(): number {
@@ -78,10 +84,6 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.socialName
   }
 
-  get email(): string {
-    return this.props.email
-  }
-
   get gender(): string {
     return this.props.gender
   }
@@ -99,11 +101,11 @@ export class Customer extends Entity<CustomerProps> {
   }
 
   get phonesList(): string {
-    return this.phones.map((phone) => phone.value).join(', ')
+    return this.phones.map((phone) => phone.value).join('; ')
   }
 
   get rgsList(): string {
-    return this.rgs.map((rg) => rg.value).join(', ')
+    return this.rgs.map((rg) => rg.value).join('; ')
   }
 
   get consumedProducts(): Product[] {
@@ -118,7 +120,6 @@ export class Customer extends Entity<CustomerProps> {
     return {
       id: this.id,
       name: this.name,
-      email: this.email,
       socialName: this.socialName,
       gender: this.gender,
       cpf: this.cpf.dto,

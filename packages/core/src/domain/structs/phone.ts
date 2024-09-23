@@ -11,6 +11,6 @@ export class Phone {
   }
 
   get value(): string {
-    return `(${this.codeArea}) ${this.number}`
+    return `+${this.codeArea} ${this.number}`
   }
 }

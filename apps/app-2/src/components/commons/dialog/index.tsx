@@ -40,14 +40,19 @@ export class Dialog extends Component<DialogProps, DialogState> {
     return (
       <>
         <Slot onClick={() => this.handleTriggerClick()}>{this.props.trigger}</Slot>
-        <Modal isOpen={this.state.isOpen} onOpenChange={this.close} size='lg'>
+        <Modal
+          isOpen={this.state.isOpen}
+          onClose={() => this.close()}
+          onOpenChange={this.close}
+          size='lg'
+        >
           <ModalContent className='p-6'>
-            {(onClose: VoidFunction) => (
-              <>
-                <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
-                <ModalBody className='mt-6'>{this.props.children(onClose)}</ModalBody>
-              </>
-            )}
+            <>
+              <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
+              <ModalBody className='mt-6 max-h-[36rem] overflow-y-auto overflow-x-hidden'>
+                {this.props.children(() => this.close())}
+              </ModalBody>
+            </>
           </ModalContent>
         </Modal>
       </>

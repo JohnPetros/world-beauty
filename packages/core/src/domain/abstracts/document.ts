@@ -1,14 +1,15 @@
+import { Datetime } from '../../libs'
+
 export abstract class Document {
   readonly value: string
   readonly issueDate: Date
 
-  protected constructor(value: string, issueDate: string) {
+  protected constructor(value: string, issueDate: Date) {
     this.value = value
+    this.issueDate = issueDate
+  }
 
-    const dateParts = issueDate.split('/')
-    const year = Number(dateParts[2])
-    const month = Number(dateParts[1])
-    const day = Number(dateParts[0])
-    this.issueDate = new Date(year, month - 1, day)
+  get issueDateAsString(): string {
+    return new Datetime(this.issueDate).format('YYYY-MM-DD')
   }
 }

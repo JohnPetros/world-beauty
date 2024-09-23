@@ -1,5 +1,6 @@
 import { Document } from '../abstracts'
 import type { DocumentDto } from '../../dtos'
+import { Datetime } from '../../libs'
 
 export class Cpf extends Document {
   static create(dto: DocumentDto): Cpf {
@@ -8,7 +9,7 @@ export class Cpf extends Document {
 
   get dto(): DocumentDto {
     return {
-      issueDate: this.issueDate.toDateString(),
+      issueDate: this.issueDate,
       value: this.value,
     }
   }

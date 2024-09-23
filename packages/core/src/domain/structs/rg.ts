@@ -8,7 +8,7 @@ export class Rg extends Document {
 
   get dto(): DocumentDto {
     return {
-      issueDate: this.issueDate.toDateString(),
+      issueDate: this.issueDate,
       value: this.value,
     }
   }

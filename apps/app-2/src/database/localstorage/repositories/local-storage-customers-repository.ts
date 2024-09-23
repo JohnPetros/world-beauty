@@ -31,12 +31,26 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       return constumers.length
     },
 
-    async add(customer) {
+    async add(customer: Customer) {
       const constumers = await this.findAll()
-      localStorage.set(KEYS.customers, [
-        customer.dto,
-        ...constumers.map((customer) => customer.dto),
-      ])
+
+      constumers.unshift(customer)
+
+      localStorage.set(
+        KEYS.customers,
+        constumers.map((customer) => customer.dto),
+      )
+    },
+
+    async update(customer: Customer) {
+      const constumers = await this.findAll()
+
+      localStorage.set(
+        KEYS.customers,
+        constumers.map((currentCustomer) =>
+          currentCustomer.isEqualTo(customer) ? customer.dto : currentCustomer.dto,
+        ),
+      )
     },
 
     async removeAll() {

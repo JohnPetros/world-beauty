@@ -14,6 +14,7 @@ import {
 import {
   ListCustomersUseCase,
   RegisterCustomerUseCase,
+  UpdateCustomerUseCase,
 } from '@world-beauty/core/use-cases'
 import type { Customer } from '@world-beauty/core/entities'
 import type { CustomerDto } from '@world-beauty/core/dtos'
@@ -23,7 +24,7 @@ import { PageTitle } from '@/components/commons/title'
 import { PAGINATION } from '@world-beauty/core/constants'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
-import { RegisterCustomerForm } from './register-customer-form'
+import { CustomerForm } from './customer-form'
 
 type CustomersPageState = {
   customers: Customer[]
@@ -36,6 +37,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
   private readonly registerCustomerUseCase = new RegisterCustomerUseCase(
     customersRepository,
   )
+  private readonly updateCustomerUseCase = new UpdateCustomerUseCase(customersRepository)
 
   constructor(props: any) {
     super(props)
@@ -59,8 +61,17 @@ export class CustomersPage extends Component<any, CustomersPageState> {
     await this.fetchCustomers(page)
   }
 
-  async handleSubmit(customerDto: CustomerDto, closeDialog: VoidFunction) {
-    // await this.registerCustomerUseCase.execute(customerDto)
+  async handleSubmit(
+    customerDto: CustomerDto,
+    closeDialog: VoidFunction,
+    action: 'register' | 'update',
+  ) {
+    if (action === 'register') {
+      await this.registerCustomerUseCase.execute(customerDto)
+    } else {
+      await this.updateCustomerUseCase.execute(customerDto)
+    }
+    await this.fetchCustomers(1)
     closeDialog()
   }
 
@@ -85,8 +96,11 @@ export class CustomersPage extends Component<any, CustomersPageState> {
           }
         >
           {(closeDialog) => (
-            <RegisterCustomerForm
-              onSubmit={(customerDto) => this.handleSubmit(customerDto, closeDialog)}
+            <CustomerForm
+              onCancel={closeDialog}
+              onSubmit={(customerDto) =>
+                this.handleSubmit(customerDto, closeDialog, 'register')
+              }
             />
           )}
         </Dialog>
@@ -126,7 +140,9 @@ export class CustomersPage extends Component<any, CustomersPageState> {
                   <TableRow key={customer.id}>
                     <TableCell>{customer.name}</TableCell>
                     <TableCell>{customer.cpf.value}</TableCell>
-                    <TableCell>{customer.gender}</TableCell>
+                    <TableCell>
+                      {customer.gender === 'male' ? 'masculino' : 'feminino'}
+                    </TableCell>
                     <TableCell>{customer.socialName}</TableCell>
                     <TableCell>{customer.phonesList}</TableCell>
                     <TableCell>{customer.rgsList}</TableCell>
@@ -134,11 +150,25 @@ export class CustomersPage extends Component<any, CustomersPageState> {
                     <TableCell>{customer.spending}</TableCell>
                     <TableCell>
                       <div className='relative flex items-center gap-2'>
-                        <Tooltip content='Editar usuário'>
-                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='edit' size={16} />
-                          </Button>
-                        </Tooltip>
+                        <Dialog
+                          title='Atualizar cliente'
+                          trigger={
+                            <Button size='sm' className='bg-gray-200 text-zinc-800'>
+                              <Icon name='edit' size={16} />
+                            </Button>
+                          }
+                        >
+                          {(closeDialog) => (
+                            <CustomerForm
+                              customer={customer}
+                              onCancel={closeDialog}
+                              onSubmit={(customerDto) =>
+                                this.handleSubmit(customerDto, closeDialog, 'update')
+                              }
+                            />
+                          )}
+                        </Dialog>
+
                         <Tooltip content='Deletar usuário'>
                           <Button size='sm' className='bg-gray-200 text-red-700'>
                             <Icon name='delete' size={16} />

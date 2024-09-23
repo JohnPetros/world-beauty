@@ -19,9 +19,9 @@ export class CustomersFaker {
       socialName: faker.person.lastName(),
       cpf: {
         value: faker.number.int({ min: 1000000000, max: 9999999999 }).toString(),
-        issueDate: dayjs(faker.date.past()).toDate(),
+        issueDate: faker.date.past(),
       },
-      gender: faker.helpers.arrayElement(['masculino', 'feminino']),
+      gender: faker.helpers.arrayElement(['male', 'female']),
       phones: PhonesFaker.fakeMany(faker.number.int({ min: 1, max: 2 })),
       rgs: RgsFaker.fakeManyDto(1),
       consumedProducts: ProductsFaker.fakeManyDto(faker.number.int({ min: 0, max: 10 })),
