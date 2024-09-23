@@ -9,6 +9,7 @@
     "./interfaces": "./src/interfaces/index.ts",
     "./constants": "./src/constants/index.ts",
     "./dtos": "./src/dtos/index.ts",
+    "./libs": "./src/libs/index.ts",
     "./use-cases": "./src/use-cases/index.ts",
     "./fakers": "./src/__tests__/fakers/index.ts"
   }
