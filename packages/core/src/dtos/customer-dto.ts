@@ -7,11 +7,10 @@ export type CustomerDto = {
   id?: string
   name: string
   socialName: string
-  email: string
   gender: string
   cpf: DocumentDto
   rgs: DocumentDto[]
   phones: PhoneDto[]
-  consumedProducts: ProductDto[]
-  consumedServices: ServiceDto[]
+  consumedProducts?: ProductDto[]
+  consumedServices?: ServiceDto[]
 }

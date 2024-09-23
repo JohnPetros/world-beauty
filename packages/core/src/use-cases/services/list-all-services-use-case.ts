@@ -4,7 +4,7 @@ export class ListAllServicesUseCase {
   constructor(private readonly servicesRepository: IServicesRepository) {}
 
   async execute() {
-    const services = this.servicesRepository.findAll()
+    const services = await this.servicesRepository.findAll()
 
     return services.map((service) => service.dto)
   }

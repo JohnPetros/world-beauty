@@ -6,4 +6,5 @@ export interface ICustomersRepository {
   removeAll(): Promise<void>
   count(): Promise<number>
   add(customer: Customer): Promise<void>
+  update(customer: Customer): Promise<void>
 }

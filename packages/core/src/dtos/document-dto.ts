@@ -1,4 +1,4 @@
 export type DocumentDto = {
   value: string
-  issueDate: string
+  issueDate: Date
 }
