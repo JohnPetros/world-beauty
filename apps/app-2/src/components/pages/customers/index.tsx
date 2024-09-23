@@ -179,7 +179,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
               <TableColumn>Telefones</TableColumn>
               <TableColumn>RG's</TableColumn>
               <TableColumn>Total consumido</TableColumn>
-              <TableColumn>Total gasto (R$)</TableColumn>
+              <TableColumn>Total gasto</TableColumn>
               <TableColumn>Ações</TableColumn>
             </TableHeader>
             <TableBody

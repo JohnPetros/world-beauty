@@ -89,11 +89,11 @@ export class CustomerForm extends Component<
 
     if (this.props.customer) {
       const updatedCustomer = this.props.customer.update(customerDto)
-      console.log(updatedCustomer)
       this.props.onSubmit(updatedCustomer.dto)
+      return
     }
 
-    // this.props.onSubmit(customerDto)
+    this.props.onSubmit(customerDto)
   }
 
   render() {

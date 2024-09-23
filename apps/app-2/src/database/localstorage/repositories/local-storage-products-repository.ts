@@ -11,32 +11,54 @@ export const LocalStorageProductsRepository = (): IProductsRepository => {
 
   return {
     async findAll() {
-      const ProductsDto = localStorage.get<ProductDto[]>(KEYS.products)
-      if (!ProductsDto) return []
-      return ProductsDto.map(Product.create)
+      const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
+      if (!productsDto) return []
+      return productsDto.map(Product.create)
     },
 
     async findAllPaginated(page: number) {
-      const ProductsDto = localStorage.get<ProductDto[]>(KEYS.products)
-      if (!ProductsDto) return []
+      const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
+      if (!productsDto) return []
 
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
 
-      return ProductsDto.map(Product.create).slice(start, end)
+      return productsDto.map(Product.create).slice(start, end)
     },
 
     async count() {
-      const constumers = await this.findAll()
-      return constumers.length
+      const products = await this.findAll()
+      return products.length
     },
 
-    async add(Product) {
-      const constumers = await this.findAll()
+    async add(product: Product) {
+      const products = await this.findAll()
       localStorage.set(KEYS.products, [
-        Product.dto,
-        ...constumers.map((Product) => Product.dto),
+        product.dto,
+        ...products.map((product) => product.dto),
       ])
+    },
+
+    async update(product: Product) {
+      const products = await this.findAll()
+
+      localStorage.set(
+        KEYS.products,
+        products.map((currentProduct) => {
+          return currentProduct.isEqualTo(product) ? product.dto : currentProduct.dto
+        }),
+      )
+    },
+
+    async removeMany(productsIds: string[]) {
+      const products = await this.findAll()
+
+      localStorage.set(
+        KEYS.products,
+        products
+          .filter((product) => !productsIds.includes(product.id))
+          .map((product) => product.dto),
+      )
     },
 
     async removeAll() {

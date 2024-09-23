@@ -47,7 +47,13 @@ export class Customer extends Entity<CustomerProps> {
   }
 
   get spending(): string {
-    return (this.spendingInProducts + this.spendingInServices).toFixed(2)
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+    return formatter.format(this.spendingInProducts + this.spendingInServices)
   }
 
   get spendingAsNumber(): number {

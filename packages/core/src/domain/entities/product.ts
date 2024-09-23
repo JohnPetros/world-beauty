@@ -10,9 +10,17 @@ export type ProductProps = {
 export class Product extends Entity<ProductProps> {
   static create(dto: ProductDto): Product {
     return new Product(
-      { name: dto.name, description: dto.description, price: dto.price },
+      {
+        name: dto.name,
+        description: dto.description,
+        price: dto.price,
+      },
       dto.id,
     )
+  }
+
+  update(dto: ProductDto): Product {
+    return Product.create({ ...this.dto, ...dto })
   }
 
   get price(): string {

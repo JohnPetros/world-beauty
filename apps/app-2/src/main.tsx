@@ -5,6 +5,8 @@ import { NextUIProvider } from '@nextui-org/react'
 import './styles/global.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { CustomersPage } from './components/pages/customers'
+import { ServicesPage } from './components/pages/services'
+import { ProductsPage } from './components/pages/products'
 import { AppLayout } from './components/layouts/app'
 
 const router = createBrowserRouter([
@@ -18,11 +20,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/products',
-        element: <CustomersPage />,
+        element: <ProductsPage />,
       },
       {
         path: '/services',
-        element: <CustomersPage />,
+        element: <ServicesPage />,
       },
       {
         path: '/lists',
