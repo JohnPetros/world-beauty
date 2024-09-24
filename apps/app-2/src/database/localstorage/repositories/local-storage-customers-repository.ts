@@ -26,6 +26,33 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       return customersDto.map(Customer.create).slice(start, end)
     },
 
+    async findManyMalePaginated(page: number) {
+      const customers = await this.findAll()
+      const maleCustomers = customers.filter((customer) => customer.isMale)
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        customers: maleCustomers.slice(start, end),
+        count: maleCustomers.length,
+      }
+    },
+
+    async findManyFemalePaginated(page: number) {
+      const customers = await this.findAll()
+      const femaleCustomers = customers.filter((customer) => customer.isFemale)
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+      console.log({ page })
+
+      return {
+        customers: femaleCustomers.slice(start, end),
+        count: femaleCustomers.length,
+      }
+    },
+
     async count() {
       const constumers = await this.findAll()
       return constumers.length

@@ -82,6 +82,14 @@ export class Customer extends Entity<CustomerProps> {
     )
   }
 
+  get isMale(): boolean {
+    return this.gender === 'male'
+  }
+
+  get isFemale(): boolean {
+    return this.gender === 'female'
+  }
+
   get name(): string {
     return this.props.name
   }

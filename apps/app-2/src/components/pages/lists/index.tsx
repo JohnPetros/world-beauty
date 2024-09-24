@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import { Button } from '@nextui-org/react'
 
 import {
   DeleteCustomersUseCase,
@@ -13,10 +12,8 @@ import type { CustomerDto } from '@world-beauty/core/dtos'
 import { customersRepository } from '@/database'
 import { PageTitle } from '@/components/commons/title'
 import { PAGINATION } from '@world-beauty/core/constants'
-import { Icon } from '@/components/commons/icon'
-import { Dialog } from '@/components/commons/dialog'
-import { CustomerForm } from '../../commons/customers-table/customer-form'
-import { CustomersTable } from '@/components/commons/customers-table'
+import { Select, SelectItem } from '@nextui-org/react'
+import { CustomersByGenderTable } from './customers-by-gender-table'
 
 type CustomersPageState = {
   customers: Customer[]
@@ -25,7 +22,7 @@ type CustomersPageState = {
   selectedCustomersIds: string[]
 }
 
-export class CustomersPage extends Component<any, CustomersPageState> {
+export class ListsPage extends Component<any, CustomersPageState> {
   private readonly listCustomersUseCase = new ListCustomersUseCase(customersRepository)
   private readonly registerCustomerUseCase = new RegisterCustomerUseCase(
     customersRepository,
@@ -87,54 +84,30 @@ export class CustomersPage extends Component<any, CustomersPageState> {
   render() {
     return (
       <div className='flex flex-col gap-3'>
-        <PageTitle>Clientes</PageTitle>
+        <PageTitle>Listagens</PageTitle>
 
-        <div className='flex items-center gap-2'>
-          <Dialog
-            title='Adicionar cliente'
-            trigger={
-              <Button
-                endContent={<Icon name='add' size={20} />}
-                radius='sm'
-                className='bg-zinc-800 text-zinc-50 w-max'
-              >
-                Cadastrar cliente
-              </Button>
-            }
-          >
-            {(closeDialog) => (
-              <CustomerForm
-                onCancel={closeDialog}
-                onSubmit={async (customerDto) => {
-                  closeDialog()
-                  await this.handleRegisterCustomer(customerDto)
-                }}
-              />
-            )}
-          </Dialog>
-          {this.state.selectedCustomersIds.length > 0 && (
-            <Button
-              radius='sm'
-              color='danger'
-              onClick={() => this.handleDeleteButtonClick()}
-            >
-              Deletar cliente(s)
-            </Button>
-          )}
+        <Select label='Selecione uma lista' className='max-w-xs'>
+          <SelectItem key='customers-by-gender'>Clientes por gênero</SelectItem>
+          <SelectItem key='customers-by-most-consumption'>
+            10 clientes que mais consumiram produtos ou serviços
+          </SelectItem>
+          <SelectItem key='products-or-services-by-most-consumption'>
+            Produtos ou serviços mais consumidos
+          </SelectItem>
+          <SelectItem key='products-or-services-by-most-consumption-and-gender'>
+            Produtos ou serviços mais consumidos por gênero
+          </SelectItem>
+          <SelectItem key='customers-by-less-consumption'>
+            10 clientes que menos consumiram produtos ou serviços{' '}
+          </SelectItem>
+          <SelectItem key='customers-by-most-spending'>
+            5 clientes que mais consumiram em valor
+          </SelectItem>
+        </Select>
+
+        <div className='mt-6'>
+          <CustomersByGenderTable />
         </div>
-
-        <CustomersTable
-          isInteractable={true}
-          customers={this.state.customers}
-          page={this.state.page}
-          pagesCount={this.state.pagesCount}
-          selectedCustomersIds={this.state.selectedCustomersIds}
-          onUpdateCustomer={this.handleUpdateCustomer}
-          onPageChange={(page) => this.handlePageChange(page)}
-          onCustomersSelectionChange={(customersIds) =>
-            this.handleCustomersSelectionChange(customersIds)
-          }
-        />
       </div>
     )
   }

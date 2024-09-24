@@ -12,9 +12,9 @@ export class ListCustomersByMostConsumptionAndGenderUseCase extends List {
   }
 
   public list(): void {
-    this.output.title("Clientes do sexo masculino")
+    this.output.title('Clientes do sexo masculino')
     this.listByMaleGender('masculino')
-    this.output.title("Clientes do sexo feminino")
+    this.output.title('Clientes do sexo feminino')
     this.listByMaleGender('feminino')
   }
 

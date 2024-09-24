@@ -230,7 +230,7 @@ export class App {
       ],
       [
         'Listar os produtos ou serviços mais consumidos por gênero',
-        'list-by-most-consumption-and-gender',
+        'list-products-or-services-by-most-consumption-and-gender',
       ],
       [
         'Listar os 10 clientes que menos consumiram produtos ou serviços',
@@ -262,7 +262,7 @@ export class App {
         useCase.list()
         break
       }
-      case 'list-by-most-consumption-and-gender': {
+      case 'list-products-or-services-by-most-consumption-and-gender': {
         const useCase = new ListCustomersByMostConsumptionAndGenderUseCase(
           this.company.customers,
           this.input,
