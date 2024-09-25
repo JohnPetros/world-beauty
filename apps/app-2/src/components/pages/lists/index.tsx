@@ -7,6 +7,7 @@ import { CustomersByMostSpendingTable } from './customers-by-most-spending-table
 import { CustomersByMostConsumptionTable } from './customers-by-most-consumption-table'
 import { CustomersByLessConsumptionTable } from './customers-by-less-consumption-table'
 import { MostConsumedProductsTable } from './most-consumed-products-and-services-table/most-consumed-products-table'
+import { MostConsumedProductsAndServicesTable } from './most-consumed-products-and-services-table'
 
 type ListsPageState = {
   selectedList: string
@@ -37,10 +38,10 @@ export class ListsPage extends Component<any, ListsPageState> {
             10 clientes que mais consumiram produtos ou serviços
           </SelectItem>
           <SelectItem key='customers-by-gender'>Clientes por gênero</SelectItem>
-          <SelectItem key='most-consumption-products-and-services'>
+          <SelectItem key='most-consumed-products-and-services'>
             Produtos e serviços mais consumidos
           </SelectItem>
-          <SelectItem key='most-consumption-products-and-services-by-gender'>
+          <SelectItem key='most-consumed-products-and-services-by-gender'>
             Produtos e serviços mais consumidos por gênero
           </SelectItem>
           <SelectItem key='customers-by-less-consumption'>
@@ -64,9 +65,8 @@ export class ListsPage extends Component<any, ListsPageState> {
           {this.state.selectedList === 'customers-by-gender' && (
             <CustomersByGenderTable />
           )}
-          {this.state.selectedList ===
-            'most-consumption-products-and-services-by-gender' && (
-            <MostConsumedProductsTable />
+          {this.state.selectedList === 'most-consumed-products-and-services' && (
+            <MostConsumedProductsAndServicesTable />
           )}
         </div>
       </div>

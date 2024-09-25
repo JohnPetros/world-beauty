@@ -55,6 +55,8 @@ export const LocalStorageProductsRepository = (
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
 
+      console.log('products', products.length)
+
       return {
         products: products.slice(start, end),
         count: products.length,

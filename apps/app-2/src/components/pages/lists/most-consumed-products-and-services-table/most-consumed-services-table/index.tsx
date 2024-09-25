@@ -5,7 +5,7 @@ import { Service } from '@world-beauty/core/entities'
 import { PAGINATION } from '@world-beauty/core/constants'
 
 import { servicesRepository } from '@/database'
-import { ServicesTable } from '@/components/commons/products-table copy'
+import { ServicesTable } from '@/components/commons/services-table'
 
 type ServicesPageState = {
   services: Service[]
@@ -33,13 +33,15 @@ export class MostConsumedServicesTable extends Component<any, ServicesPageState>
 
     this.setState({
       services: items.map(Service.create),
-      page: Math.ceil(itemsCount / PAGINATION.itemsPerPage),
+      page,
+      pagesCount: Math.ceil(itemsCount / PAGINATION.itemsPerPage),
     })
   }
 
   async handlePageChange(page: number) {
     await this.fetchServices(page)
   }
+
   async componentDidMount() {
     await this.fetchServices(this.state.page)
   }

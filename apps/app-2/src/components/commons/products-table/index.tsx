@@ -57,7 +57,7 @@ export class ProductsTable extends Component<ProductsTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode='multiple'
+        selectionMode={this.props.isInteractable ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedProductsIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleProductsSelectionChange(selection)}
@@ -82,7 +82,7 @@ export class ProductsTable extends Component<ProductsTableProps> {
           <TableColumn>Nome</TableColumn>
           <TableColumn>Preço</TableColumn>
           <TableColumn>Descrição</TableColumn>
-          <TableColumn>Ações</TableColumn>
+          <TableColumn>{this.props.isInteractable ? 'Ações' : null} </TableColumn>
         </TableHeader>
         <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.products}>
           {(product) => (
@@ -91,33 +91,35 @@ export class ProductsTable extends Component<ProductsTableProps> {
               <TableCell>{product.price}</TableCell>
               <TableCell>{product.description}</TableCell>
               <TableCell>
-                <div className='relative flex items-center gap-2'>
-                  <Dialog
-                    title='Atualizar produto'
-                    trigger={
-                      <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                        <Icon name='edit' size={16} />
-                      </Button>
-                    }
-                  >
-                    {(closeDialog) => (
-                      <ProductForm
-                        product={product}
-                        onCancel={closeDialog}
-                        onSubmit={async (productDto) => {
-                          closeDialog()
-                          await this.handleUpdateProduct(productDto)
-                        }}
-                      />
-                    )}
-                  </Dialog>
+                {this.props.isInteractable && (
+                  <div className='relative flex items-center gap-2'>
+                    <Dialog
+                      title='Atualizar produto'
+                      trigger={
+                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
+                          <Icon name='edit' size={16} />
+                        </Button>
+                      }
+                    >
+                      {(closeDialog) => (
+                        <ProductForm
+                          product={product}
+                          onCancel={closeDialog}
+                          onSubmit={async (productDto) => {
+                            closeDialog()
+                            await this.handleUpdateProduct(productDto)
+                          }}
+                        />
+                      )}
+                    </Dialog>
 
-                  <Tooltip content='Deletar usuário'>
-                    <Button size='sm' className='bg-gray-200 text-red-700'>
-                      <Icon name='delete' size={16} />
-                    </Button>
-                  </Tooltip>
-                </div>
+                    <Tooltip content='Deletar usuário'>
+                      <Button size='sm' className='bg-gray-200 text-red-700'>
+                        <Icon name='delete' size={16} />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                )}
               </TableCell>
             </TableRow>
           )}

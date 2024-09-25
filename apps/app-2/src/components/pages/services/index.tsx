@@ -16,7 +16,7 @@ import { PAGINATION } from '@world-beauty/core/constants'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { ServiceForm } from './service-form'
-import { ServicesTable } from '@/components/commons/products-table copy'
+import { ServicesTable } from '@/components/commons/services-table'
 
 type ServicesPageState = {
   services: Service[]
@@ -92,18 +92,18 @@ export class ServicesPage extends Component<any, ServicesPageState> {
   render() {
     return (
       <div className='flex flex-col gap-3'>
-        <PageTitle>Produtos</PageTitle>
+        <PageTitle>Serviços</PageTitle>
 
         <div className='flex items-center gap-2'>
           <Dialog
-            title='Adicionar produto'
+            title='Adicionar serviço'
             trigger={
               <Button
                 endContent={<Icon name='add' size={20} />}
                 radius='sm'
                 className='bg-zinc-800 text-zinc-50 w-max'
               >
-                Cadastrar produto
+                Cadastrar serviço
               </Button>
             }
           >
@@ -122,7 +122,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
               color='danger'
               onClick={() => this.handleDeleteButtonClick()}
             >
-              Deletar produto(s)
+              Deletar serviço(s)
             </Button>
           )}
         </div>

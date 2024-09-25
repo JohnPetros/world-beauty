@@ -57,7 +57,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode='multiple'
+        selectionMode={this.props.isInteractable ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedServicesIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleServicesSelectionChange(selection)}
@@ -82,7 +82,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
           <TableColumn>Nome</TableColumn>
           <TableColumn>Preço</TableColumn>
           <TableColumn>Descrição</TableColumn>
-          <TableColumn>Ações</TableColumn>
+          <TableColumn>{this.props.isInteractable ? 'Ações' : null} </TableColumn>
         </TableHeader>
         <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.services}>
           {(service) => (
@@ -91,33 +91,35 @@ export class ServicesTable extends Component<ServicesTableProps> {
               <TableCell>{service.price}</TableCell>
               <TableCell>{service.description}</TableCell>
               <TableCell>
-                <div className='relative flex items-center gap-2'>
-                  <Dialog
-                    title='Atualizar produto'
-                    trigger={
-                      <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                        <Icon name='edit' size={16} />
-                      </Button>
-                    }
-                  >
-                    {(closeDialog) => (
-                      <ServiceForm
-                        service={service}
-                        onCancel={closeDialog}
-                        onSubmit={async (serviceDto) => {
-                          closeDialog()
-                          await this.handleUpdateService(serviceDto)
-                        }}
-                      />
-                    )}
-                  </Dialog>
+                {this.props.isInteractable && (
+                  <div className='relative flex items-center gap-2'>
+                    <Dialog
+                      title='Atualizar produto'
+                      trigger={
+                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
+                          <Icon name='edit' size={16} />
+                        </Button>
+                      }
+                    >
+                      {(closeDialog) => (
+                        <ServiceForm
+                          service={service}
+                          onCancel={closeDialog}
+                          onSubmit={async (serviceDto) => {
+                            closeDialog()
+                            await this.handleUpdateService(serviceDto)
+                          }}
+                        />
+                      )}
+                    </Dialog>
 
-                  <Tooltip content='Deletar usuário'>
-                    <Button size='sm' className='bg-gray-200 text-red-700'>
-                      <Icon name='delete' size={16} />
-                    </Button>
-                  </Tooltip>
-                </div>
+                    <Tooltip content='Deletar usuário'>
+                      <Button size='sm' className='bg-gray-200 text-red-700'>
+                        <Icon name='delete' size={16} />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                )}
               </TableCell>
             </TableRow>
           )}

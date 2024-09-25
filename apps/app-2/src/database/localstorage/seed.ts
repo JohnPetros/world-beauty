@@ -10,7 +10,6 @@ export const Seed = async () => {
   }
 
   const fakeServices = ServicesFaker.fakeMany(10)
-  console.log(fakeServices.length)
   servicesRepository.removeAll()
   for (const fakeProduct of fakeServices) {
     await servicesRepository.add(fakeProduct)

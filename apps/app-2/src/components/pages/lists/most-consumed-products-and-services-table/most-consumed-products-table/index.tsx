@@ -33,7 +33,8 @@ export class MostConsumedProductsTable extends Component<any, ProductsPageState>
 
     this.setState({
       products: items.map(Product.create),
-      page: Math.ceil(itemsCount / PAGINATION.itemsPerPage),
+      page,
+      pagesCount: Math.ceil(itemsCount / PAGINATION.itemsPerPage),
     })
   }
 
@@ -46,20 +47,13 @@ export class MostConsumedProductsTable extends Component<any, ProductsPageState>
 
   render() {
     return (
-      <div className='flex flex-col gap-3'>
-        <div>
-          <h2 className='mb-2 text-zinc-700 text-xl font-medium'>
-            Produtos mais consumidos
-          </h2>
-          <ProductsTable
-            isInteractable={false}
-            products={this.state.products}
-            page={this.state.page}
-            pagesCount={this.state.pagesCount}
-            onPageChange={(page) => this.handlePageChange(page)}
-          />
-        </div>
-      </div>
+      <ProductsTable
+        isInteractable={false}
+        products={this.state.products}
+        page={this.state.page}
+        pagesCount={this.state.pagesCount}
+        onPageChange={(page) => this.handlePageChange(page)}
+      />
     )
   }
 }
