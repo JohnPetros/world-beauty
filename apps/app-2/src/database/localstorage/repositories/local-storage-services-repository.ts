@@ -1,12 +1,17 @@
 import { PAGINATION } from '@world-beauty/core/constants'
 import type { ServiceDto } from '@world-beauty/core/dtos'
-import type { IServicesRepository } from '@world-beauty/core/interfaces'
+import type {
+  ICustomersRepository,
+  IServicesRepository,
+} from '@world-beauty/core/interfaces'
 import { Service } from '@world-beauty/core/entities'
 
 import { KEYS } from '../keys'
 import { LocalStorage } from '../local-storage'
 
-export const LocalStorageServicesRepository = (): IServicesRepository => {
+export const LocalStorageServicesRepository = (
+  costumersRepository: ICustomersRepository,
+): IServicesRepository => {
   const localStorage = LocalStorage()
 
   return {
@@ -16,7 +21,7 @@ export const LocalStorageServicesRepository = (): IServicesRepository => {
       return servicesDto.map(Service.create)
     },
 
-    async findAllPaginated(page: number) {
+    async findMany(page: number) {
       const servicesDto = localStorage.get<ServiceDto[]>(KEYS.services)
       if (!servicesDto) return []
 
@@ -24,6 +29,36 @@ export const LocalStorageServicesRepository = (): IServicesRepository => {
       const end = start + PAGINATION.itemsPerPage
 
       return servicesDto.map(Service.create).slice(start, end)
+    },
+
+    async findManyMostConsumedServices(page: number) {
+      const consumedServicesMap: {
+        [key: string]: number
+      } = {}
+
+      const services = await this.findAll()
+      const customers = await costumersRepository.findAll()
+
+      for (const customer of customers) {
+        for (const service of customer.consumedServices) {
+          if (!(service.id in consumedServicesMap)) {
+            consumedServicesMap[service.id] = consumedServicesMap[service.id] + 1
+          }
+        }
+      }
+
+      services.sort(
+        (firstService, secondService) =>
+          consumedServicesMap[firstService.id] - consumedServicesMap[secondService.id],
+      )
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        services: services.slice(start, end),
+        count: services.length,
+      }
     },
 
     async count() {

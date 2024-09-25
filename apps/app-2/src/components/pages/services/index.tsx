@@ -1,16 +1,5 @@
 import { Component } from 'react'
-import {
-  Button,
-  Pagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  Tooltip,
-  type Selection,
-} from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 
 import {
   DeleteServicesUseCase,
@@ -27,6 +16,7 @@ import { PAGINATION } from '@world-beauty/core/constants'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { ServiceForm } from './service-form'
+import { ServicesTable } from '@/components/commons/products-table copy'
 
 type ServicesPageState = {
   services: Service[]
@@ -60,15 +50,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
     })
   }
 
-  async handleServicesSelectionChange(ServicesSelection: Selection) {
-    let selectedServicesIds: string[] = []
-
-    if (ServicesSelection === 'all') {
-      selectedServicesIds = this.state.services.map((service) => service.id)
-    } else {
-      selectedServicesIds = Array.from(ServicesSelection).map(String)
-    }
-
+  async handleServicesSelectionChange(selectedServicesIds: string[]) {
     this.setState({
       selectedServicesIds,
     })
@@ -84,15 +66,20 @@ export class ServicesPage extends Component<any, ServicesPageState> {
     await this.fetchServices(1)
   }
 
+  async handleUpdateService(serviceDto: ServiceDto) {
+    await this.updateServiceUseCase.execute(serviceDto)
+    await this.fetchServices(1)
+  }
+
   async handleSubmit(
-    ServiceDto: ServiceDto,
+    serviceDto: ServiceDto,
     closeDialog: VoidFunction,
     action: 'register' | 'update',
   ) {
     if (action === 'register') {
-      await this.registerServiceUseCase.execute(ServiceDto)
+      await this.registerServiceUseCase.execute(serviceDto)
     } else {
-      await this.updateServiceUseCase.execute(ServiceDto)
+      await this.updateServiceUseCase.execute(serviceDto)
     }
     await this.fetchServices(1)
     closeDialog()
@@ -105,26 +92,26 @@ export class ServicesPage extends Component<any, ServicesPageState> {
   render() {
     return (
       <div className='flex flex-col gap-3'>
-        <PageTitle>Serviços</PageTitle>
+        <PageTitle>Produtos</PageTitle>
 
         <div className='flex items-center gap-2'>
           <Dialog
-            title='Adicionar serviço'
+            title='Adicionar produto'
             trigger={
               <Button
                 endContent={<Icon name='add' size={20} />}
                 radius='sm'
                 className='bg-zinc-800 text-zinc-50 w-max'
               >
-                Cadastrar serviço
+                Cadastrar produto
               </Button>
             }
           >
             {(closeDialog) => (
               <ServiceForm
                 onCancel={closeDialog}
-                onSubmit={(serviceDto) =>
-                  this.handleSubmit(serviceDto, closeDialog, 'register')
+                onSubmit={(ServiceDto) =>
+                  this.handleSubmit(ServiceDto, closeDialog, 'register')
                 }
               />
             )}
@@ -135,83 +122,24 @@ export class ServicesPage extends Component<any, ServicesPageState> {
               color='danger'
               onClick={() => this.handleDeleteButtonClick()}
             >
-              Deletar serviço(s)
+              Deletar produto(s)
             </Button>
           )}
         </div>
 
         <div className='w-full'>
-          <Table
-            key={this.state.pagesCount}
-            color='default'
-            selectionMode='multiple'
-            selectedKeys={this.state.selectedServicesIds}
-            aria-label='Tabela de serviços'
-            onSelectionChange={(selection) =>
-              this.handleServicesSelectionChange(selection)
+          <ServicesTable
+            isInteractable={true}
+            services={this.state.services}
+            page={this.state.page}
+            pagesCount={this.state.pagesCount}
+            selectedServicesIds={this.state.selectedServicesIds}
+            onUpdateService={this.handleUpdateService}
+            onPageChange={(page) => this.handlePageChange(page)}
+            onServicesSelectionChange={(servicesIds) =>
+              this.handleServicesSelectionChange(servicesIds)
             }
-            bottomContent={
-              <Pagination
-                color='primary'
-                total={this.state.pagesCount}
-                initialPage={this.state.page}
-                onChange={(page) => this.handlePageChange(page)}
-              />
-            }
-            className='w-full'
-            checkboxesProps={{
-              classNames: {
-                wrapper: 'after:bg-foreground after:text-background text-background',
-              },
-            }}
-          >
-            <TableHeader>
-              <TableColumn>Nome</TableColumn>
-              <TableColumn>Preço</TableColumn>
-              <TableColumn>Descrição</TableColumn>
-              <TableColumn>Ações</TableColumn>
-            </TableHeader>
-            <TableBody
-              emptyContent='Nenhum serviço cadastrado'
-              items={this.state.services}
-            >
-              {(services) => (
-                <TableRow key={services.id}>
-                  <TableCell>{services.name}</TableCell>
-                  <TableCell>{services.price}</TableCell>
-                  <TableCell>{services.description}</TableCell>
-                  <TableCell>
-                    <div className='relative flex items-center gap-2'>
-                      <Dialog
-                        title='Atualizar serviço'
-                        trigger={
-                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='edit' size={16} />
-                          </Button>
-                        }
-                      >
-                        {(closeDialog) => (
-                          <ServiceForm
-                            service={services}
-                            onCancel={closeDialog}
-                            onSubmit={(serviceDto) =>
-                              this.handleSubmit(serviceDto, closeDialog, 'update')
-                            }
-                          />
-                        )}
-                      </Dialog>
-
-                      <Tooltip content='Deletar usuário'>
-                        <Button size='sm' className='bg-gray-200 text-red-700'>
-                          <Icon name='delete' size={16} />
-                        </Button>
-                      </Tooltip>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          />
         </div>
       </div>
     )

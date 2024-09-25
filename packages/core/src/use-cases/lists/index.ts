@@ -1,1 +1,6 @@
 export { ListCustomersByGenderUseCase } from './list-customers-by-gender-use-case'
+export { ListCustomersByMostConsumptionUseCase } from './list-customers-by-most-consumption'
+export { ListCustomersByLessConsumptionUseCase } from './list-customers-by-less-consumption'
+export { ListCustomersByMostSpendingUseCase } from './list-customers-by-most-spending'
+export { ListMostConsumedProductsAndServicesUseCase } from './list-most-consumed-products-use-case'
+export { ListMostConsumedServicesAndServicesUseCase } from './list-most-consumed-services-use-case'

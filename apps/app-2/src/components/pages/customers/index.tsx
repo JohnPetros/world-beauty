@@ -7,16 +7,16 @@ import {
   RegisterCustomerUseCase,
   UpdateCustomerUseCase,
 } from '@world-beauty/core/use-cases'
-import type { Customer } from '@world-beauty/core/entities'
+import { Customer } from '@world-beauty/core/entities'
 import type { CustomerDto } from '@world-beauty/core/dtos'
+import { PAGINATION } from '@world-beauty/core/constants'
 
 import { customersRepository } from '@/database'
 import { PageTitle } from '@/components/commons/title'
-import { PAGINATION } from '@world-beauty/core/constants'
 import { Icon } from '@/components/commons/icon'
+import { CustomersTable } from '@/components/commons/customers-table'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomerForm } from '../../commons/customers-table/customer-form'
-import { CustomersTable } from '@/components/commons/customers-table'
 
 type CustomersPageState = {
   customers: Customer[]
@@ -48,7 +48,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
   async fetchCustomers(page: number) {
     const response = await this.listCustomersUseCase.execute(page)
     this.setState({
-      customers: response.items,
+      customers: response.items.map(Customer.create),
       pagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
       page,
     })

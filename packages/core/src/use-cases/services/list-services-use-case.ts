@@ -6,7 +6,7 @@ export class ListServicesUseCase {
 
   async execute(page: number) {
     const [products, productsCount] = await Promise.all([
-      this.servicesRepository.findAllPaginated(page),
+      this.servicesRepository.findMany(page),
       this.servicesRepository.count(),
     ])
 

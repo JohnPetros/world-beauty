@@ -1,12 +1,17 @@
 import type { ProductDto } from '@world-beauty/core/dtos'
 import { Product } from '@world-beauty/core/entities'
 import { PAGINATION } from '@world-beauty/core/constants'
-import type { IProductsRepository } from '@world-beauty/core/interfaces'
+import type {
+  ICustomersRepository,
+  IProductsRepository,
+} from '@world-beauty/core/interfaces'
 
 import { KEYS } from '../keys'
 import { LocalStorage } from '../local-storage'
 
-export const LocalStorageProductsRepository = (): IProductsRepository => {
+export const LocalStorageProductsRepository = (
+  costumersRepository: ICustomersRepository,
+): IProductsRepository => {
   const localStorage = LocalStorage()
 
   return {
@@ -16,7 +21,7 @@ export const LocalStorageProductsRepository = (): IProductsRepository => {
       return productsDto.map(Product.create)
     },
 
-    async findAllPaginated(page: number) {
+    async findMany(page: number) {
       const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
       if (!productsDto) return []
 
@@ -24,6 +29,36 @@ export const LocalStorageProductsRepository = (): IProductsRepository => {
       const end = start + PAGINATION.itemsPerPage
 
       return productsDto.map(Product.create).slice(start, end)
+    },
+
+    async findManyMostConsumedProducts(page: number) {
+      const consumedProductsMap: {
+        [key: string]: number
+      } = {}
+
+      const products = await this.findAll()
+      const customers = await costumersRepository.findAll()
+
+      for (const customer of customers) {
+        for (const product of customer.consumedProducts) {
+          if (!(product.id in consumedProductsMap)) {
+            consumedProductsMap[product.id] = consumedProductsMap[product.id] + 1
+          }
+        }
+      }
+
+      products.sort(
+        (firstProduct, secondProduct) =>
+          consumedProductsMap[firstProduct.id] - consumedProductsMap[secondProduct.id],
+      )
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        products: products.slice(start, end),
+        count: products.length,
+      }
     },
 
     async count() {

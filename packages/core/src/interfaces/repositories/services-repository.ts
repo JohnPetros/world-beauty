@@ -2,7 +2,10 @@ import type { Service } from '../../domain/entities'
 
 export interface IServicesRepository {
   findAll(): Promise<Service[]>
-  findAllPaginated(page: number): Promise<Service[]>
+  findMany(page: number): Promise<Service[]>
+  findManyMostConsumedServices(
+    page: number,
+  ): Promise<{ services: Service[]; count: number }>
   removeAll(): Promise<void>
   removeMany(servicesIds: string[]): Promise<void>
   count(): Promise<number>

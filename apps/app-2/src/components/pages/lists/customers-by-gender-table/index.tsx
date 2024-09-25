@@ -49,20 +49,20 @@ export class CustomersByGenderTable extends Component<any, CustomersPageState> {
       femaleCustomesPage,
     )
 
-    console.log(items)
-
     this.setState({
       femaleCustomers: items.map(Customer.create),
       femaleCustomersPagesCount: Math.ceil(itemsCount / PAGINATION.itemsPerPage),
     })
   }
 
-  handleMaleCustomersPageChange(page: number) {
+  async handleMaleCustomersPageChange(page: number) {
     this.setState({ page })
+    await this.fetchMaleCustomers(page)
   }
 
-  handlefemaleCustomersPageChange(page: number) {
+  async handlefemaleCustomersPageChange(page: number) {
     this.setState({ page })
+    await this.fetchFemaleCustomers(page)
   }
 
   async componentDidMount() {

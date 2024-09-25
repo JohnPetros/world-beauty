@@ -2,7 +2,10 @@ import type { Product } from '../../domain/entities'
 
 export interface IProductsRepository {
   findAll(): Promise<Product[]>
-  findAllPaginated(page: number): Promise<Product[]>
+  findMany(page: number): Promise<Product[]>
+  findManyMostConsumedProducts(
+    page: number,
+  ): Promise<{ products: Product[]; count: number }>
   removeAll(): Promise<void>
   removeMany(productsIds: string[]): Promise<void>
   count(): Promise<number>
