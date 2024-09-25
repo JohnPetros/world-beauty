@@ -16,17 +16,19 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       return customersDto.map(Customer.create)
     },
 
-    async findAllPaginated(page: number) {
-      const customersDto = localStorage.get<CustomerDto[]>(KEYS.customers)
-      if (!customersDto) return []
+    async findMany(page: number) {
+      const customers = await this.findAll()
 
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
 
-      return customersDto.map(Customer.create).slice(start, end)
+      return {
+        customers: customers.slice(start, end),
+        count: customers.length,
+      }
     },
 
-    async findManyMalePaginated(page: number) {
+    async findManyMale(page: number) {
       const customers = await this.findAll()
       const maleCustomers = customers.filter((customer) => customer.isMale)
 
@@ -39,13 +41,12 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       }
     },
 
-    async findManyFemalePaginated(page: number) {
+    async findManyFemale(page: number) {
       const customers = await this.findAll()
       const femaleCustomers = customers.filter((customer) => customer.isFemale)
 
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
-      console.log({ page })
 
       return {
         customers: femaleCustomers.slice(start, end),
@@ -53,9 +54,37 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
       }
     },
 
-    async count() {
-      const constumers = await this.findAll()
-      return constumers.length
+    async findTop10CustomersByMostConsumption() {
+      const customers = await this.findAll()
+      customers.sort((fisrtCustomer, secondCustomer) => {
+        return (
+          secondCustomer.consumedProductsOrServicesCount -
+          fisrtCustomer.consumedProductsOrServicesCount
+        )
+      })
+
+      return customers.slice(0, 10)
+    },
+
+    async findTop10CustomersByLessConsumption() {
+      const customers = await this.findAll()
+      customers.sort((fisrtCustomer, secondCustomer) => {
+        return (
+          fisrtCustomer.consumedProductsOrServicesCount -
+          secondCustomer.consumedProductsOrServicesCount
+        )
+      })
+
+      return customers.slice(0, 10)
+    },
+
+    async findTop5CustomersByMostSpending() {
+      const customers = await this.findAll()
+      customers.sort((fisrtCustomer, secondCustomer) => {
+        return secondCustomer.spendingAsNumber - fisrtCustomer.spendingAsNumber
+      })
+
+      return customers.slice(0, 5)
     },
 
     async add(customer: Customer) {

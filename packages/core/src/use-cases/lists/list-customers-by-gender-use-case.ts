@@ -12,9 +12,9 @@ export class ListCustomersByGenderUseCase {
     }
 
     if (gender === 'male') {
-      customersPagination = await this.customersRepository.findManyMalePaginated(page)
+      customersPagination = await this.customersRepository.findManyMale(page)
     } else {
-      customersPagination = await this.customersRepository.findManyFemalePaginated(page)
+      customersPagination = await this.customersRepository.findManyFemale(page)
     }
 
     return new PaginationResponse({
