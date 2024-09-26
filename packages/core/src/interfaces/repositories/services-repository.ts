@@ -6,11 +6,9 @@ export interface IServicesRepository {
   findManyMostConsumedServices(
     page: number,
   ): Promise<{ services: Service[]; count: number }>
-  findManyMostConsumedServicesByMaleCustomers(
+  findManyMostConsumedServicesByCustomersGender(
     page: number,
-  ): Promise<{ services: Service[]; count: number }>
-  findManyMostConsumedServicesByFemaleCustomers(
-    page: number,
+    gender: 'male' | 'female',
   ): Promise<{ services: Service[]; count: number }>
   removeAll(): Promise<void>
   removeMany(servicesIds: string[]): Promise<void>

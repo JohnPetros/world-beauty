@@ -32,6 +32,8 @@ export class MostConsumedServicesTable extends Component<any, ServicesPageState>
   async fetchServices(page: number) {
     const { items, itemsCount } = await this.listMostConsumedServices.execute(page)
 
+    console.log('items', items)
+
     this.setState({
       services: items.map(Service.create),
       page,

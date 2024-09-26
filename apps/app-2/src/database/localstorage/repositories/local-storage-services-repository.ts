@@ -20,7 +20,17 @@ export const LocalStorageServicesRepository = (
     async findAll() {
       const servicesDto = localStorage.get<ServiceDto[]>(KEYS.services)
       if (!servicesDto) return []
-      return servicesDto.map(Service.create)
+
+      const orders = await ordersRepository.findAll()
+      const services = servicesDto.map((dto) => {
+        const service = Service.create(dto)
+        service.ordersCount = orders.reduce((count, order) => {
+          return count + (order.itemId === service.id ? 1 : 0)
+        }, 0)
+        return service
+      })
+
+      return services
     },
 
     async findMany(page: number) {
@@ -30,7 +40,7 @@ export const LocalStorageServicesRepository = (
       const orders = await ordersRepository.findAll()
       const services = servicesDto.map((dto) => {
         const service = Service.create(dto)
-        service.customersCount = orders.reduce((count, order) => {
+        service.ordersCount = orders.reduce((count, order) => {
           return count + (order.itemId === service.id ? 1 : 0)
         }, 0)
         return service
@@ -43,23 +53,11 @@ export const LocalStorageServicesRepository = (
     },
 
     async findManyMostConsumedServices(page: number) {
-      const consumedServicesMap: {
-        [key: string]: number
-      } = {}
-
       const services = await this.findAll()
-      const servicesIds = services.map((Service) => Service.id)
-      const orders = await ordersRepository.findAll()
-
-      for (const order of orders) {
-        if (servicesIds.includes(order.itemId)) {
-          consumedServicesMap[order.itemId] = consumedServicesMap[order.itemId] + 1
-        }
-      }
 
       services.sort(
         (firstService, secondService) =>
-          consumedServicesMap[firstService.id] - consumedServicesMap[secondService.id],
+          secondService.ordersCount - firstService.ordersCount,
       )
 
       const start = (page - 1) * PAGINATION.itemsPerPage
@@ -71,63 +69,29 @@ export const LocalStorageServicesRepository = (
       }
     },
 
-    async findManyMostConsumedServicesByMaleCustomers(page: number) {
-      const consumedServicesMap: {
-        [key: string]: number
-      } = {}
+    async findManyMostConsumedServicesByCustomersGender(page: number, gender: 'male' | 'female') {
+      const servicesDto = localStorage.get<ServiceDto[]>(KEYS.services)
+      if (!servicesDto) return { services: [], count: 0 }
 
-      const services = await this.findAll()
-      const servicesIds = services.map((services) => services.id)
-      const customers = await customersRepository.findAllMale()
+      const customers = gender === 'male' ? await customersRepository.findAllMale() : await customersRepository.findAllFemale()
       const customersIds = customers.map((customer) => customer.id)
       const orders = await ordersRepository.findAll()
 
-      for (const order of orders) {
-        if (
-          servicesIds.includes(order.itemId) &&
-          customersIds.includes(order.customerId)
-        ) {
-          consumedServicesMap[order.itemId] = consumedServicesMap[order.itemId] + 1
-        }
-      }
+      const services = servicesDto.map((dto) => {
+        const service = Service.create(dto)
+        service.ordersCount = orders.reduce((count, order) => {
+          if (customersIds.includes(order.customerId) && order.itemId === service.id) {
+            return count + 1
+          }
+            return count + 0
+        }, 0)
+        return service
+      })
+
 
       services.sort(
         (firstService, secondService) =>
-          consumedServicesMap[firstService.id] - consumedServicesMap[secondService.id],
-      )
-
-      const start = (page - 1) * PAGINATION.itemsPerPage
-      const end = start + PAGINATION.itemsPerPage
-
-      return {
-        services: services.slice(start, end),
-        count: services.length,
-      }
-    },
-
-    async findManyMostConsumedServicesByFemaleCustomers(page: number) {
-      const consumedServicesMap: {
-        [key: string]: number
-      } = {}
-
-      const services = await this.findAll()
-      const ServicesIds = services.map((service) => service.id)
-      const customers = await customersRepository.findAllFemale()
-      const customersIds = customers.map((customer) => customer.id)
-      const orders = await ordersRepository.findAll()
-
-      for (const order of orders) {
-        if (
-          ServicesIds.includes(order.itemId) &&
-          customersIds.includes(order.customerId)
-        ) {
-          consumedServicesMap[order.itemId] = consumedServicesMap[order.itemId] + 1
-        }
-      }
-
-      services.sort(
-        (firstService, secondService) =>
-          consumedServicesMap[firstService.id] - consumedServicesMap[secondService.id],
+          secondService.ordersCount - firstService.ordersCount,
       )
 
       const start = (page - 1) * PAGINATION.itemsPerPage

@@ -17,6 +17,7 @@ export class Service extends Item {
       name: this.name,
       price: this.props.price,
       category: 'service',
+      ordersCount: this.ordersCount,
     }
   }
 }

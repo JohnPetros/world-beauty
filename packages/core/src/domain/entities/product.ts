@@ -17,6 +17,7 @@ export class Product extends Item {
       name: this.name,
       price: this.props.price,
       category: 'product',
+      ordersCount: this.ordersCount,
     }
   }
 }

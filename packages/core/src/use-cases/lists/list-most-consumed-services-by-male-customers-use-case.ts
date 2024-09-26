@@ -6,7 +6,7 @@ export class ListMostConsumedServicesByMaleCustomersUseCase {
 
   async execute(page: number) {
     const { services, count } =
-      await this.servicesRepository.findManyMostConsumedServicesByMaleCustomers(page)
+    await this.servicesRepository.findManyMostConsumedServicesByCustomersGender(page, 'male')
 
     return new PaginationResponse({
       items: services.map((service) => service.dto),

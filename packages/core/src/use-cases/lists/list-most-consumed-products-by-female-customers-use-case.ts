@@ -6,7 +6,7 @@ export class ListMostConsumedProductsByFemaleCustomersUseCase {
 
   async execute(page: number) {
     const { products, count } =
-      await this.productsRepository.findManyMostConsumedProductsByFemaleCustomers(page)
+      await this.productsRepository.findManyMostConsumedProductsByCustomersGender(page, 'female')
 
     return new PaginationResponse({
       items: products.map((product) => product.dto),

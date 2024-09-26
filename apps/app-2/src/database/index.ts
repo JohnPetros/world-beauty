@@ -17,4 +17,4 @@ export const servicesRepository = LocalStorageServicesRepository(
   customersRepository,
 )
 
-// Seed()
+Seed()

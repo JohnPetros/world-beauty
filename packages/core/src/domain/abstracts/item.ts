@@ -7,7 +7,7 @@ export type ItemProps = {
   price: number
   description: string
   category: ItemCategory
-  customersCount: number
+  ordersCount: number
 }
 
 export abstract class Item extends Entity<ItemProps> {
@@ -18,18 +18,18 @@ export abstract class Item extends Entity<ItemProps> {
         category: dto.category,
         description: dto.description,
         price: dto.price,
-        customersCount: dto.customersCount ?? 0,
+        ordersCount: dto.ordersCount ?? 0,
       },
       id,
     )
   }
 
-  set customersCount(customersCount: number) {
-    this.props.customersCount = customersCount
+  set ordersCount(ordersCount: number) {
+    this.props.ordersCount = ordersCount
   }
 
-  get customersCount() {
-    return this.props.customersCount
+  get ordersCount() {
+    return this.props.ordersCount
   }
 
   get name() {

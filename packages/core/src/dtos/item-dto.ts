@@ -5,6 +5,6 @@ export type ItemDto = {
   name: string
   description: string
   price: number
-  customersCount?: number
+  ordersCount?: number
   category: ItemCategory
 }

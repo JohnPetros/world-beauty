@@ -100,7 +100,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
                 })()}
               </TableCell>
               <TableCell>{service.description}</TableCell>
-              <TableCell>{service.customersCount}</TableCell>
+              <TableCell>{service.ordersCount}</TableCell>
               <TableCell>
                 {this.props.isInteractable && (
                   <div className='relative flex items-center gap-2'>

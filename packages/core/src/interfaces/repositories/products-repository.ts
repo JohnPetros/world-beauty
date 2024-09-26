@@ -6,11 +6,9 @@ export interface IProductsRepository {
   findManyMostConsumedProducts(
     page: number,
   ): Promise<{ products: Product[]; count: number }>
-  findManyMostConsumedProductsByMaleCustomers(
+  findManyMostConsumedProductsByCustomersGender(
     page: number,
-  ): Promise<{ products: Product[]; count: number }>
-  findManyMostConsumedProductsByFemaleCustomers(
-    page: number,
+    gender: 'male' | 'female',
   ): Promise<{ products: Product[]; count: number }>
   removeAll(): Promise<void>
   removeMany(productsIds: string[]): Promise<void>
