@@ -38,6 +38,7 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
       name,
       price,
       description,
+      category: 'product',
     }
 
     if (this.props.product) {
@@ -64,7 +65,7 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
           <Input
             label='Preço'
             name='price'
-            defaultValue={this.props.product?.priceAsNumber.toString()}
+            defaultValue={this.props.product?.price.toString()}
             variant='bordered'
             required
           />

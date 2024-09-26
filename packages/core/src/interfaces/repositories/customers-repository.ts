@@ -2,6 +2,8 @@ import type { Customer } from '../../domain/entities/customer'
 
 export interface ICustomersRepository {
   findAll(): Promise<Customer[]>
+  findAllMale(): Promise<Customer[]>
+  findAllFemale(): Promise<Customer[]>
   findManyMale(page: number): Promise<{ customers: Customer[]; count: number }>
   findManyFemale(page: number): Promise<{ customers: Customer[]; count: number }>
   findMany(page: number): Promise<{ customers: Customer[]; count: number }>

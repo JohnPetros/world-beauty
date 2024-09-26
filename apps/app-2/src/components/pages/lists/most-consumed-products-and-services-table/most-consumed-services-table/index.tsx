@@ -1,6 +1,6 @@
 import { Component } from 'react'
 
-import { ListMostConsumedServicesAndServicesUseCase } from '@world-beauty/core/use-cases'
+import { ListMostConsumedServicesUseCase } from '@world-beauty/core/use-cases'
 import { Service } from '@world-beauty/core/entities'
 import { PAGINATION } from '@world-beauty/core/constants'
 
@@ -15,8 +15,9 @@ type ServicesPageState = {
 }
 
 export class MostConsumedServicesTable extends Component<any, ServicesPageState> {
-  private readonly listMostConsumedServices =
-    new ListMostConsumedServicesAndServicesUseCase(servicesRepository)
+  private readonly listMostConsumedServices = new ListMostConsumedServicesUseCase(
+    servicesRepository,
+  )
 
   constructor(props: any) {
     super(props)

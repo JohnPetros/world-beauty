@@ -1,22 +1,48 @@
 import type { CustomerDto } from '@world-beauty/core/dtos'
 import { Customer } from '@world-beauty/core/entities'
 import { PAGINATION } from '@world-beauty/core/constants'
-import type { ICustomersRepository } from '@world-beauty/core/interfaces'
+import type {
+  ICustomersRepository,
+  IOrdersRepository,
+} from '@world-beauty/core/interfaces'
 
 import { KEYS } from '../keys'
 import { LocalStorage } from '../local-storage'
 
-export const LocalStorageCustomersRepository = (): ICustomersRepository => {
+export const LocalStorageCustomersRepository = (
+  ordersRepository: IOrdersRepository,
+): ICustomersRepository => {
   const localStorage = LocalStorage()
 
   return {
     async findAll() {
       const customersDto = localStorage.get<CustomerDto[]>(KEYS.customers)
       if (!customersDto) return []
-      return customersDto.map(Customer.create)
+      const customers = customersDto.map(Customer.create)
+
+      for (let index = 0; index < customers.length; index++) {
+        const customer = customers[index]
+        const orders = await ordersRepository.findAllByCustomerId(customer.id)
+        customer.consumption = orders.length
+        customer.spending = orders.reduce((amount, order) => amount + order.amount, 0)
+        customers[index] = customer
+      }
+
+      return customers
+    },
+
+    async findAllMale() {
+      const customers = await this.findAll()
+      return customers.filter((customer) => customer.isMale)
+    },
+
+    async findAllFemale() {
+      const customers = await this.findAll()
+      return customers.filter((customer) => customer.isFemale)
     },
 
     async findMany(page: number) {
+      console.log(page)
       const customers = await this.findAll()
 
       const start = (page - 1) * PAGINATION.itemsPerPage
@@ -57,10 +83,7 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
     async findTop10CustomersByMostConsumption() {
       const customers = await this.findAll()
       customers.sort((fisrtCustomer, secondCustomer) => {
-        return (
-          secondCustomer.consumedProductsOrServicesCount -
-          fisrtCustomer.consumedProductsOrServicesCount
-        )
+        return secondCustomer.consumption - fisrtCustomer.consumption
       })
 
       return customers.slice(0, 10)
@@ -69,10 +92,7 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
     async findTop10CustomersByLessConsumption() {
       const customers = await this.findAll()
       customers.sort((fisrtCustomer, secondCustomer) => {
-        return (
-          fisrtCustomer.consumedProductsOrServicesCount -
-          secondCustomer.consumedProductsOrServicesCount
-        )
+        return fisrtCustomer.consumption - secondCustomer.consumption
       })
 
       return customers.slice(0, 10)
@@ -81,7 +101,7 @@ export const LocalStorageCustomersRepository = (): ICustomersRepository => {
     async findTop5CustomersByMostSpending() {
       const customers = await this.findAll()
       customers.sort((fisrtCustomer, secondCustomer) => {
-        return secondCustomer.spendingAsNumber - fisrtCustomer.spendingAsNumber
+        return secondCustomer.spending - fisrtCustomer.spending
       })
 
       return customers.slice(0, 5)

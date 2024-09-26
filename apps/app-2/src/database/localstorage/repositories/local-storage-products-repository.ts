@@ -2,15 +2,17 @@ import type { ProductDto } from '@world-beauty/core/dtos'
 import { Product } from '@world-beauty/core/entities'
 import { PAGINATION } from '@world-beauty/core/constants'
 import type {
-  ICustomersRepository,
   IProductsRepository,
+  IOrdersRepository,
+  ICustomersRepository,
 } from '@world-beauty/core/interfaces'
 
 import { KEYS } from '../keys'
 import { LocalStorage } from '../local-storage'
 
 export const LocalStorageProductsRepository = (
-  costumersRepository: ICustomersRepository,
+  ordersRepository: IOrdersRepository,
+  customersRepository: ICustomersRepository,
 ): IProductsRepository => {
   const localStorage = LocalStorage()
 
@@ -25,10 +27,19 @@ export const LocalStorageProductsRepository = (
       const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
       if (!productsDto) return []
 
+      const orders = await ordersRepository.findAll()
+      const products = productsDto.map((dto) => {
+        const product = Product.create(dto)
+        product.customersCount = orders.reduce((count, order) => {
+          return count + (order.itemId === product.id ? 1 : 0)
+        }, 0)
+        return product
+      })
+
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
 
-      return productsDto.map(Product.create).slice(start, end)
+      return products.slice(start, end)
     },
 
     async findManyMostConsumedProducts(page: number) {
@@ -37,13 +48,12 @@ export const LocalStorageProductsRepository = (
       } = {}
 
       const products = await this.findAll()
-      const customers = await costumersRepository.findAll()
+      const productsIds = products.map((product) => product.id)
+      const orders = await ordersRepository.findAll()
 
-      for (const customer of customers) {
-        for (const product of customer.consumedProducts) {
-          if (!(product.id in consumedProductsMap)) {
-            consumedProductsMap[product.id] = consumedProductsMap[product.id] + 1
-          }
+      for (const order of orders) {
+        if (productsIds.includes(order.itemId)) {
+          consumedProductsMap[order.itemId] = consumedProductsMap[order.itemId] + 1
         }
       }
 
@@ -55,7 +65,73 @@ export const LocalStorageProductsRepository = (
       const start = (page - 1) * PAGINATION.itemsPerPage
       const end = start + PAGINATION.itemsPerPage
 
-      console.log('products', products.length)
+      return {
+        products: products.slice(start, end),
+        count: products.length,
+      }
+    },
+
+    async findManyMostConsumedProductsByMaleCustomers(page: number) {
+      const consumedProductsMap: {
+        [key: string]: number
+      } = {}
+
+      const products = await this.findAll()
+      const productsIds = products.map((product) => product.id)
+      const customers = await customersRepository.findAllMale()
+      const customersIds = customers.map((customer) => customer.id)
+      const orders = await ordersRepository.findAll()
+
+      for (const order of orders) {
+        if (
+          productsIds.includes(order.itemId) &&
+          customersIds.includes(order.customerId)
+        ) {
+          consumedProductsMap[order.itemId] = consumedProductsMap[order.itemId] + 1
+        }
+      }
+
+      products.sort(
+        (firstProduct, secondProduct) =>
+          consumedProductsMap[firstProduct.id] - consumedProductsMap[secondProduct.id],
+      )
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        products: products.slice(start, end),
+        count: products.length,
+      }
+    },
+
+    async findManyMostConsumedProductsByFemaleCustomers(page: number) {
+      const consumedProductsMap: {
+        [key: string]: number
+      } = {}
+
+      const products = await this.findAll()
+      const productsIds = products.map((product) => product.id)
+      const customers = await customersRepository.findAllFemale()
+      const customersIds = customers.map((customer) => customer.id)
+      const orders = await ordersRepository.findAll()
+
+      for (const order of orders) {
+        if (
+          productsIds.includes(order.itemId) &&
+          customersIds.includes(order.customerId)
+        ) {
+          consumedProductsMap[order.itemId] = consumedProductsMap[order.itemId] + 1
+        }
+      }
+
+      products.sort(
+        (firstProduct, secondProduct) =>
+          consumedProductsMap[firstProduct.id] - consumedProductsMap[secondProduct.id],
+      )
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
 
       return {
         products: products.slice(start, end),

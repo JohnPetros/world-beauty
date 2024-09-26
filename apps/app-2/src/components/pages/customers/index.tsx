@@ -129,7 +129,9 @@ export class CustomersPage extends Component<any, CustomersPageState> {
           page={this.state.page}
           pagesCount={this.state.pagesCount}
           selectedCustomersIds={this.state.selectedCustomersIds}
-          onUpdateCustomer={this.handleUpdateCustomer}
+          onUpdateCustomer={(customerDto: CustomerDto) =>
+            this.handleUpdateCustomer(customerDto)
+          }
           onPageChange={(page) => this.handlePageChange(page)}
           onCustomersSelectionChange={(customersIds) =>
             this.handleCustomersSelectionChange(customersIds)

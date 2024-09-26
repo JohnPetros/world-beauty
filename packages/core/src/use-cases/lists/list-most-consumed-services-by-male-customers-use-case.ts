@@ -1,12 +1,12 @@
 import type { IServicesRepository } from '../../interfaces'
 import { PaginationResponse } from '../../responses/pagination'
 
-export class ListMostConsumedServicesUseCase {
+export class ListMostConsumedServicesByMaleCustomersUseCase {
   constructor(private readonly servicesRepository: IServicesRepository) {}
 
-  async execute(servicesPage: number) {
+  async execute(page: number) {
     const { services, count } =
-      await this.servicesRepository.findManyMostConsumedServices(servicesPage)
+      await this.servicesRepository.findManyMostConsumedServicesByMaleCustomers(page)
 
     return new PaginationResponse({
       items: services.map((service) => service.dto),

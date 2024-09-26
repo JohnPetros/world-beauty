@@ -1,6 +1,3 @@
-export type ProductDto = {
-  id?: string
-  name: string
-  price: number
-  description: string
-}
+import type { ItemDto } from './item-dto'
+
+export type ProductDto = ItemDto

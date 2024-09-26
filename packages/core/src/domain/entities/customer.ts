@@ -1,9 +1,7 @@
 import { Entity } from '../abstracts'
 import { Cpf } from '../structs/cpf'
 import { Phone } from '../structs/phone'
-import { Product } from './product'
 import { Rg } from '../structs/rg'
-import { Service } from './service'
 import type { CustomerDto } from '../../dtos'
 
 export type CustomerProps = {
@@ -11,10 +9,10 @@ export type CustomerProps = {
   socialName: string
   cpf: Cpf
   gender: string
-  rgs?: Rg[]
-  phones?: Phone[]
-  consumedProducts?: Product[]
-  consumedServices?: Service[]
+  rgs: Rg[]
+  phones: Phone[]
+  consumption: number
+  spending: number
 }
 
 export class Customer extends Entity<CustomerProps> {
@@ -26,13 +24,9 @@ export class Customer extends Entity<CustomerProps> {
         socialName: dto.socialName,
         cpf: Cpf.create(dto.cpf),
         phones: dto.phones?.map(Phone.create),
-        consumedProducts: dto.consumedProducts
-          ? dto.consumedProducts.map(Product.create)
-          : [],
-        consumedServices: dto.consumedServices
-          ? dto.consumedServices.map(Service.create)
-          : [],
         rgs: dto.rgs.map(Rg.create),
+        consumption: dto.consumption ?? 0,
+        spending: dto.spending ?? 0,
       },
       dto.id,
     )
@@ -42,44 +36,20 @@ export class Customer extends Entity<CustomerProps> {
     return Customer.create({ ...this.dto, ...dto })
   }
 
-  get consumedProductsOrServicesCount(): number {
-    return this.consumedProductsCount + this.consumedServicesCount
+  set spending(spending: number) {
+    this.props.spending = spending
   }
 
-  get spending(): string {
-    const formatter = new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
-    return formatter.format(this.spendingInProducts + this.spendingInServices)
+  set consumption(consumption: number) {
+    this.props.consumption = consumption
   }
 
-  get spendingAsNumber(): number {
-    return this.spendingInProducts + this.spendingInServices
+  get consumption(): number {
+    return this.props.consumption
   }
 
-  get consumedProductsCount(): number {
-    return this.consumedProducts.reduce((count) => count + 1, 0)
-  }
-
-  get consumedServicesCount(): number {
-    return this.consumedServices.reduce((count) => count + 1, 0)
-  }
-
-  get spendingInProducts(): number {
-    return this.consumedProducts.reduce(
-      (spending, product) => spending + product.priceAsNumber,
-      0,
-    )
-  }
-
-  get spendingInServices(): number {
-    return this.consumedServices.reduce(
-      (spending, service) => spending + service.priceAsNumber,
-      0,
-    )
+  get spending(): number {
+    return this.props.spending
   }
 
   get isMale(): boolean {
@@ -122,14 +92,6 @@ export class Customer extends Entity<CustomerProps> {
     return this.rgs.map((rg) => rg.value).join('; ')
   }
 
-  get consumedProducts(): Product[] {
-    return this.props.consumedProducts ?? []
-  }
-
-  get consumedServices(): Service[] {
-    return this.props.consumedServices ?? []
-  }
-
   get dto(): CustomerDto {
     return {
       id: this.id,
@@ -139,8 +101,8 @@ export class Customer extends Entity<CustomerProps> {
       cpf: this.cpf.dto,
       rgs: this.rgs.map((rg) => rg.dto),
       phones: this.phones,
-      consumedProducts: this.consumedProducts.map((product) => product.dto),
-      consumedServices: this.consumedProducts.map((product) => product.dto),
+      consumption: this.consumption,
+      spending: this.spending,
     }
   }
 }

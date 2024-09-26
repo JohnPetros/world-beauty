@@ -8,7 +8,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
   type Selection,
 } from '@nextui-org/react'
 
@@ -90,7 +89,7 @@ export class CustomersTable extends Component<CustomersTableProps> {
             <TableColumn>RG's</TableColumn>
             <TableColumn>Total consumido</TableColumn>
             <TableColumn>Total gasto</TableColumn>
-            <TableColumn>{this.props.isInteractable ? 'Ações' : null} </TableColumn>
+            <TableColumn> </TableColumn>
           </TableHeader>
           <TableBody
             emptyContent='Nenhum cliente cadastrado'
@@ -106,8 +105,18 @@ export class CustomersTable extends Component<CustomersTableProps> {
                 <TableCell>{customer.socialName}</TableCell>
                 <TableCell>{customer.phonesList}</TableCell>
                 <TableCell>{customer.rgsList}</TableCell>
-                <TableCell>{customer.consumedProductsOrServicesCount}</TableCell>
-                <TableCell>{customer.spending}</TableCell>
+                <TableCell>{customer.consumption}</TableCell>
+                <TableCell>
+                  {(() => {
+                    const formatter = new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                    return formatter.format(customer.spending)
+                  })()}
+                </TableCell>
                 <TableCell>
                   {this.props.isInteractable && (
                     <div className='relative flex items-center gap-2'>
@@ -130,12 +139,6 @@ export class CustomersTable extends Component<CustomersTableProps> {
                           />
                         )}
                       </Dialog>
-
-                      <Tooltip content='Deletar usuário'>
-                        <Button size='sm' className='bg-gray-200 text-red-700'>
-                          <Icon name='delete' size={16} />
-                        </Button>
-                      </Tooltip>
                     </div>
                   )}
                 </TableCell>

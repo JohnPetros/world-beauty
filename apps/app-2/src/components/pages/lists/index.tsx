@@ -6,8 +6,8 @@ import { CustomersByGenderTable } from './customers-by-gender-table'
 import { CustomersByMostSpendingTable } from './customers-by-most-spending-table'
 import { CustomersByMostConsumptionTable } from './customers-by-most-consumption-table'
 import { CustomersByLessConsumptionTable } from './customers-by-less-consumption-table'
-import { MostConsumedProductsTable } from './most-consumed-products-and-services-table/most-consumed-products-table'
 import { MostConsumedProductsAndServicesTable } from './most-consumed-products-and-services-table'
+import { MostConsumedProductsAndServicesByGenderTable } from './most-consumed-products-and-services-table-by-gender'
 
 type ListsPageState = {
   selectedList: string
@@ -34,21 +34,21 @@ export class ListsPage extends Component<any, ListsPageState> {
           onChange={({ target }) => this.handleSelectChange(target.value)}
           className='max-w-xs'
         >
+          <SelectItem key='customers-by-gender'>Clientes por gênero</SelectItem>
           <SelectItem key='customers-by-most-consumption'>
             10 clientes que mais consumiram produtos ou serviços
-          </SelectItem>
-          <SelectItem key='customers-by-gender'>Clientes por gênero</SelectItem>
-          <SelectItem key='most-consumed-products-and-services'>
-            Produtos e serviços mais consumidos
-          </SelectItem>
-          <SelectItem key='most-consumed-products-and-services-by-gender'>
-            Produtos e serviços mais consumidos por gênero
           </SelectItem>
           <SelectItem key='customers-by-less-consumption'>
             10 clientes que menos consumiram produtos ou serviços
           </SelectItem>
           <SelectItem key='customers-by-most-spending'>
             5 clientes que mais consumiram em valor
+          </SelectItem>
+          <SelectItem key='most-consumed-products-and-services'>
+            Produtos e serviços mais consumidos
+          </SelectItem>
+          <SelectItem key='most-consumed-products-and-services-by-gender'>
+            Produtos e serviços mais consumidos por gênero
           </SelectItem>
         </Select>
 
@@ -67,6 +67,10 @@ export class ListsPage extends Component<any, ListsPageState> {
           )}
           {this.state.selectedList === 'most-consumed-products-and-services' && (
             <MostConsumedProductsAndServicesTable />
+          )}
+          {this.state.selectedList ===
+            'most-consumed-products-and-services-by-gender' && (
+            <MostConsumedProductsAndServicesByGenderTable />
           )}
         </div>
       </div>

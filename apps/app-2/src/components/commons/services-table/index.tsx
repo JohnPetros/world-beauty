@@ -8,7 +8,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
   type Selection,
 } from '@nextui-org/react'
 
@@ -82,14 +81,26 @@ export class ServicesTable extends Component<ServicesTableProps> {
           <TableColumn>Nome</TableColumn>
           <TableColumn>Preço</TableColumn>
           <TableColumn>Descrição</TableColumn>
-          <TableColumn>{this.props.isInteractable ? 'Ações' : null} </TableColumn>
+          <TableColumn>Qtd. de clientes que consumiram esse produto</TableColumn>
+          <TableColumn> </TableColumn>
         </TableHeader>
         <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.services}>
           {(service) => (
             <TableRow key={service.id}>
               <TableCell>{service.name}</TableCell>
-              <TableCell>{service.price}</TableCell>
+              <TableCell>
+                {(() => {
+                  const formatter = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                  return formatter.format(service.price)
+                })()}
+              </TableCell>
               <TableCell>{service.description}</TableCell>
+              <TableCell>{service.customersCount}</TableCell>
               <TableCell>
                 {this.props.isInteractable && (
                   <div className='relative flex items-center gap-2'>
@@ -112,12 +123,6 @@ export class ServicesTable extends Component<ServicesTableProps> {
                         />
                       )}
                     </Dialog>
-
-                    <Tooltip content='Deletar usuário'>
-                      <Button size='sm' className='bg-gray-200 text-red-700'>
-                        <Icon name='delete' size={16} />
-                      </Button>
-                    </Tooltip>
                   </div>
                 )}
               </TableCell>

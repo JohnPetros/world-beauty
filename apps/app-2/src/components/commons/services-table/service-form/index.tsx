@@ -38,6 +38,7 @@ export class ServiceForm extends Component<ServiceFormProps, ServiceFormState> {
       name,
       price,
       description,
+      category: 'service',
     }
 
     if (this.props.service) {
@@ -64,7 +65,7 @@ export class ServiceForm extends Component<ServiceFormProps, ServiceFormState> {
           <Input
             label='Preço'
             name='price'
-            defaultValue={this.props.service?.priceAsNumber.toString()}
+            defaultValue={this.props.service?.price.toString()}
             variant='bordered'
             required
           />

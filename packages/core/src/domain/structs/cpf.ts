@@ -1,6 +1,5 @@
 import { Document } from '../abstracts'
 import type { DocumentDto } from '../../dtos'
-import { Datetime } from '../../libs'
 
 export class Cpf extends Document {
   static create(dto: DocumentDto): Cpf {

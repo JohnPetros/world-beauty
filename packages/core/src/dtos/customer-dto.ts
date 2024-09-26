@@ -1,7 +1,5 @@
 import type { DocumentDto } from './document-dto'
 import type { PhoneDto } from './phone-dto'
-import type { ProductDto } from './product-dto'
-import type { ServiceDto } from './service-dto'
 
 export type CustomerDto = {
   id?: string
@@ -11,6 +9,6 @@ export type CustomerDto = {
   cpf: DocumentDto
   rgs: DocumentDto[]
   phones: PhoneDto[]
-  consumedProducts?: ProductDto[]
-  consumedServices?: ServiceDto[]
+  consumption?: number
+  spending?: number
 }

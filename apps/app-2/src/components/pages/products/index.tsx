@@ -134,7 +134,7 @@ export class ProductsPage extends Component<any, ProductsPageState> {
             page={this.state.page}
             pagesCount={this.state.pagesCount}
             selectedProductsIds={this.state.selectedProductsIds}
-            onUpdateProduct={this.handleUpdateProduct}
+            onUpdateProduct={(productDto) => this.handleUpdateProduct(productDto)}
             onPageChange={(page) => this.handlePageChange(page)}
             onProductsSelectionChange={(productsIds) =>
               this.handleProductsSelectionChange(productsIds)

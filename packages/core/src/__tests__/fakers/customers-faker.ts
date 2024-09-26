@@ -1,10 +1,7 @@
 import { fakerPT_BR as faker } from '@faker-js/faker'
-import dayjs from 'dayjs'
 
 import { PhonesFaker } from './phones-faker'
 import { RgsFaker } from './rgs-faker'
-import { ProductsFaker } from './products-faker'
-import { ServicesFaker } from './services-faker'
 import { Customer } from '../../domain/entities'
 import type { CustomerDto } from '../../dtos'
 
@@ -24,8 +21,6 @@ export class CustomersFaker {
       gender: faker.helpers.arrayElement(['male', 'female']),
       phones: PhonesFaker.fakeMany(faker.number.int({ min: 1, max: 2 })),
       rgs: RgsFaker.fakeManyDto(1),
-      consumedProducts: ProductsFaker.fakeManyDto(faker.number.int({ min: 0, max: 10 })),
-      consumedServices: ServicesFaker.fakeManyDto(faker.number.int({ min: 0, max: 5 })),
       ...dto,
     }
   }

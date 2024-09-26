@@ -134,7 +134,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
             page={this.state.page}
             pagesCount={this.state.pagesCount}
             selectedServicesIds={this.state.selectedServicesIds}
-            onUpdateService={this.handleUpdateService}
+            onUpdateService={(serviceDto) => this.handleUpdateService(serviceDto)}
             onPageChange={(page) => this.handlePageChange(page)}
             onServicesSelectionChange={(servicesIds) =>
               this.handleServicesSelectionChange(servicesIds)
