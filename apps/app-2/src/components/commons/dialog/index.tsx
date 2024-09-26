@@ -6,6 +6,7 @@ type DialogProps = {
   title: string
   children: (closeDialog: VoidFunction) => ReactNode
   trigger: ReactNode
+  isLarge?: boolean
 }
 
 type DialogState = {
@@ -44,12 +45,12 @@ export class Dialog extends Component<DialogProps, DialogState> {
           isOpen={this.state.isOpen}
           onClose={() => this.close()}
           onOpenChange={this.close}
-          size='lg'
+          size={this.props.isLarge ? '5xl' : 'lg'}
         >
           <ModalContent className='p-6'>
             <>
               <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
-              <ModalBody className='mt-6 max-h-[36rem] overflow-y-auto overflow-x-hidden'>
+              <ModalBody className='max-h-[36rem] overflow-y-auto overflow-x-hidden'>
                 {this.props.children(() => this.close())}
               </ModalBody>
             </>

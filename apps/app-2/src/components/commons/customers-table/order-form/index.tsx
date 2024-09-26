@@ -3,14 +3,21 @@ import { Component } from 'react'
 import { Button, Tab, Tabs } from '@nextui-org/react'
 
 import type { Product, Service } from '@world-beauty/core/entities'
-import { ListProductsUseCase, ListServicesUseCase } from '@world-beauty/core/use-cases'
+import {
+  ListProductsUseCase,
+  ListServicesUseCase,
+  RegisterOrdersUseCase,
+} from '@world-beauty/core/use-cases'
 
-import { productsRepository, servicesRepository } from '@/database'
+import type { OrderDto } from '@world-beauty/core/dtos'
 import { PAGINATION } from '@world-beauty/core/constants'
+
+import { ordersRepository, productsRepository, servicesRepository } from '@/database'
 import { ProductsTable } from '../../products-table'
 import { ServicesTable } from '../../services-table'
 
 type OrderFormProps = {
+  customerId: string
   onCancel: VoidFunction
 }
 
@@ -28,6 +35,7 @@ type OrderFormState = {
 export class OrderForm extends Component<OrderFormProps, OrderFormState> {
   private readonly listProductsUseCase = new ListProductsUseCase(productsRepository)
   private readonly listServicesUseCase = new ListServicesUseCase(servicesRepository)
+  private readonly registerOrdersUseCase = new RegisterOrdersUseCase(ordersRepository)
 
   constructor(props: OrderFormProps) {
     super(props)
@@ -73,17 +81,42 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
     })
   }
 
+  async handleOrderButtonClick() {
+    const selectedProducts = this.state.products.filter((product) =>
+      this.state.selectedProductsIds.includes(product.id),
+    )
+    const selectedServices = this.state.services.filter((service) =>
+      this.state.selectedServicesIds.includes(service.id),
+    )
+    const ordersDto: OrderDto[] = []
+
+    for (const product of selectedProducts) {
+      ordersDto.push({
+        amount: product.price,
+        customerId: this.props.customerId,
+        itemId: product.id,
+      })
+    }
+    for (const service of selectedServices) {
+      ordersDto.push({
+        amount: service.price,
+        customerId: this.props.customerId,
+        itemId: service.id,
+      })
+    }
+
+    await this.registerOrdersUseCase.execute(ordersDto)
+  }
+
   async componentDidMount() {
     await Promise.all([this.fetchProducts(1), this.fetchServices(1)])
   }
 
   render() {
     return (
-      <div>
-        <h2>Fazer pedido para cliente</h2>
-        <Tabs aria-label='Tabelas'>
-          <Tab>
-            <h3 className='text-xl text-zinc-800 font-semibold'>Produtos</h3>
+      <>
+        <Tabs aria-label='Tabelas' className='mt-3 w-full'>
+          <Tab title='Produtos' className='w-full'>
             <ProductsTable
               hasActions={false}
               hasSelection={true}
@@ -96,8 +129,7 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
               }
             />
           </Tab>
-          <Tab>
-            <h3 className='text-xl text-zinc-800 font-semibold'>Serviços</h3>
+          <Tab title='Serviços' className='w-full'>
             <ServicesTable
               hasActions={false}
               hasSelection={true}
@@ -117,7 +149,7 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
             Cancelar
           </Button>
         </div>
-      </div>
+      </>
     )
   }
 }

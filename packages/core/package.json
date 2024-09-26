@@ -6,6 +6,7 @@
   "exports": {
     "./entities": "./src/domain/entities/index.ts",
     "./structs": "./src/domain/structs/index.ts",
+    "./abstracts": "./src/domain/abstracts/index.ts",
     "./interfaces": "./src/interfaces/index.ts",
     "./constants": "./src/constants/index.ts",
     "./dtos": "./src/dtos/index.ts",

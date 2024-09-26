@@ -57,7 +57,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode={this.props.hasActions ? 'multiple' : 'none'}
+        selectionMode={this.props.hasSelection ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedServicesIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleServicesSelectionChange(selection)}
@@ -82,7 +82,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
           <TableColumn>Nome</TableColumn>
           <TableColumn>Preço</TableColumn>
           <TableColumn>Descrição</TableColumn>
-          <TableColumn>Qtd. de clientes que consumiram esse produto</TableColumn>
+          <TableColumn>Qtd. de clientes que consumiram esse serviço</TableColumn>
           <TableColumn> </TableColumn>
         </TableHeader>
         <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.services}>

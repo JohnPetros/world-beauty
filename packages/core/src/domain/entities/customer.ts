@@ -3,6 +3,7 @@ import { Cpf } from '../structs/cpf'
 import { Phone } from '../structs/phone'
 import { Rg } from '../structs/rg'
 import type { CustomerDto } from '../../dtos'
+import { Item } from '../abstracts/item'
 
 export type CustomerProps = {
   name: string
@@ -30,6 +31,11 @@ export class Customer extends Entity<CustomerProps> {
       },
       dto.id,
     )
+  }
+
+  orderItem(itemPrice: number) {
+    this.props.spending += itemPrice
+    this.props.consumption += 1
   }
 
   update(dto: CustomerDto): Customer {

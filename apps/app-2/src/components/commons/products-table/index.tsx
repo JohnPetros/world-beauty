@@ -57,7 +57,7 @@ export class ProductsTable extends Component<ProductsTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode={this.props.hasActions ? 'multiple' : 'none'}
+        selectionMode={this.props.hasSelection ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedProductsIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleProductsSelectionChange(selection)}

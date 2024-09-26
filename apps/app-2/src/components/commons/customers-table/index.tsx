@@ -12,6 +12,7 @@ import {
 } from '@nextui-org/react'
 
 import type { Customer } from '@world-beauty/core/entities'
+import type { Item } from '@world-beauty/core/abstracts'
 import type { CustomerDto } from '@world-beauty/core/dtos'
 
 import { Icon } from '@/components/commons/icon'
@@ -28,6 +29,7 @@ type CustomersTableProps = {
   onPageChange?: (page: number) => void
   onUpdateCustomer?: (customerDto: CustomerDto) => void
   onCustomersSelectionChange?: (customersIds: string[]) => void
+  onCustomerOrderItem?: (customersIds: string[]) => void
 }
 
 export class CustomersTable extends Component<CustomersTableProps> {
@@ -142,13 +144,16 @@ export class CustomersTable extends Component<CustomersTableProps> {
                       </Dialog>
                       <Dialog
                         title={`Fazer pedido para o cliente ${customer.name}`}
+                        isLarge
                         trigger={
                           <Button size='sm' className='bg-gray-200 text-zinc-800'>
                             <Icon name='edit' size={16} />
                           </Button>
                         }
                       >
-                        {(closeDialog) => <OrderForm onCancel={closeDialog} />}
+                        {(closeDialog) => (
+                          <OrderForm customerId={customer.id} onCancel={closeDialog} />
+                        )}
                       </Dialog>
                     </div>
                   )}

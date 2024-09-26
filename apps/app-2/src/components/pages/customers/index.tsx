@@ -80,6 +80,18 @@ export class CustomersPage extends Component<any, CustomersPageState> {
     await this.fetchCustomers(1)
   }
 
+  handleCustomerOrderItem(customerId: string, itemPrice: number) {
+    const customerIndex = this.state.customers.findIndex(
+      (customer) => customer.id === customerId,
+    )
+    if (customerIndex === -1) return
+
+    const customer = this.state.customers[customerIndex]
+    customer.orderItem(itemPrice)
+    this.state.customers[customerIndex] = customer
+    this.setState({ customers: this.state.customers })
+  }
+
   async componentDidMount() {
     await this.fetchCustomers(1)
   }
