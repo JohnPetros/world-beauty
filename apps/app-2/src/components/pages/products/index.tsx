@@ -50,7 +50,7 @@ export class ProductsPage extends Component<any, ProductsPageState> {
     })
   }
 
-  async handleProductsSelectionChange(selectedProductsIds: string[]) {
+  handleProductsSelectionChange(selectedProductsIds: string[]) {
     this.setState({
       selectedProductsIds,
     })
@@ -129,7 +129,8 @@ export class ProductsPage extends Component<any, ProductsPageState> {
 
         <div className='w-full'>
           <ProductsTable
-            isInteractable={true}
+            hasActions={true}
+            hasSelection={true}
             products={this.state.products}
             page={this.state.page}
             pagesCount={this.state.pagesCount}

@@ -22,7 +22,8 @@ type ProductsTableProps = {
   products: Product[]
   page: number
   pagesCount: number
-  isInteractable: boolean
+  hasActions: boolean
+  hasSelection: boolean
   selectedProductsIds?: string[]
   onPageChange?: (page: number) => void
   onUpdateProduct?: (productDto: ProductDto) => void
@@ -56,7 +57,7 @@ export class ProductsTable extends Component<ProductsTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode={this.props.isInteractable ? 'multiple' : 'none'}
+        selectionMode={this.props.hasActions ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedProductsIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleProductsSelectionChange(selection)}
@@ -102,7 +103,7 @@ export class ProductsTable extends Component<ProductsTableProps> {
               <TableCell>{product.description}</TableCell>
               <TableCell>{product.ordersCount}</TableCell>
               <TableCell>
-                {this.props.isInteractable && (
+                {this.props.hasActions && (
                   <div className='relative flex items-center gap-2'>
                     <Dialog
                       title='Atualizar produto'

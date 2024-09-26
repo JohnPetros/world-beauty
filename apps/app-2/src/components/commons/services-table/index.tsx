@@ -22,7 +22,8 @@ type ServicesTableProps = {
   services: Service[]
   page: number
   pagesCount: number
-  isInteractable: boolean
+  hasActions: boolean
+  hasSelection: boolean
   selectedServicesIds?: string[]
   onPageChange?: (page: number) => void
   onUpdateService?: (serviceDto: ServiceDto) => void
@@ -56,7 +57,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
       <Table
         key={this.props.pagesCount}
         color='default'
-        selectionMode={this.props.isInteractable ? 'multiple' : 'none'}
+        selectionMode={this.props.hasActions ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedServicesIds}
         aria-label='Tabela de produtos'
         onSelectionChange={(selection) => this.handleServicesSelectionChange(selection)}
@@ -102,7 +103,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
               <TableCell>{service.description}</TableCell>
               <TableCell>{service.ordersCount}</TableCell>
               <TableCell>
-                {this.props.isInteractable && (
+                {this.props.hasActions && (
                   <div className='relative flex items-center gap-2'>
                     <Dialog
                       title='Atualizar produto'

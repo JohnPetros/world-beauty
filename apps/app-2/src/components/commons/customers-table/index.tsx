@@ -17,6 +17,7 @@ import type { CustomerDto } from '@world-beauty/core/dtos'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomerForm } from './customer-form'
+import { OrderForm } from './order-form'
 
 type CustomersTableProps = {
   customers: Customer[]
@@ -121,7 +122,7 @@ export class CustomersTable extends Component<CustomersTableProps> {
                   {this.props.isInteractable && (
                     <div className='relative flex items-center gap-2'>
                       <Dialog
-                        title='Atualizar cliente'
+                        title={`Atualizar cliente ${customer.name}`}
                         trigger={
                           <Button size='sm' className='bg-gray-200 text-zinc-800'>
                             <Icon name='edit' size={16} />
@@ -138,6 +139,16 @@ export class CustomersTable extends Component<CustomersTableProps> {
                             }}
                           />
                         )}
+                      </Dialog>
+                      <Dialog
+                        title={`Fazer pedido para o cliente ${customer.name}`}
+                        trigger={
+                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
+                            <Icon name='edit' size={16} />
+                          </Button>
+                        }
+                      >
+                        {(closeDialog) => <OrderForm onCancel={closeDialog} />}
                       </Dialog>
                     </div>
                   )}
