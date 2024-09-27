@@ -21,6 +21,7 @@
     "dayjs": "1.11.13",
     "framer-motion": "11.5.4",
     "react-hook-form": "7.53.0",
+    "react-toastify": "10.0.5",
     "uuid": "10.0.0",
     "zod": "3.23.8"
   },
