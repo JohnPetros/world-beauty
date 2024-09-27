@@ -42,6 +42,40 @@ export const LocalStorageProductsRepository = (
       return products.slice(start, end)
     },
 
+    async findManyByCustomerId(page: number, customerId: string) {
+      const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
+      if (!productsDto)
+        return {
+          products: [],
+          count: 0,
+        }
+
+      const orders = await ordersRepository.findAllByCustomerId(customerId)
+      const itemsIds = orders.map((order) => order.itemId)
+
+      console.log(orders)
+
+      const customerProducts: Product[] = []
+
+      for (const productDto of productsDto) {
+        const product = Product.create(productDto)
+        if (itemsIds.includes(product.id)) {
+          product.ordersCount = orders.reduce((count, order) => {
+            return count + (order.itemId === product.id ? 1 : 0)
+          }, 0)
+          customerProducts.push(product)
+        }
+      }
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        products: customerProducts.slice(start, end),
+        count: customerProducts.length,
+      }
+    },
+
     async findManyMostConsumedProducts(page: number) {
       const products = await this.findAll()
 
@@ -59,11 +93,17 @@ export const LocalStorageProductsRepository = (
       }
     },
 
-    async findManyMostConsumedProductsByCustomersGender(page: number, gender: 'male' | 'female') {
+    async findManyMostConsumedProductsByCustomersGender(
+      page: number,
+      gender: 'male' | 'female',
+    ) {
       const productsDto = localStorage.get<ProductDto[]>(KEYS.products)
       if (!productsDto) return { products: [], count: 0 }
 
-      const customers = gender === 'male' ? await customersRepository.findAllMale() : await customersRepository.findAllFemale()
+      const customers =
+        gender === 'male'
+          ? await customersRepository.findAllMale()
+          : await customersRepository.findAllFemale()
       const customersIds = customers.map((customer) => customer.id)
       const orders = await ordersRepository.findAll()
 
@@ -73,11 +113,10 @@ export const LocalStorageProductsRepository = (
           if (customersIds.includes(order.customerId) && order.itemId === product.id) {
             return count + 1
           }
-            return count + 0
+          return count + 0
         }, 0)
         return product
       })
-
 
       products.sort(
         (firstProduct, secondProduct) =>

@@ -129,7 +129,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
 
         <div className='w-full'>
           <ServicesTable
-            isInteractable={true}
+            hasActions={true}
             services={this.state.services}
             page={this.state.page}
             pagesCount={this.state.pagesCount}

@@ -2,6 +2,7 @@ import { Component } from 'react'
 import {
   Button,
   Pagination,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -23,7 +24,8 @@ type ServicesTableProps = {
   page: number
   pagesCount: number
   hasActions: boolean
-  hasSelection: boolean
+  isLoading?: boolean
+  hasSelection?: boolean
   selectedServicesIds?: string[]
   onPageChange?: (page: number) => void
   onUpdateService?: (serviceDto: ServiceDto) => void
@@ -85,7 +87,12 @@ export class ServicesTable extends Component<ServicesTableProps> {
           <TableColumn>Qtd. de clientes que consumiram esse serviço</TableColumn>
           <TableColumn> </TableColumn>
         </TableHeader>
-        <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.services}>
+        <TableBody
+          isLoading={this.props.isLoading}
+          loadingContent={<Spinner />}
+          emptyContent='Nenhum produto cadastrado'
+          items={this.props.services}
+        >
           {(service) => (
             <TableRow key={service.id}>
               <TableCell>{service.name}</TableCell>

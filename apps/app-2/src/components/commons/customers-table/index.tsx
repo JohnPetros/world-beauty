@@ -2,6 +2,7 @@ import { Component } from 'react'
 import {
   Button,
   Pagination,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -12,24 +13,26 @@ import {
 } from '@nextui-org/react'
 
 import type { Customer } from '@world-beauty/core/entities'
-import type { Item } from '@world-beauty/core/abstracts'
 import type { CustomerDto } from '@world-beauty/core/dtos'
 
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomerForm } from './customer-form'
 import { OrderForm } from './order-form'
+import type { Item } from '@world-beauty/core/abstracts'
+import { OrdersTable } from './orders-table'
 
 type CustomersTableProps = {
   customers: Customer[]
   page: number
   pagesCount: number
-  isInteractable: boolean
+  hasActions: boolean
   selectedCustomersIds?: string[]
+  isLoading?: boolean
   onPageChange?: (page: number) => void
   onUpdateCustomer?: (customerDto: CustomerDto) => void
   onCustomersSelectionChange?: (customersIds: string[]) => void
-  onCustomerOrderItem?: (customersIds: string[]) => void
+  onCustomerOrderItems?: (items: Item[], customerId: string) => void
 }
 
 export class CustomersTable extends Component<CustomersTableProps> {
@@ -58,11 +61,11 @@ export class CustomersTable extends Component<CustomersTableProps> {
     return (
       <div className='w-full'>
         <Table
+          aria-label='Tabela de clientes'
           key={this.props.pagesCount}
           color='default'
-          selectionMode={this.props.isInteractable ? 'multiple' : 'none'}
+          selectionMode={this.props.hasActions ? 'multiple' : 'none'}
           selectedKeys={this.props.selectedCustomersIds}
-          aria-label='Tabela de clientes'
           onSelectionChange={(selection) =>
             this.handleCustomersSelectionChange(selection)
           }
@@ -95,6 +98,8 @@ export class CustomersTable extends Component<CustomersTableProps> {
             <TableColumn> </TableColumn>
           </TableHeader>
           <TableBody
+            isLoading={this.props.isLoading}
+            loadingContent={<Spinner />}
             emptyContent='Nenhum cliente cadastrado'
             items={this.props.customers}
           >
@@ -121,7 +126,7 @@ export class CustomersTable extends Component<CustomersTableProps> {
                   })()}
                 </TableCell>
                 <TableCell>
-                  {this.props.isInteractable && (
+                  {this.props.hasActions && (
                     <div className='relative flex items-center gap-2'>
                       <Dialog
                         title={`Atualizar cliente ${customer.name}`}
@@ -147,13 +152,32 @@ export class CustomersTable extends Component<CustomersTableProps> {
                         isLarge
                         trigger={
                           <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='edit' size={16} />
+                            <Icon name='order' size={16} />
                           </Button>
                         }
                       >
                         {(closeDialog) => (
-                          <OrderForm customerId={customer.id} onCancel={closeDialog} />
+                          <OrderForm
+                            customerId={customer.id}
+                            onCancel={closeDialog}
+                            onOrderItems={(items) => {
+                              closeDialog()
+                              if (this.props.onCustomerOrderItems)
+                                this.props.onCustomerOrderItems(items, customer.id)
+                            }}
+                          />
                         )}
+                      </Dialog>
+                      <Dialog
+                        title={`Produtos e serviços consumidos por ${customer.name}`}
+                        isLarge
+                        trigger={
+                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
+                            <Icon name='orders' size={16} />
+                          </Button>
+                        }
+                      >
+                        {() => <OrdersTable customerId={customer.id} />}
                       </Dialog>
                     </div>
                   )}

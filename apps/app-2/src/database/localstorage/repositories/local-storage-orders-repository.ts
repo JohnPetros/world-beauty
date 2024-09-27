@@ -20,9 +20,12 @@ export const LocalStorageOrdersRepository = (): IOrdersRepository => {
       const ordersDto = localStorage.get<OrderDto[]>(KEYS.orders)
       if (!ordersDto) return []
 
-      return ordersDto
-        .map(Order.create)
-        .filter((order) => order.customerId === customerId)
+      const orders: Order[] = []
+      for (const orderDto of ordersDto) {
+        if (orderDto.customerId === customerId) orders.push(Order.create(orderDto))
+      }
+
+      return orders
     },
 
     async add(order: Order) {
@@ -30,6 +33,11 @@ export const LocalStorageOrdersRepository = (): IOrdersRepository => {
 
       ordersDto.push(order.dto)
       localStorage.set(KEYS.orders, ordersDto)
+    },
+
+    async addMany(orders: Order[]) {
+      const ordersDto = localStorage.get<OrderDto[]>(KEYS.orders) ?? []
+      localStorage.set(KEYS.orders, [...ordersDto, ...orders.map((order) => order.dto)])
     },
 
     async removeAll() {

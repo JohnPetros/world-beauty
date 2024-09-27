@@ -1,5 +1,8 @@
 import { Component } from 'react'
 import { Outlet } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { NavMenu } from './navbar'
 
 export class AppLayout extends Component {
@@ -17,6 +20,7 @@ export class AppLayout extends Component {
         <main className='w-full p-8'>
           <Outlet />
         </main>
+        <ToastContainer />
       </div>
     )
   }

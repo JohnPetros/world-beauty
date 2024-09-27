@@ -3,6 +3,8 @@ export type IconName =
   | 'product'
   | 'service'
   | 'list'
+  | 'orders'
   | 'add'
   | 'edit'
+  | 'order'
   | 'delete'

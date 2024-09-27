@@ -3,6 +3,10 @@ import type { Product } from '../../domain/entities'
 export interface IProductsRepository {
   findAll(): Promise<Product[]>
   findMany(page: number): Promise<Product[]>
+  findManyByCustomerId(
+    page: number,
+    customerId: string,
+  ): Promise<{ products: Product[]; count: number }>
   findManyMostConsumedProducts(
     page: number,
   ): Promise<{ products: Product[]; count: number }>

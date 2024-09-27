@@ -2,6 +2,7 @@ import { Component } from 'react'
 import {
   Button,
   Pagination,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -24,6 +25,7 @@ type ProductsTableProps = {
   pagesCount: number
   hasActions: boolean
   hasSelection: boolean
+  isLoading?: boolean
   selectedProductsIds?: string[]
   onPageChange?: (page: number) => void
   onUpdateProduct?: (productDto: ProductDto) => void
@@ -82,10 +84,15 @@ export class ProductsTable extends Component<ProductsTableProps> {
           <TableColumn>Nome</TableColumn>
           <TableColumn>Preço</TableColumn>
           <TableColumn>Descrição</TableColumn>
-          <TableColumn>Qtd. de clientes que consumiram esse produto</TableColumn>
+          <TableColumn>Qtd. de vezes que esse produto foi consumido</TableColumn>
           <TableColumn> </TableColumn>
         </TableHeader>
-        <TableBody emptyContent='Nenhum produto cadastrado' items={this.props.products}>
+        <TableBody
+          isLoading={this.props.isLoading}
+          loadingContent={<Spinner />}
+          emptyContent='Nenhum produto cadastrado'
+          items={this.props.products}
+        >
           {(product) => (
             <TableRow key={product.id}>
               <TableCell>{product.name}</TableCell>

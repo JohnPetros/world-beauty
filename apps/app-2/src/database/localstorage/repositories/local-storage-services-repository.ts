@@ -52,6 +52,38 @@ export const LocalStorageServicesRepository = (
       return services.slice(start, end)
     },
 
+    async findManyByCustomerId(page: number, customerId: string) {
+      const servicesDto = localStorage.get<ServiceDto[]>(KEYS.services)
+      if (!servicesDto)
+        return {
+          services: [],
+          count: 0,
+        }
+
+      const orders = await ordersRepository.findAllByCustomerId(customerId)
+      const itemsIds = orders.map((order) => order.itemId)
+
+      const customerServices: Service[] = []
+
+      for (const serviceDto of servicesDto) {
+        const service = Service.create(serviceDto)
+        if (itemsIds.includes(service.id)) {
+          service.ordersCount = orders.reduce((count, order) => {
+            return count + (order.itemId === service.id ? 1 : 0)
+          }, 0)
+          customerServices.push(service)
+        }
+      }
+
+      const start = (page - 1) * PAGINATION.itemsPerPage
+      const end = start + PAGINATION.itemsPerPage
+
+      return {
+        services: customerServices.slice(start, end),
+        count: customerServices.length,
+      }
+    },
+
     async findManyMostConsumedServices(page: number) {
       const services = await this.findAll()
 
@@ -69,11 +101,17 @@ export const LocalStorageServicesRepository = (
       }
     },
 
-    async findManyMostConsumedServicesByCustomersGender(page: number, gender: 'male' | 'female') {
+    async findManyMostConsumedServicesByCustomersGender(
+      page: number,
+      gender: 'male' | 'female',
+    ) {
       const servicesDto = localStorage.get<ServiceDto[]>(KEYS.services)
       if (!servicesDto) return { services: [], count: 0 }
 
-      const customers = gender === 'male' ? await customersRepository.findAllMale() : await customersRepository.findAllFemale()
+      const customers =
+        gender === 'male'
+          ? await customersRepository.findAllMale()
+          : await customersRepository.findAllFemale()
       const customersIds = customers.map((customer) => customer.id)
       const orders = await ordersRepository.findAll()
 
@@ -83,11 +121,10 @@ export const LocalStorageServicesRepository = (
           if (customersIds.includes(order.customerId) && order.itemId === service.id) {
             return count + 1
           }
-            return count + 0
+          return count + 0
         }, 0)
         return service
       })
-
 
       services.sort(
         (firstService, secondService) =>

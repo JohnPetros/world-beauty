@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { Button } from '@nextui-org/react'
+import { toast } from 'react-toastify'
 
 import {
   DeleteCustomersUseCase,
@@ -23,6 +24,7 @@ type CustomersPageState = {
   page: number
   pagesCount: number
   selectedCustomersIds: string[]
+  isFetching: boolean
 }
 
 export class CustomersPage extends Component<any, CustomersPageState> {
@@ -42,6 +44,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
       page: 1,
       pagesCount: 0,
       selectedCustomersIds: [],
+      isFetching: true,
     }
   }
 
@@ -80,20 +83,14 @@ export class CustomersPage extends Component<any, CustomersPageState> {
     await this.fetchCustomers(1)
   }
 
-  handleCustomerOrderItem(customerId: string, itemPrice: number) {
-    const customerIndex = this.state.customers.findIndex(
-      (customer) => customer.id === customerId,
-    )
-    if (customerIndex === -1) return
-
-    const customer = this.state.customers[customerIndex]
-    customer.orderItem(itemPrice)
-    this.state.customers[customerIndex] = customer
-    this.setState({ customers: this.state.customers })
+  handleCustomerOrderItems() {
+    this.fetchCustomers(this.state.page)
+    toast('Pedido realizado com sucesso!', { type: 'success' })
   }
 
   async componentDidMount() {
     await this.fetchCustomers(1)
+    this.setState({ isFetching: false })
   }
 
   render() {
@@ -136,8 +133,9 @@ export class CustomersPage extends Component<any, CustomersPageState> {
         </div>
 
         <CustomersTable
-          isInteractable={true}
+          hasActions={true}
           customers={this.state.customers}
+          isLoading={this.state.isFetching}
           page={this.state.page}
           pagesCount={this.state.pagesCount}
           selectedCustomersIds={this.state.selectedCustomersIds}
@@ -148,6 +146,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
           onCustomersSelectionChange={(customersIds) =>
             this.handleCustomersSelectionChange(customersIds)
           }
+          onCustomerOrderItems={() => this.handleCustomerOrderItems()}
         />
       </div>
     )

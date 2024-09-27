@@ -1,9 +1,9 @@
-import { Entity } from '../abstracts'
+import { Entity, type Item } from '../abstracts'
 import { Cpf } from '../structs/cpf'
 import { Phone } from '../structs/phone'
 import { Rg } from '../structs/rg'
 import type { CustomerDto } from '../../dtos'
-import { Item } from '../abstracts/item'
+import { Order } from '../structs'
 
 export type CustomerProps = {
   name: string
@@ -33,8 +33,8 @@ export class Customer extends Entity<CustomerProps> {
     )
   }
 
-  orderItem(itemPrice: number) {
-    this.props.spending += itemPrice
+  orderItem(item: Item) {
+    this.props.spending += item.price
     this.props.consumption += 1
   }
 

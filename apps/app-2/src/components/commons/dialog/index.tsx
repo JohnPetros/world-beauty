@@ -44,7 +44,7 @@ export class Dialog extends Component<DialogProps, DialogState> {
         <Modal
           isOpen={this.state.isOpen}
           onClose={() => this.close()}
-          onOpenChange={this.close}
+          onOpenChange={() => this.close()}
           size={this.props.isLarge ? '5xl' : 'lg'}
         >
           <ModalContent className='p-6'>

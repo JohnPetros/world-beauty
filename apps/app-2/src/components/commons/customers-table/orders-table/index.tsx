@@ -1,26 +1,20 @@
 import { Component } from 'react'
 
-import { Button, Tab, Tabs } from '@nextui-org/react'
+import { Tab, Tabs } from '@nextui-org/react'
 
 import type { Product, Service } from '@world-beauty/core/entities'
 import {
-  ListProductsUseCase,
-  ListServicesUseCase,
-  RegisterOrdersUseCase,
+  ListCustomerOrderedProductsUseCase,
+  ListCustomerOrderedservicesUseCase,
 } from '@world-beauty/core/use-cases'
-
-import type { OrderDto } from '@world-beauty/core/dtos'
 import { PAGINATION } from '@world-beauty/core/constants'
-import type { Item } from '@world-beauty/core/abstracts'
 
-import { ordersRepository, productsRepository, servicesRepository } from '@/database'
+import { productsRepository, servicesRepository } from '@/database'
 import { ProductsTable } from '../../products-table'
 import { ServicesTable } from '../../services-table'
 
 type OrderFormProps = {
   customerId: string
-  onCancel: VoidFunction
-  onOrderItems: (items: Item[]) => void
 }
 
 type OrderFormState = {
@@ -32,13 +26,15 @@ type OrderFormState = {
   servicesPage: number
   servicesPagesCount: number
   selectedServicesIds: string[]
-  isOrdering: boolean
 }
 
-export class OrderForm extends Component<OrderFormProps, OrderFormState> {
-  private readonly listProductsUseCase = new ListProductsUseCase(productsRepository)
-  private readonly listServicesUseCase = new ListServicesUseCase(servicesRepository)
-  private readonly registerOrdersUseCase = new RegisterOrdersUseCase(ordersRepository)
+export class OrdersTable extends Component<OrderFormProps, OrderFormState> {
+  private readonly listProductsUseCase = new ListCustomerOrderedProductsUseCase(
+    productsRepository,
+  )
+  private readonly listServicesUseCase = new ListCustomerOrderedservicesUseCase(
+    servicesRepository,
+  )
 
   constructor(props: OrderFormProps) {
     super(props)
@@ -51,12 +47,11 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
       servicesPage: 0,
       servicesPagesCount: 0,
       selectedServicesIds: [],
-      isOrdering: true,
     }
   }
 
   async fetchProducts(page: number) {
-    const response = await this.listProductsUseCase.execute(page)
+    const response = await this.listProductsUseCase.execute(this.props.customerId, page)
     this.setState({
       products: response.items,
       productsPagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
@@ -65,7 +60,7 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
   }
 
   async fetchServices(page: number) {
-    const response = await this.listServicesUseCase.execute(page)
+    const response = await this.listServicesUseCase.execute(this.props.customerId, page)
     this.setState({
       services: response.items,
       servicesPagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
@@ -91,34 +86,6 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
     this.setState({
       selectedServicesIds,
     })
-  }
-
-  async handleOrderButtonClick() {
-    const selectedProducts = this.state.products.filter((product) =>
-      this.state.selectedProductsIds.includes(product.id),
-    )
-    const selectedServices = this.state.services.filter((service) =>
-      this.state.selectedServicesIds.includes(service.id),
-    )
-    const ordersDto: OrderDto[] = []
-
-    for (const product of selectedProducts) {
-      ordersDto.push({
-        amount: product.price,
-        customerId: this.props.customerId,
-        itemId: product.id,
-      })
-    }
-    for (const service of selectedServices) {
-      ordersDto.push({
-        amount: service.price,
-        customerId: this.props.customerId,
-        itemId: service.id,
-      })
-    }
-
-    await this.registerOrdersUseCase.execute(ordersDto)
-    this.props.onOrderItems([...selectedProducts, ...selectedServices])
   }
 
   async componentDidMount() {
@@ -158,21 +125,6 @@ export class OrderForm extends Component<OrderFormProps, OrderFormState> {
             />
           </Tab>
         </Tabs>
-        <div className='flex items-center gap-2'>
-          <Button
-            color='primary'
-            isDisabled={
-              this.state.selectedServicesIds.length === 0 &&
-              this.state.selectedProductsIds.length === 0
-            }
-            onClick={() => this.handleOrderButtonClick()}
-          >
-            Fazer pedido
-          </Button>
-          <Button color='danger' onClick={this.props.onCancel}>
-            Cancelar
-          </Button>
-        </div>
       </>
     )
   }
