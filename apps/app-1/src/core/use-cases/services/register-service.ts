@@ -15,7 +15,7 @@ export class RegisterService extends Register {
     const description = await this.input.text('Descrição do serviço:')
     const price = await this.input.number('Preço do serviço:')
 
-    const service = new Service({ name, description, price })
+    const service = new Service({ name, description, price, ordersCount: 0 })
 
     this.services.push(service)
     this.output.clear()

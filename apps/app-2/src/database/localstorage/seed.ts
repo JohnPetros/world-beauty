@@ -27,7 +27,8 @@ export const Seed = async () => {
     const fakeCustomer = CustomersFaker.fake()
 
     for (let index = 0; index < faker.number.int({ min: 0, max: 10 }); index++) {
-      const fakeProduct = fakeProducts[faker.number.int({ min: 0, max: 19 })]
+      const fakeProduct =
+        fakeProducts[faker.number.int({ min: 0, max: fakeProducts.length - 1 })]
       const order = Order.create({
         customerId: fakeCustomer.id,
         amount: fakeProduct.price,
@@ -37,7 +38,8 @@ export const Seed = async () => {
     }
 
     for (let index = 0; index < faker.number.int({ min: 0, max: 5 }); index++) {
-      const fakeService = fakeServices[faker.number.int({ min: 0, max: 9 })]
+      const fakeService =
+        fakeServices[faker.number.int({ min: 0, max: fakeServices.length - 1 })]
       const order = Order.create({
         customerId: fakeCustomer.id,
         amount: fakeService.price,

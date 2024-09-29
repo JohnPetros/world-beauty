@@ -16,7 +16,7 @@ export class RegisterProduct extends Register {
     const description = await this.input.text('Descrição do produto:')
     const price = await this.input.number('Preço do produto:')
 
-    const product = new Product({ name, description, price })
+    const product = new Product({ name, description, price, ordersCount: 0 })
 
     this.products.push(product)
     this.output.clear()
