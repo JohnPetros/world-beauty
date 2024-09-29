@@ -5,18 +5,21 @@ export type ServiceProps = {
   name: string
   price: number
   description: string
+  ordersCount: number
 }
 
 export class Service extends EntityWithId {
   private _name: string
   private _price: number
   private _description: string
+  private _ordersCount: number
 
   constructor(props: ServiceProps) {
     super(props.id)
     this._name = props.name
     this._price = props.price
     this._description = props.description
+    this._ordersCount = props.ordersCount
   }
 
   public get name() {
@@ -49,7 +52,15 @@ export class Service extends EntityWithId {
     return this._description
   }
 
-  public set description(description: string) {
-    this._description = description
+  public get ordersCount(): number {
+    return this._ordersCount
+  }
+
+  public resetOrdersCount() {
+    this._ordersCount = 0
+  }
+
+  public incrementOrdersCount(count = 1) {
+    this._ordersCount += count
   }
 }

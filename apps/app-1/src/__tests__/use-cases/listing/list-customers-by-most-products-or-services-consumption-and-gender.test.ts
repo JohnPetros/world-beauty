@@ -2,7 +2,7 @@ import {} from '../../../core/use-cases/listing'
 import { describe, it, beforeEach, expect } from 'vitest'
 import { CustomersFaker, ProductsFaker, ServicesFaker } from '../../fakers'
 import { InputMock, OutputMock } from '../../mocks'
-import { ListCustomersByMostConsumptionAndGenderUseCase } from '../../../core/use-cases/listing/list-customers-by-most-consumption-and-gender'
+import { ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase } from '../../../core/use-cases/listing/list-products-and-services-by-most-comsumption-and-customer-gender'
 
 let inputMock: InputMock
 let outputMock: OutputMock
@@ -42,7 +42,7 @@ describe('List Customers By Most Products Or Services Consumption And Gender Use
     const [femaleCustomerA, femaleCustomerB, femaleCustomerC] =
       fakeCustomersFixture('feminino')
 
-    const useCase = new ListCustomersByMostConsumptionAndGenderUseCase(
+    const useCase = new ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase(
       [
         femaleCustomerC,
         maleCustomerC,
@@ -80,7 +80,7 @@ describe('List Customers By Most Products Or Services Consumption And Gender Use
     const [femaleCustomerA, femaleCustomerB, femaleCustomerC] =
       fakeCustomersFixture('feminino')
 
-    const useCase = new ListCustomersByMostConsumptionAndGenderUseCase(
+    const useCase = new ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase(
       [
         femaleCustomerC,
         maleCustomerC,

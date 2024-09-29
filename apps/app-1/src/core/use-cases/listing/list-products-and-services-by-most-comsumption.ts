@@ -9,62 +9,24 @@ type ConsumedMap = {
 }
 
 export class ListProductsAndServicesByMostConsumption extends List {
-  private customers: Customer[]
+  private products: Product[]
+  private services: Service[]
 
-  constructor(customers: Customer[], input: Input, output: Output) {
+  constructor(products: Product[], services: Service[], input: Input, output: Output) {
     super(input, output)
-    this.customers = customers
+    this.products = products
+    this.services = services
   }
 
   public list(): void {
-    const products: Product[] = []
-    const services: Service[] = []
-    const consumedProductsMap: ConsumedMap = {}
-    const consumedServicesMap: ConsumedMap = {}
-
-    for (const customer of this.customers) {
-      for (const product of customer.consumedProducts) {
-        const isIncluded = products.some((currentProduct) =>
-          currentProduct.isEqualTo(product),
-        )
-        if (!isIncluded) {
-          products.push(product)
-          consumedProductsMap[product.id] = 0
-        }
-      }
-    }
-
-    for (const customer of this.customers) {
-      for (const service of customer.consumedServices) {
-        if (!service) continue
-        const isIncluded = services.some((currentService) =>
-          currentService.isEqualTo(service),
-        )
-        if (!isIncluded) {
-          services.push(service)
-          consumedServicesMap[service.id] = 0
-        }
-      }
-    }
-
-    for (const customer of this.customers) {
-      for (const product of customer.consumedProducts) {
-        consumedProductsMap[product.id] = consumedProductsMap[product.id] + 1
-      }
-
-      for (const service of customer.consumedServices) {
-        consumedServicesMap[service.id] = consumedServicesMap[service.id] + 1
-      }
-    }
-
-    const sortedProducts = [...products].sort(
+    const sortedProducts = [...this.products].sort(
       (firstProduct, secondProduct) =>
-        consumedProductsMap[secondProduct.id] - consumedProductsMap[firstProduct.id],
+        secondProduct.ordersCount - firstProduct.ordersCount,
     )
 
-    const sortedServices = [...services].sort(
+    const sortedServices = [...this.services].sort(
       (firstService, secondService) =>
-        consumedServicesMap[secondService.id] - consumedServicesMap[firstService.id],
+        secondService.ordersCount - firstService.ordersCount,
     )
 
     const productsList = new ListProducts(sortedProducts, this.input, this.output)

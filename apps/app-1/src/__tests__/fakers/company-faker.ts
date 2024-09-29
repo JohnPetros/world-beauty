@@ -18,30 +18,32 @@ export class CompanyFaker {
     for (let index = 0; index < 30; index++) {
       const fakeProducts = []
       for (let index = 0; index < faker.number.int({ min: 0, max: 10 }); index++) {
-        fakeProducts.push(
-          company.getProductByIndex(
-            faker.number.int({ min: 0, max: company.products.length - 1 }),
-          ),
-        )
+        const productIndex = faker.number.int({
+          min: 0,
+          max: company.products.length - 1,
+        })
+        fakeProducts.push(company.orderProductByIndex(productIndex))
       }
 
       const fakeServices = []
       for (let index = 0; index < faker.number.int({ min: 0, max: 5 }); index++) {
-        fakeServices.push(
-          company.getServiceByIndex(
-            faker.number.int({ min: 0, max: company.services.length - 1 }),
-          ),
-        )
+        const serviceIndex = faker.number.int({
+          min: 0,
+          max: company.services.length - 1,
+        })
+        fakeServices.push(company.orderServiceByIndex(serviceIndex))
       }
 
-      fakeCustomers.push(
-        CustomersFaker.fake({
-          consumedProducts: fakeProducts,
-          consumedServices: fakeServices,
-        }),
-      )
-    }
+      const fakeCustomer = CustomersFaker.fake({
+        consumedProducts: [],
+        consumedServices: [],
+      })
 
+      for (const product of fakeProducts) fakeCustomer.consumeProduct(product)
+      for (const service of fakeServices) fakeCustomer.consumeService(service)
+
+      fakeCustomers.push(fakeCustomer)
+    }
     company.customers = fakeCustomers
     return company
   }

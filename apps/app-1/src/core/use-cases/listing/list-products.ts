@@ -22,6 +22,7 @@ export class ListProducts extends List {
         Nome: product.name,
         Preco: product.price,
         Descrição: product.description,
+        'Qtd. de vezes que esse produto foi consumido': product.ordersCount,
       })),
     )
   }

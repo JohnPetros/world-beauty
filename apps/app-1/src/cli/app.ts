@@ -6,7 +6,7 @@ import {
   ListCustomersByLessConsumption,
   ListCustomersByMostSpeding,
   ListProductsAndServicesByMostConsumption,
-  ListCustomersByMostConsumptionAndGenderUseCase,
+  ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase,
   ListProducts,
   ListServices,
 } from '../core/use-cases/listing'
@@ -19,6 +19,7 @@ import { DeleteService, RegisterService, UpdateService } from '../core/use-cases
 import {
   ConsumeProductrOrService,
   DeleteCustomer,
+  ListCustomerProductsOrServices,
   UpdateCustomer,
 } from '../core/use-cases/customers'
 
@@ -75,6 +76,7 @@ export class App {
       ['Deletar o cadastro de um cliente', 'delete'],
       ['Listar todos os clientes', 'list'],
       ['Consumir produto ou serviço', 'consume-product-or-service'],
+      ['Lista produtos ou serviços consumidos', 'list-products-or-services'],
       ['Voltar', 'back'],
     ])
 
@@ -120,6 +122,15 @@ export class App {
           this.output,
         )
         await useCase.consume()
+        break
+      }
+      case 'list-products-or-services': {
+        const useCase = new ListCustomerProductsOrServices(
+          this.company.customers,
+          this.input,
+          this.output,
+        )
+        await useCase.list()
         break
       }
       case 'back':
@@ -230,7 +241,7 @@ export class App {
       ],
       [
         'Listar os produtos ou serviços mais consumidos por gênero',
-        'list-products-or-services-by-most-consumption-and-gender',
+        'list-products-and-services-by-most-consumption-and-gender',
       ],
       [
         'Listar os 10 clientes que menos consumiram produtos ou serviços',
@@ -255,19 +266,21 @@ export class App {
       }
       case 'list-products-and-services-by-most-consumption': {
         const useCase = new ListProductsAndServicesByMostConsumption(
-          this.company.customers,
+          this.company.products,
+          this.company.services,
           this.input,
           this.output,
         )
         useCase.list()
         break
       }
-      case 'list-products-or-services-by-most-consumption-and-gender': {
-        const useCase = new ListCustomersByMostConsumptionAndGenderUseCase(
-          this.company.customers,
-          this.input,
-          this.output,
-        )
+      case 'list-products-and-services-by-most-consumption-and-gender': {
+        const useCase =
+          new ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase(
+            this.company.customers,
+            this.input,
+            this.output,
+          )
         useCase.list()
         break
       }

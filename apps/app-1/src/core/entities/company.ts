@@ -19,12 +19,18 @@ export class Company {
     this._services = props.services
   }
 
-  getProductByIndex(index: number): Product {
-    return this.products[index]
+  orderProductByIndex(index: number): Product {
+    const product = this._products[index]
+    product.incrementOrdersCount()
+    this._products[index] = product
+    return product
   }
 
-  getServiceByIndex(index: number) {
-    return this.services[index]
+  orderServiceByIndex(index: number) {
+    const service = this.services[index]
+    service.incrementOrdersCount()
+    this._services[index] = service
+    return service
   }
 
   get customers(): Customer[] {

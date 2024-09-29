@@ -30,7 +30,8 @@ describe('List Products And Services By Most Consumption Use Case', () => {
     ]
 
     const useCase = new ListProductsAndServicesByMostConsumption(
-      customers,
+      [],
+      [],
       inputMock,
       outputMock,
     )
@@ -50,24 +51,13 @@ describe('List Products And Services By Most Consumption Use Case', () => {
   })
 
   it('should list services by most consumption in an ascending order', () => {
-    const serviceA = ServicesFaker.fake({ id: 'Service A' })
-    const serviceB = ServicesFaker.fake({ id: 'Service B' })
-    const serviceC = ServicesFaker.fake({ id: 'Service C' })
-
-    const customers = [
-      CustomersFaker.fake({
-        consumedServices: [serviceC],
-      }),
-      CustomersFaker.fake({
-        consumedServices: [serviceA, serviceA, serviceB],
-      }),
-      CustomersFaker.fake({
-        consumedServices: [serviceB, serviceA],
-      }),
-    ]
+    const serviceA = ServicesFaker.fake({ id: 'Service A', ordersCount: 10 })
+    const serviceB = ServicesFaker.fake({ id: 'Service B', ordersCount: 5 })
+    const serviceC = ServicesFaker.fake({ id: 'Service C', ordersCount: 0 })
 
     const useCase = new ListProductsAndServicesByMostConsumption(
-      customers,
+      [],
+      [serviceC, serviceB, serviceA],
       inputMock,
       outputMock,
     )

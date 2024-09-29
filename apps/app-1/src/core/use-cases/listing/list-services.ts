@@ -22,6 +22,7 @@ export class ListServices extends List {
         Nome: service.name,
         Preco: service.price,
         Descrição: service.description,
+        'Qtd. de vezes que esse serviço foi consumido': service.ordersCount,
       })),
     )
   }

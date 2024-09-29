@@ -8,6 +8,7 @@ export class ServicesFaker {
       name: faker.company.name(),
       price: parseFloat(faker.commerce.price()),
       description: faker.commerce.productDescription().slice(0, 50),
+      ordersCount: 0,
       ...props,
     })
   }

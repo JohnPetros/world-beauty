@@ -40,6 +40,46 @@ export class Customer extends EntityWithId {
     this._registrationDate = new Date()
   }
 
+  public consumeProduct(_product: Product) {
+    const product = Object.assign(
+      Object.create(Object.getPrototypeOf(_product)),
+      _product,
+    )
+    const productIndex = this._consumedProducts.findIndex((currentProduct) =>
+      currentProduct.isEqualTo(product),
+    )
+
+    if (productIndex === -1) {
+      product.resetOrdersCount()
+      product.incrementOrdersCount()
+      this._consumedProducts.push(product)
+      return
+    }
+
+    product.incrementOrdersCount()
+    this._consumedProducts[productIndex] = product
+  }
+
+  public consumeService(_service: Service) {
+    const service = Object.assign(
+      Object.create(Object.getPrototypeOf(_service)),
+      _service,
+    )
+    const serviceIndex = this._consumedServices.findIndex((currentProduct) =>
+      currentProduct.isEqualTo(service),
+    )
+
+    if (serviceIndex === -1) {
+      service.resetOrdersCount()
+      service.incrementOrdersCount()
+      this._consumedServices.push(service)
+      return
+    }
+
+    service.incrementOrdersCount()
+    this._consumedServices[serviceIndex] = service
+  }
+
   public get consumedProductsOrServicesCount(): number {
     return this.consumedProductsCount + this.consumedServicesCount
   }
@@ -53,23 +93,29 @@ export class Customer extends EntityWithId {
   }
 
   public get consumedProductsCount(): number {
-    return this.consumedProducts.reduce((count) => count + 1, 0)
+    return this.consumedProducts.reduce(
+      (count, product) => count + product.ordersCount,
+      0,
+    )
   }
 
   public get consumedServicesCount(): number {
-    return this.consumedServices.reduce((count) => count + 1, 0)
+    return this.consumedServices.reduce(
+      (count, service) => count + service.ordersCount,
+      0,
+    )
   }
 
   public get spendingInProducts(): number {
     return this.consumedProducts.reduce(
-      (spending, product) => spending + product.priceAsNumber,
+      (spending, product) => spending + product.priceAsNumber * product.ordersCount,
       0,
     )
   }
 
   public get spendingInServices(): number {
     return this.consumedServices.reduce(
-      (spending, service) => spending + service.priceAsNumber,
+      (spending, service) => spending + service.priceAsNumber * service.ordersCount,
       0,
     )
   }

@@ -8,6 +8,7 @@ export class ProductsFaker {
       name: faker.commerce.productName(),
       price: parseFloat(faker.commerce.price()),
       description: faker.commerce.productDescription().slice(0, 50),
+      ordersCount: 0,
       ...props,
     })
   }

@@ -2,9 +2,7 @@
   "name": "@stocker/app-1",
   "private": true,
   "scripts": {
-    "start": "tsx src/cli",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "start": "tsx src/cli"
   },
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
