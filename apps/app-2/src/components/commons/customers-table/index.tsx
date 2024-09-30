@@ -111,7 +111,9 @@ export class CustomersTable extends Component<CustomersTableProps> {
                   {customer.gender === 'male' ? 'masculino' : 'feminino'}
                 </TableCell>
                 <TableCell>{customer.socialName}</TableCell>
-                <TableCell>{customer.phonesList}</TableCell>
+                <TableCell className='w-24'>
+                  {<span className='truncate'>{customer.phonesList}</span>}
+                </TableCell>
                 <TableCell>{customer.rgsList}</TableCell>
                 <TableCell>{customer.consumption}</TableCell>
                 <TableCell>

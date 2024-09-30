@@ -7,4 +7,5 @@ export type IconName =
   | 'add'
   | 'edit'
   | 'order'
+  | 'menu'
   | 'delete'

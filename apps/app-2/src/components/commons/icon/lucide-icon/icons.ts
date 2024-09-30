@@ -7,8 +7,9 @@ import {
   Trash,
   Plus,
   DollarSign,
-  type LucideProps,
+  Menu,
   ClipboardList,
+  type LucideProps,
 } from 'lucide-react'
 import type { ForwardRefExoticComponent, RefAttributes } from 'react'
 import type { IconName } from '../types'
@@ -25,5 +26,6 @@ export const ICONS: Record<
   edit: Pencil,
   delete: Trash,
   add: Plus,
+  menu: Menu,
   order: DollarSign,
 }
