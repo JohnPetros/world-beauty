@@ -1,23 +1,62 @@
 import { Component } from 'react'
 import { Outlet } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import Drawer from 'react-modern-drawer'
+import 'react-modern-drawer/dist/index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { NavMenu } from './navbar'
+import { Button } from '@nextui-org/react'
+import { Icon } from '@/components/commons/icon'
+import { Sidebar } from './sidebar'
 
-export class AppLayout extends Component {
+type AppLayoutState = {
+  isDrawerOpen: boolean
+}
+
+export class AppLayout extends Component<any, AppLayoutState> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      isDrawerOpen: false,
+    }
+  }
+
+  closeDrawer() {
+    this.setState({ isDrawerOpen: false })
+  }
+
+  openDrawer() {
+    this.setState({ isDrawerOpen: true })
+  }
+
+  handleMenuClick() {
+    this.openDrawer()
+  }
+
   render() {
     return (
-      <div className='flex bg-zinc-50'>
-        <div className='w-60 border-1 p-6 h-screen'>
-          <div className='bg-zinc-800 rounded-md'>
-            <h1 className='text-zinc-50 text-center px-3 py-2 font-bold'>World Beauty</h1>
-          </div>
-          <div className='mt-3'>
-            <NavMenu />
-          </div>
+      <div className='relative flex bg-zinc-50 h-screen'>
+        <div className='hidden md:block'>
+          <Sidebar />
         </div>
-        <main className='w-full p-8'>
+        <div className='absolute top-1 left-1 pl-3 pt-3 md:hidden'>
+          <Button
+            isIconOnly
+            size='sm'
+            className='bg-transparent'
+            onClick={() => this.handleMenuClick()}
+          >
+            <Icon name='menu' />
+          </Button>
+          <Drawer
+            direction='left'
+            open={this.state.isDrawerOpen}
+            onClose={() => this.closeDrawer()}
+          >
+            <Sidebar />
+          </Drawer>
+        </div>
+        <main className='w-full pl-6 md:pl-56 md:pr-8 pt-12 md:pt-8'>
           <Outlet />
         </main>
         <ToastContainer />

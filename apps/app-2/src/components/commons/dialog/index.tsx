@@ -45,9 +45,10 @@ export class Dialog extends Component<DialogProps, DialogState> {
           isOpen={this.state.isOpen}
           onClose={() => this.close()}
           onOpenChange={() => this.close()}
+          classNames={{ header: 'ml-6' }}
           size={this.props.isLarge ? '5xl' : 'lg'}
         >
-          <ModalContent className='p-6'>
+          <ModalContent className='p-1 py-4'>
             <>
               <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
               <ModalBody className='max-h-[36rem] overflow-y-auto overflow-x-hidden'>

@@ -99,7 +99,7 @@ export class OrdersTable extends Component<OrderFormProps, OrderFormState> {
           <Tab title='Produtos' className='w-full'>
             <ProductsTable
               hasActions={false}
-              hasSelection={true}
+              hasSelection={false}
               products={this.state.products}
               page={this.state.productsPage}
               pagesCount={this.state.productsPagesCount}
@@ -113,7 +113,7 @@ export class OrdersTable extends Component<OrderFormProps, OrderFormState> {
           <Tab title='Serviços' className='w-full'>
             <ServicesTable
               hasActions={false}
-              hasSelection={true}
+              hasSelection={false}
               services={this.state.services}
               page={this.state.servicesPage}
               pagesCount={this.state.servicesPagesCount}

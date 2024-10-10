@@ -53,7 +53,7 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
   render() {
     return (
       <form onSubmit={(event) => this.handleSubmit(event)} className='space-y-3'>
-        <div className='grid grid-cols-2 gap-3'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
           <Input
             autoFocus
             label='Nome'

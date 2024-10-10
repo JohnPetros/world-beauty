@@ -99,7 +99,7 @@ export class CustomerForm extends Component<
   render() {
     return (
       <form onSubmit={(event) => this.handleSubmit(event)} className='space-y-3'>
-        <div className='grid grid-cols-2 gap-3'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
           <Input
             autoFocus
             label='Nome'
@@ -116,7 +116,7 @@ export class CustomerForm extends Component<
             required
           />
         </div>
-        <div className='grid grid-cols-2 gap-3'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
           <RadioGroup
             name='gender'
             label='Gênero'
@@ -128,7 +128,7 @@ export class CustomerForm extends Component<
           </RadioGroup>
         </div>
         <Divider />
-        <div className='grid grid-cols-2 gap-2'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
           <Input
             name='cpf-value'
             label='CPF'
@@ -160,7 +160,10 @@ export class CustomerForm extends Component<
           </div>
           <div className='mt-1 space-y-1'>
             {Array.from({ length: this.state.rgFieldsCount }).map((_, index) => (
-              <div key={String(index)} className='grid grid-cols-[1fr_1fr_0.25fr] gap-2'>
+              <div
+                key={String(index)}
+                className='grid grid-cols-1 md:grid-cols-[1fr_1fr_0.25fr] gap-2'
+              >
                 <Input
                   label='RG'
                   name='rg-name[]'
@@ -182,7 +185,7 @@ export class CustomerForm extends Component<
                   isIconOnly
                   variant='bordered'
                   radius='sm'
-                  className='h-full w-full text-red-600'
+                  className='md:h-full w-full text-red-600'
                   onClick={() => this.handlePopRgFieldButtonClick()}
                 >
                   <Icon name='delete' size={16} />
@@ -201,7 +204,10 @@ export class CustomerForm extends Component<
           </div>
           <div className='mt-1 space-y-1'>
             {Array.from({ length: this.state.phoneFieldsCount }).map((_, index) => (
-              <div key={String(index)} className='grid grid-cols-[1fr_1fr_0.25fr] gap-2'>
+              <div
+                key={String(index)}
+                className='grid grid-cols-1 md:grid-cols-[1fr_1fr_0.25fr] gap-2'
+              >
                 <Input
                   label='DDD'
                   name='phone-code-area[]'
@@ -220,7 +226,7 @@ export class CustomerForm extends Component<
                   isIconOnly
                   variant='bordered'
                   radius='sm'
-                  className='h-full w-full text-red-600'
+                  className='md:h-full w-full text-red-600'
                   onClick={() => this.handlePopRgFieldButtonClick()}
                 >
                   <Icon name='delete' size={16} />
