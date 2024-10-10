@@ -53,8 +53,6 @@ export const LocalStorageProductsRepository = (
       const orders = await ordersRepository.findAllByCustomerId(customerId)
       const itemsIds = orders.map((order) => order.itemId)
 
-      console.log(orders)
-
       const customerProducts: Product[] = []
 
       for (const productDto of productsDto) {

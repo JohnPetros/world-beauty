@@ -1,8 +1,6 @@
 import type { Customer, Product, Service } from '../../entities'
 import type { Input, Output } from '../../interfaces'
 import { UseCase } from '../use-case'
-import { List } from './list'
-import { ListCustomers } from './list-customers'
 import { ListProducts } from './list-products'
 import { ListServices } from './list-services'
 
@@ -15,6 +13,7 @@ export class ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase ex
   }
 
   public list(): void {
+    this.output.clear()
     this.listByGender('masculino')
     this.listByGender('feminino')
   }
@@ -66,8 +65,8 @@ export class ListProductsAndServicesByMostComsumptionAndCustomerGenderUseCase ex
       }
     }
 
-    services.sort((fisrtservice, secondservice) => {
-      return secondservice.ordersCount - fisrtservice.ordersCount
+    services.sort((fisrtService, secondService) => {
+      return secondService.ordersCount - fisrtService.ordersCount
     })
     const useCase = new ListServices(services, this.input, this.output)
     useCase.list()

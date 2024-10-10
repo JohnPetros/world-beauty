@@ -71,8 +71,8 @@ export class ConsumeProductrOrService extends UseCase {
       }
 
       const product = this.products[productIndex]
-      customer.consumedProducts.push(product)
-      product.incrementOrdersCount()
+      customer.consumeProduct(product)
+      product.incrementOrdersCount(1)
       this.products[productIndex] = product
 
       this.output.clear()
@@ -90,7 +90,7 @@ export class ConsumeProductrOrService extends UseCase {
     while (true) {
       const id = await this.input.text('ID do serviço:')
 
-      const serviceIndex = this.products.findIndex((product) => product.id === id)
+      const serviceIndex = this.services.findIndex((product) => product.id === id)
 
       if (serviceIndex === -1) {
         this.output.error('Serviço não encontrado')
@@ -98,8 +98,8 @@ export class ConsumeProductrOrService extends UseCase {
       }
 
       const service = this.services[serviceIndex]
-      customer.consumedServices.push(service)
-      service.incrementOrdersCount()
+      customer.consumeService(service)
+      service.incrementOrdersCount(1)
       this.services[serviceIndex] = service
 
       this.output.clear()

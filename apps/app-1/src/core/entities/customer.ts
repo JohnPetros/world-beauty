@@ -71,13 +71,14 @@ export class Customer extends EntityWithId {
 
     if (serviceIndex === -1) {
       service.resetOrdersCount()
-      service.incrementOrdersCount()
+      service.incrementOrdersCount(1)
       this._consumedServices.push(service)
       return
     }
 
-    service.incrementOrdersCount()
-    this._consumedServices[serviceIndex] = service
+    const cosumedService = this._consumedServices[serviceIndex]
+    cosumedService.incrementOrdersCount(1)
+    this._consumedServices[serviceIndex] = cosumedService
   }
 
   public get consumedProductsOrServicesCount(): number {
