@@ -27,7 +27,7 @@ type ServicesTableProps = {
   isLoading?: boolean
   selectedServicesIds?: string[]
   onPageChange?: (page: number) => void
-  onUpdateService?: (ServiceDto: ServiceDto) => void
+  onUpdateService?: (ServiceDto: ServiceDto, serviceId: string) => void
   onServicesSelectionChange?: (ServicesIds: string[]) => void
 }
 
@@ -120,9 +120,9 @@ export const ServicesTable = ({
                       <ServiceForm
                         service={service}
                         onCancel={closeDialog}
-                        onSubmit={async (ServiceDto) => {
+                        onSubmit={async (serviceDto) => {
                           closeDialog()
-                          await handleUpdateService(ServiceDto)
+                          await handleUpdateService(serviceDto, service.id)
                         }}
                       />
                     )}

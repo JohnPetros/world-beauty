@@ -79,7 +79,7 @@ export class CustomersPage extends Component<any, CustomersPageState> {
   }
 
   async handleUpdateCustomer(customerDto: CustomerDto) {
-    await this.updateCustomerUseCase.execute(customerDto)
+    await this.updateCustomerUseCase.execute(customerDto, String(customerDto.id))
     await this.fetchCustomers(1)
   }
 

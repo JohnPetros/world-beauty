@@ -3,9 +3,9 @@ import { Button } from '@nextui-org/react'
 import { PageTitle } from '@/components/commons/page-title'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
+import { useServicesPage } from './use-services-page'
 import { ServicesTable } from '@/components/commons/services-table'
 import { ServiceForm } from '@/components/commons/services-table/service-form'
-import { useServicesPage } from './use-services-page'
 
 export const ServicesPage = () => {
   const {
@@ -15,7 +15,7 @@ export const ServicesPage = () => {
     pagesCount,
     selectedServicesIds,
     handleDeleteButtonClick,
-    handleFormSubmit,
+    handleRegisterService,
     handlePageChange,
     handleServicesSelectionChange,
     handleUpdateService,
@@ -41,9 +41,7 @@ export const ServicesPage = () => {
           {(closeDialog) => (
             <ServiceForm
               onCancel={closeDialog}
-              onSubmit={(serviceDto) =>
-                handleFormSubmit(serviceDto, closeDialog, 'register')
-              }
+              onSubmit={(serviceDto) => handleRegisterService(serviceDto, closeDialog)}
             />
           )}
         </Dialog>
@@ -63,11 +61,9 @@ export const ServicesPage = () => {
           isLoading={isFetching}
           pagesCount={pagesCount}
           selectedServicesIds={selectedServicesIds}
-          onUpdateService={(ServiceDto) => handleUpdateService(ServiceDto)}
-          onPageChange={(page) => handlePageChange(page)}
-          onServicesSelectionChange={(ServicesIds) =>
-            handleServicesSelectionChange(ServicesIds)
-          }
+          onUpdateService={handleUpdateService}
+          onPageChange={handlePageChange}
+          onServicesSelectionChange={handleServicesSelectionChange}
         />
       </div>
     </div>

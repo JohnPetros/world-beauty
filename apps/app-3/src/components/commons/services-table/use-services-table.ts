@@ -6,8 +6,8 @@ import type { Service } from '@world-beauty/core/entities'
 type UseServicesTableProps = {
   services: Service[]
   onPageChange?: (page: number) => void
-  onUpdateService?: (ServiceDto: ServiceDto) => void
-  onServicesSelectionChange?: (ServicesIds: string[]) => void
+  onUpdateService?: (serviceDto: ServiceDto, serviceId: string) => void
+  onServicesSelectionChange?: (serviceIds: string[]) => void
 }
 
 export function useServicesTable({
@@ -32,8 +32,8 @@ export function useServicesTable({
     if (onPageChange) onPageChange(page)
   }
 
-  async function handleUpdateService(ServiceDto: ServiceDto) {
-    if (onUpdateService) onUpdateService(ServiceDto)
+  async function handleUpdateService(ServiceDto: ServiceDto, serviceId: string) {
+    if (onUpdateService) onUpdateService(ServiceDto, serviceId)
   }
 
   return {

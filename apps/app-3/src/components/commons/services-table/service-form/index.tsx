@@ -1,8 +1,9 @@
-import { Component, type FormEvent } from 'react'
 import { Button, Divider, Input, Textarea } from '@nextui-org/react'
 
 import type { ServiceDto } from '@world-beauty/core/dtos'
 import type { Service } from '@world-beauty/core/entities'
+
+import { useServiceForm } from './use-service.form'
 
 type ServiceFormProps = {
   service?: Service
@@ -10,82 +11,47 @@ type ServiceFormProps = {
   onCancel: () => void
 }
 
-type ServiceFormState = {
-  rgFieldsCount: number
-  phoneFieldsCount: number
-}
+export const ServiceForm = ({ service, onSubmit, onCancel }: ServiceFormProps) => {
+  const { formErrors, registerField, handleFormSubmit } = useServiceForm(
+    onSubmit,
+    service?.dto,
+  )
 
-export class ServiceForm extends Component<ServiceFormProps, ServiceFormState> {
-  constructor(props: ServiceFormProps) {
-    super(props)
-    this.state = {
-      rgFieldsCount: 1,
-      phoneFieldsCount: 1,
-    }
-  }
-
-  async handleSubmit(event: FormEvent) {
-    event.preventDefault()
-
-    // @ts-ignore
-    const formData = new FormData(event.target)
-
-    const name = String(formData.get('name'))
-    const price = Number(formData.get('price'))
-    const description = String(formData.get('description'))
-
-    const ServiceDto: ServiceDto = {
-      name,
-      price,
-      description,
-      category: 'service',
-    }
-
-    if (this.props.service) {
-      const updatedService = this.props.service.update(ServiceDto)
-      this.props.onSubmit(updatedService.dto)
-      return
-    }
-
-    this.props.onSubmit(ServiceDto)
-  }
-
-  render() {
-    return (
-      <form onSubmit={(event) => this.handleSubmit(event)} className='space-y-3'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-          <Input
-            autoFocus
-            label='Nome'
-            name='name'
-            defaultValue={this.props.service?.name}
-            variant='bordered'
-            required
-          />
-          <Input
-            label='Preço'
-            name='price'
-            defaultValue={this.props.service?.price.toString()}
-            variant='bordered'
-            required
-          />
-        </div>
-        <Divider />
-        <Textarea
-          label='Descrição'
-          name='description'
+  return (
+    <form onSubmit={handleFormSubmit} className='space-y-3'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+        <Input
+          label='Nome'
+          autoFocus
           variant='bordered'
-          defaultValue={this.props.service?.description}
+          isInvalid={Boolean(formErrors.name)}
+          errorMessage={formErrors.name?.message}
+          {...registerField('name')}
         />
-        <div className='flex items-center gap-2'>
-          <Button type='submit' color='primary' className='mt-3'>
-            Cadastrar
-          </Button>
-          <Button color='danger' onClick={() => this.props.onCancel()} className='mt-3'>
-            Cancelar
-          </Button>
-        </div>
-      </form>
-    )
-  }
+        <Input
+          label='Preço'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.price)}
+          errorMessage={formErrors.price?.message}
+          {...registerField('price')}
+        />
+      </div>
+      <Divider />
+      <Textarea
+        label='Descrição'
+        variant='bordered'
+        isInvalid={Boolean(formErrors.description)}
+        errorMessage={formErrors.description?.message}
+        {...registerField('description')}
+      />
+      <div className='flex items-center gap-2'>
+        <Button type='submit' color='primary' className='mt-3'>
+          Cadastrar
+        </Button>
+        <Button color='danger' onClick={() => onCancel()} className='mt-3'>
+          Cancelar
+        </Button>
+      </div>
+    </form>
+  )
 }

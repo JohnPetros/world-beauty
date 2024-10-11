@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
 
 import {
   DeleteServicesUseCase,
@@ -46,26 +45,17 @@ export function useServicesPage() {
     await fetchServices(1)
   }
 
-  async function handleUpdateService(ServiceDto: ServiceDto) {
-    await updateServiceUseCase.execute(ServiceDto)
+  async function handleUpdateService(ServiceDto: ServiceDto, serviceId: string) {
+    await updateServiceUseCase.execute(ServiceDto, serviceId)
     await fetchServices(1)
   }
 
-  function handleServiceOrderItems() {
-    fetchServices(page)
-    toast('Pedido realizado com sucesso!', { type: 'success' })
-  }
-
-  async function handleFormSubmit(
+  async function handleRegisterService(
     ServiceDto: ServiceDto,
     closeDialog: VoidFunction,
-    action: 'register' | 'update',
   ) {
-    if (action === 'register') {
-      await registerServiceUseCase.execute(ServiceDto)
-    } else {
-      await updateServiceUseCase.execute(ServiceDto)
-    }
+    await registerServiceUseCase.execute(ServiceDto)
+
     await fetchServices(1)
     closeDialog()
   }
@@ -81,10 +71,9 @@ export function useServicesPage() {
     pagesCount,
     isFetching,
     selectedServicesIds,
-    handleFormSubmit,
+    handleRegisterService,
     handleUpdateService,
     handleDeleteButtonClick,
-    handleServiceOrderItems,
     handleServicesSelectionChange,
     handlePageChange,
   }
