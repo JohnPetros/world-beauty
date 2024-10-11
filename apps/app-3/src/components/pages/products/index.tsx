@@ -15,7 +15,7 @@ export const ProductsPage = () => {
     pagesCount,
     selectedProductsIds,
     handleDeleteButtonClick,
-    handleFormSubmit,
+    handleRegisterProduct,
     handlePageChange,
     handleProductsSelectionChange,
     handleUpdateProduct,
@@ -41,9 +41,7 @@ export const ProductsPage = () => {
           {(closeDialog) => (
             <ProductForm
               onCancel={closeDialog}
-              onSubmit={(ProductDto) =>
-                handleFormSubmit(ProductDto, closeDialog, 'register')
-              }
+              onSubmit={(ProductDto) => handleRegisterProduct(ProductDto, closeDialog)}
             />
           )}
         </Dialog>
@@ -63,11 +61,9 @@ export const ProductsPage = () => {
           isLoading={isFetching}
           pagesCount={pagesCount}
           selectedProductsIds={selectedProductsIds}
-          onUpdateProduct={(productDto) => handleUpdateProduct(productDto)}
-          onPageChange={(page) => handlePageChange(page)}
-          onProductsSelectionChange={(productsIds) =>
-            handleProductsSelectionChange(productsIds)
-          }
+          onUpdateProduct={handleUpdateProduct}
+          onPageChange={handlePageChange}
+          onProductsSelectionChange={handleProductsSelectionChange}
         />
       </div>
     </div>

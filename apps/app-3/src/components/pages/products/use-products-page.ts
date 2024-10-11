@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
 
 import {
   DeleteProductsUseCase,
@@ -46,26 +45,17 @@ export function useProductsPage() {
     await fetchProducts(1)
   }
 
-  async function handleUpdateProduct(productDto: ProductDto) {
-    await updateProductUseCase.execute(productDto)
+  async function handleUpdateProduct(productDto: ProductDto, productId: string) {
+    await updateProductUseCase.execute(productDto, productId)
     await fetchProducts(1)
   }
 
-  function handleProductOrderItems() {
-    fetchProducts(page)
-    toast('Pedido realizado com sucesso!', { type: 'success' })
-  }
-
-  async function handleFormSubmit(
+  async function handleRegisterProduct(
     productDto: ProductDto,
     closeDialog: VoidFunction,
-    action: 'register' | 'update',
   ) {
-    if (action === 'register') {
-      await registerProductUseCase.execute(productDto)
-    } else {
-      await updateProductUseCase.execute(productDto)
-    }
+    await registerProductUseCase.execute(productDto)
+
     await fetchProducts(1)
     closeDialog()
   }
@@ -81,10 +71,9 @@ export function useProductsPage() {
     pagesCount,
     isFetching,
     selectedProductsIds,
-    handleFormSubmit,
+    handleRegisterProduct,
     handleUpdateProduct,
     handleDeleteButtonClick,
-    handleProductOrderItems,
     handleProductsSelectionChange,
     handlePageChange,
   }

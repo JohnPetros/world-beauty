@@ -77,8 +77,6 @@ export function useCustomerForm(
   }
 
   function handleFormSubmit(fields: CustomerFormFields) {
-    console.log(fields)
-
     const customerDto: CustomerDto = {
       name: fields.name,
       socialName: fields.socialName,

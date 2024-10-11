@@ -5,8 +5,8 @@ import type { IProductsRepository } from '../../interfaces/repositories'
 export class UpdateProductUseCase {
   constructor(private readonly productsRepository: IProductsRepository) {}
 
-  async execute(productDto: ProductDto) {
-    const product = Product.create(productDto)
+  async execute(productDto: ProductDto, productId: string) {
+    const product = Product.create({ id: productId, ...productDto })
     await this.productsRepository.update(product)
   }
 }

@@ -27,7 +27,7 @@ type ProductsTableProps = {
   isLoading?: boolean
   selectedProductsIds?: string[]
   onPageChange?: (page: number) => void
-  onUpdateProduct?: (productDto: ProductDto) => void
+  onUpdateProduct?: (productDto: ProductDto, productsId: string) => void
   onProductsSelectionChange?: (productsIds: string[]) => void
 }
 
@@ -122,7 +122,7 @@ export const ProductsTable = ({
                         onCancel={closeDialog}
                         onSubmit={async (productDto) => {
                           closeDialog()
-                          await handleUpdateProduct(productDto)
+                          await handleUpdateProduct(productDto, product.id)
                         }}
                       />
                     )}

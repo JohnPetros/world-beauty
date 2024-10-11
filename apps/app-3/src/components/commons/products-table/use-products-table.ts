@@ -6,7 +6,7 @@ import type { Product } from '@world-beauty/core/entities'
 type UseProductsTableProps = {
   products: Product[]
   onPageChange?: (page: number) => void
-  onUpdateProduct?: (productDto: ProductDto) => void
+  onUpdateProduct?: (productDto: ProductDto, productsId: string) => void
   onProductsSelectionChange?: (productsIds: string[]) => void
 }
 
@@ -32,8 +32,8 @@ export function useProductsTable({
     if (onPageChange) onPageChange(page)
   }
 
-  async function handleUpdateProduct(productDto: ProductDto) {
-    if (onUpdateProduct) onUpdateProduct(productDto)
+  async function handleUpdateProduct(productDto: ProductDto, productId: string) {
+    if (onUpdateProduct) onUpdateProduct(productDto, productId)
   }
 
   return {
