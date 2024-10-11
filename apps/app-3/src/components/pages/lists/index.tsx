@@ -36,7 +36,7 @@ export const ListsPage = () => {
         <SelectItem key='customers-by-gender'>Clientes por gênero</SelectItem>
       </Select>
 
-      <div className='mt-6'>
+      <div className='mt-6 pb-6'>
         {/* {selectedList === 'customers-by-most-consumption' && (
           <CustomersByMostConsumptionTable />
         )}
