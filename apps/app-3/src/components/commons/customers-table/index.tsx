@@ -12,12 +12,12 @@ import {
 
 import type { Customer } from '@world-beauty/core/entities'
 import type { CustomerDto } from '@world-beauty/core/dtos'
+import type { Item } from '@world-beauty/core/abstracts'
 
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomerForm } from './customer-form'
 import { OrderForm } from './order-form'
-import type { Item } from '@world-beauty/core/abstracts'
 import { OrdersTable } from './orders-table'
 import { useCustomersTable } from './use-customers-table'
 
@@ -29,7 +29,7 @@ type CustomersTableProps = {
   selectedCustomersIds?: string[]
   isLoading?: boolean
   onPageChange?: (page: number) => void
-  onUpdateCustomer?: (customerDto: CustomerDto) => void
+  onUpdateCustomer?: (customerDto: CustomerDto, customerId: string) => Promise<void>
   onCustomersSelectionChange?: (customersIds: string[]) => void
   onCustomerOrderItems?: (items: Item[], customerId: string) => void
 }
@@ -138,7 +138,7 @@ export const CustomersTable = ({
                           onCancel={closeDialog}
                           onSubmit={async (customerDto) => {
                             closeDialog()
-                            await handleUpdateCustomer(customerDto)
+                            await handleUpdateCustomer(customerDto, customer.id)
                           }}
                         />
                       )}

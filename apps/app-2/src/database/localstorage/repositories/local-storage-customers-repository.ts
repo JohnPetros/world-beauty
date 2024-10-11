@@ -42,7 +42,6 @@ export const LocalStorageCustomersRepository = (
     },
 
     async findMany(page: number) {
-      console.log(page)
       const customers = await this.findAll()
 
       const start = (page - 1) * PAGINATION.itemsPerPage

@@ -51,8 +51,8 @@ export function useCustomersPage() {
     await fetchCustomers(1)
   }
 
-  async function handleUpdateCustomer(customerDto: CustomerDto) {
-    await updateCustomerUseCase.execute(customerDto)
+  async function handleUpdateCustomer(customerDto: CustomerDto, customerId: string) {
+    await updateCustomerUseCase.execute(customerDto, customerId)
     await fetchCustomers(1)
   }
 

@@ -65,7 +65,7 @@ export const CustomersPage = () => {
         page={page}
         pagesCount={pagesCount}
         selectedCustomersIds={selectedCustomersIds}
-        onUpdateCustomer={(customerDto: CustomerDto) => handleUpdateCustomer(customerDto)}
+        onUpdateCustomer={handleUpdateCustomer}
         onPageChange={(page) => handlePageChange(page)}
         onCustomersSelectionChange={(customersIds) =>
           handleCustomersSelectionChange(customersIds)
