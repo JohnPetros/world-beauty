@@ -1,0 +1,12 @@
+{
+  "name": "@world-beauty/validation",
+  "dependencies": {
+    "@world-beauty/core": "*"
+  },
+  "devDependencies": {
+    "@world-beauty/typescript-config": "*"
+  },
+  "exports": {
+    "./schemas": "./src/schemas/index.ts"
+  }
+}
