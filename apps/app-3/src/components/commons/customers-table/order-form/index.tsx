@@ -1,21 +1,10 @@
-import { Component } from 'react'
-
 import { Button, Tab, Tabs } from '@nextui-org/react'
 
-import type { Product, Service } from '@world-beauty/core/entities'
-import {
-  ListProductsUseCase,
-  ListServicesUseCase,
-  RegisterOrdersUseCase,
-} from '@world-beauty/core/use-cases'
-
-import type { OrderDto } from '@world-beauty/core/dtos'
-import { PAGINATION } from '@world-beauty/core/constants'
 import type { Item } from '@world-beauty/core/abstracts'
 
-import { ordersRepository, productsRepository, servicesRepository } from '@/database'
 import { ProductsTable } from '../../products-table'
 import { ServicesTable } from '../../services-table'
+import { useOrderForm } from './use-order-form'
 
 type OrderFormProps = {
   customerId: string
@@ -23,157 +12,69 @@ type OrderFormProps = {
   onOrderItems: (items: Item[]) => void
 }
 
-type OrderFormState = {
-  products: Product[]
-  productsPage: number
-  productsPagesCount: number
-  selectedProductsIds: string[]
-  services: Service[]
-  servicesPage: number
-  servicesPagesCount: number
-  selectedServicesIds: string[]
-  isOrdering: boolean
-}
+export const OrderForm = ({ customerId, onOrderItems, onCancel }: OrderFormProps) => {
+  const {
+    products,
+    productsPage,
+    productsPagesCount,
+    selectedProductsIds,
+    services,
+    servicesPage,
+    servicesPagesCount,
+    selectedServicesIds,
+    handleProductsPageChange,
+    handleProductsSelectionChange,
+    handleServicesPageChange,
+    handleServicesSelectionChange,
+    handleOrderButtonClick,
+  } = useOrderForm(customerId, onOrderItems)
 
-export class OrderForm extends Component<OrderFormProps, OrderFormState> {
-  private readonly listProductsUseCase = new ListProductsUseCase(productsRepository)
-  private readonly listServicesUseCase = new ListServicesUseCase(servicesRepository)
-  private readonly registerOrdersUseCase = new RegisterOrdersUseCase(ordersRepository)
-
-  constructor(props: OrderFormProps) {
-    super(props)
-    this.state = {
-      products: [],
-      productsPage: 0,
-      productsPagesCount: 0,
-      selectedProductsIds: [],
-      services: [],
-      servicesPage: 0,
-      servicesPagesCount: 0,
-      selectedServicesIds: [],
-      isOrdering: true,
-    }
-  }
-
-  async fetchProducts(page: number) {
-    const response = await this.listProductsUseCase.execute(page)
-    this.setState({
-      products: response.items,
-      productsPagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
-      productsPage: page,
-    })
-  }
-
-  async fetchServices(page: number) {
-    const response = await this.listServicesUseCase.execute(page)
-    this.setState({
-      services: response.items,
-      servicesPagesCount: Math.ceil(response.itemsCount / PAGINATION.itemsPerPage),
-      servicesPage: page,
-    })
-  }
-
-  async handleProductsPageChange(page: number) {
-    await this.fetchProducts(page)
-  }
-
-  async handleServicesPageChange(page: number) {
-    await this.fetchServices(page)
-  }
-
-  handleProductsSelectionChange(selectedProductsIds: string[]) {
-    this.setState({
-      selectedProductsIds,
-    })
-  }
-
-  handleServicesSelectionChange(selectedServicesIds: string[]) {
-    this.setState({
-      selectedServicesIds,
-    })
-  }
-
-  async handleOrderButtonClick() {
-    const selectedProducts = this.state.products.filter((product) =>
-      this.state.selectedProductsIds.includes(product.id),
-    )
-    const selectedServices = this.state.services.filter((service) =>
-      this.state.selectedServicesIds.includes(service.id),
-    )
-    const ordersDto: OrderDto[] = []
-
-    for (const product of selectedProducts) {
-      ordersDto.push({
-        amount: product.price,
-        customerId: this.props.customerId,
-        itemId: product.id,
-      })
-    }
-    for (const service of selectedServices) {
-      ordersDto.push({
-        amount: service.price,
-        customerId: this.props.customerId,
-        itemId: service.id,
-      })
-    }
-
-    await this.registerOrdersUseCase.execute(ordersDto)
-    this.props.onOrderItems([...selectedProducts, ...selectedServices])
-  }
-
-  async componentDidMount() {
-    await Promise.all([this.fetchProducts(1), this.fetchServices(1)])
-  }
-
-  render() {
-    return (
-      <>
-        <Tabs aria-label='Tabelas' className='mt-3 w-full'>
-          <Tab title='Produtos' className='w-full'>
-            <ProductsTable
-              hasActions={false}
-              hasSelection={true}
-              products={this.state.products}
-              page={this.state.productsPage}
-              pagesCount={this.state.productsPagesCount}
-              selectedProductsIds={this.state.selectedProductsIds}
-              onPageChange={(page) => this.handleProductsPageChange(page)}
-              onProductsSelectionChange={(productsIds) =>
-                this.handleProductsSelectionChange(productsIds)
-              }
-            />
-          </Tab>
-          <Tab title='Serviços' className='w-full'>
-            <ServicesTable
-              hasActions={false}
-              hasSelection={true}
-              services={this.state.services}
-              page={this.state.servicesPage}
-              pagesCount={this.state.servicesPagesCount}
-              onPageChange={(page) => this.handleServicesPageChange(page)}
-              selectedServicesIds={this.state.selectedServicesIds}
-              onServicesSelectionChange={(servicesIds) =>
-                this.handleServicesSelectionChange(servicesIds)
-              }
-            />
-          </Tab>
-        </Tabs>
-        <div className='flex items-center gap-2'>
-          <Button
-            color='primary'
-            isDisabled={
-              this.state.selectedServicesIds.length === 0 &&
-              this.state.selectedProductsIds.length === 0
+  return (
+    <>
+      <Tabs aria-label='Tabelas' className='mt-3 w-full'>
+        <Tab title='Produtos' className='w-full'>
+          <ProductsTable
+            hasActions={false}
+            hasSelection={true}
+            products={products}
+            page={productsPage}
+            pagesCount={productsPagesCount}
+            selectedProductsIds={selectedProductsIds}
+            onPageChange={(page) => handleProductsPageChange(page)}
+            onProductsSelectionChange={(productsIds) =>
+              handleProductsSelectionChange(productsIds)
             }
-            onClick={() => this.handleOrderButtonClick()}
-          >
-            Fazer pedido
-          </Button>
-          <Button color='danger' onClick={this.props.onCancel}>
-            Cancelar
-          </Button>
-        </div>
-      </>
-    )
-  }
+          />
+        </Tab>
+        <Tab title='Serviços' className='w-full'>
+          <ServicesTable
+            hasActions={false}
+            hasSelection={true}
+            services={services}
+            page={servicesPage}
+            pagesCount={servicesPagesCount}
+            onPageChange={(page) => handleServicesPageChange(page)}
+            selectedServicesIds={selectedServicesIds}
+            onServicesSelectionChange={(servicesIds) =>
+              handleServicesSelectionChange(servicesIds)
+            }
+          />
+        </Tab>
+      </Tabs>
+      <div className='flex items-center gap-2'>
+        <Button
+          color='primary'
+          isDisabled={
+            selectedServicesIds.length === 0 && selectedProductsIds.length === 0
+          }
+          onClick={handleOrderButtonClick}
+        >
+          Fazer pedido
+        </Button>
+        <Button color='danger' onClick={onCancel}>
+          Cancelar
+        </Button>
+      </div>
+    </>
+  )
 }
