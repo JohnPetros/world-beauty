@@ -48,7 +48,7 @@ export class CustomersByMostSpendingTable extends Component<any, CustomersPageSt
             Top 5 clientes que mais consumiram em valor
           </h2>
           <CustomersTable
-            isInteractable={false}
+            hasActions={false}
             customers={this.state.customers}
             page={this.state.page}
             pagesCount={0}

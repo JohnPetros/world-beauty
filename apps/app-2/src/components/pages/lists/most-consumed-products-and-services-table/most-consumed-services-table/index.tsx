@@ -52,7 +52,8 @@ export class MostConsumedServicesTable extends Component<any, ServicesPageState>
   render() {
     return (
       <ServicesTable
-        isInteractable={false}
+        hasSelection={false}
+        hasActions={false}
         services={this.state.services}
         page={this.state.page}
         pagesCount={this.state.pagesCount}

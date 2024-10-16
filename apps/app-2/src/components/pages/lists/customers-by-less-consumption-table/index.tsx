@@ -47,7 +47,7 @@ export class CustomersByLessConsumptionTable extends Component<any, CustomersPag
             Top 10 clientes que menos consumiram produtos ou serviços (em quantidade)
           </h2>
           <CustomersTable
-            isInteractable={false}
+            hasActions={false}
             customers={this.state.customers}
             page={this.state.page}
             pagesCount={0}

@@ -78,7 +78,7 @@ export class CustomersByGenderTable extends Component<any, CustomersPageState> {
             Clientes do sexo masculino
           </h2>
           <CustomersTable
-            isInteractable={false}
+            hasActions={false}
             customers={this.state.maleCustomers}
             page={this.state.page}
             pagesCount={this.state.maleCustomersPagesCount}
@@ -90,7 +90,7 @@ export class CustomersByGenderTable extends Component<any, CustomersPageState> {
             Clientes do sexo feminino
           </h2>
           <CustomersTable
-            isInteractable={false}
+            hasActions={false}
             customers={this.state.femaleCustomers}
             page={this.state.page}
             pagesCount={this.state.femaleCustomersPagesCount}
