@@ -1,15 +1,15 @@
 import { CustomersTable } from '@/components/commons/customers-table'
-import { useCustomersByLessConsumptionTable } from './use-customers-by-less-consumption-table'
+import { useCustomersByMostConsumptionTable } from './use-customers-by-most-consumption-table'
 
-export const CustomersByLessConsumptionTable = () => {
+export const CustomersByMostConsumptionTable = () => {
   const { customers, page, handlePageChange } =
-    useCustomersByLessConsumptionTable()
+    useCustomersByMostConsumptionTable()
 
   return (
     <div className='flex flex-col gap-3'>
       <div>
         <h2 className='mb-2 text-zinc-700 text-xl font-medium'>
-          Top 10 clientes que menos consumiram produtos ou serviços (em quantidade)
+          Top 10 clientes que mais consumiram produtos ou serviços (em quantidade)
         </h2>
         <CustomersTable
           hasActions={false}

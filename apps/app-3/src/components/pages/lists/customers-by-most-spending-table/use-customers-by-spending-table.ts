@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Customer } from '@world-beauty/core/entities'
-import { ListCustomersByLessConsumptionUseCase } from '@world-beauty/core/use-cases'
+import { ListCustomersByMostSpendingUseCase } from '@world-beauty/core/use-cases'
 import { customersRepository } from '@/database'
 
-const listCustomersByLessConsumption = new ListCustomersByLessConsumptionUseCase(
+const listCustomersByMostSpending = new ListCustomersByMostSpendingUseCase(
   customersRepository,
 )
 
-export function useCustomersByLessConsumptionTable() {
+export function useCustomersByMostSpendingTable() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [page, setPage] = useState(1)
 
   const fetchCustomers = useCallback(async () => {
-    const customers = await listCustomersByLessConsumption.execute()
+    const customers = await listCustomersByMostSpending.execute()
     setCustomers(customers.map(Customer.create))
   }, [])
 

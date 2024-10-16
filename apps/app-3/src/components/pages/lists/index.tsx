@@ -4,6 +4,11 @@ import { PageTitle } from '@/components/commons/page-title'
 
 import { useListsPage } from './use-lists-page'
 import { CustomersByGenderTable } from './customers-by-gender-table'
+import { CustomersByLessConsumptionTable } from './customers-by-less-consumption-table'
+import { CustomersByMostConsumptionTable } from './customers-by-most-consumption-table'
+import { CustomersByMostSpendingTable } from './customers-by-most-spending-table'
+import { MostConsumedProductsAndServicesTable } from './most-consumed-products-and-services-table copy'
+import { MostConsumedProductsAndServicesByGenderTable } from './most-consumed-products-and-services-table-by-gender copy'
 
 export const ListsPage = () => {
   const { selectedList, handleSelectChange } = useListsPage()
@@ -37,21 +42,21 @@ export const ListsPage = () => {
       </Select>
 
       <div className='mt-6 pb-6'>
-        {/* {selectedList === 'customers-by-most-consumption' && (
-          <CustomersByMostConsumptionTable />
-        )}
-        {selectedList === 'customers-by-less-consumption' && (
-          <CustomersByLessConsumptionTable />
-        )}
-        {selectedList === 'customers-by-most-spending' && (
-          <CustomersByMostSpendingTable />
-        )}
-        {selectedList === 'most-consumed-products-and-services' && (
-          <MostConsumedProductsAndServicesTable />
-        )}
         {selectedList === 'most-consumed-products-and-services-by-gender' && (
           <MostConsumedProductsAndServicesByGenderTable />
-        )} */}
+        )} 
+         {selectedList === 'most-consumed-products-and-services' && (
+          <MostConsumedProductsAndServicesTable />
+        )}
+         {selectedList === 'customers-by-most-spending' && (
+          <CustomersByMostSpendingTable />
+        )}
+         {selectedList === 'customers-by-most-consumption' && (
+          <CustomersByMostConsumptionTable />
+        )}
+         {selectedList === 'customers-by-less-consumption' && (
+          <CustomersByLessConsumptionTable />
+        )}
         {selectedList === 'customers-by-gender' && <CustomersByGenderTable />}
       </div>
     </div>

@@ -1,7 +1,5 @@
 import { Button } from '@nextui-org/react'
 
-import type { CustomerDto } from '@world-beauty/core/dtos'
-
 import { PageTitle } from '@/components/commons/page-title'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomersTable } from '@/components/commons/customers-table'
