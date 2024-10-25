@@ -1,5 +1,5 @@
 import type { IProductsRepository } from '../../interfaces'
-import { PaginationResponse } from '../../responses/pagination'
+import { PaginationResponse } from '../../responses/pagination-response'
 
 export class ListProductsUseCase {
   constructor(private readonly productsRepository: IProductsRepository) {}

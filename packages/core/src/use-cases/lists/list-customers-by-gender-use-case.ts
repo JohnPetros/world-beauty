@@ -1,6 +1,6 @@
 import type { Customer } from '../../domain/entities'
 import type { ICustomersRepository } from '../../interfaces'
-import { PaginationResponse } from '../../responses/pagination'
+import { PaginationResponse } from '../../responses/pagination-response'
 
 export class ListCustomersByGenderUseCase {
   constructor(private readonly customersRepository: ICustomersRepository) {}

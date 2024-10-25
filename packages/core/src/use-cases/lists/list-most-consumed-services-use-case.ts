@@ -1,5 +1,5 @@
 import type { IServicesRepository } from '../../interfaces'
-import { PaginationResponse } from '../../responses/pagination'
+import { PaginationResponse } from '../../responses/pagination-response'
 
 export class ListMostConsumedServicesUseCase {
   constructor(private readonly servicesRepository: IServicesRepository) {}

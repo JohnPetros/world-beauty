@@ -3,7 +3,6 @@ import { Cpf } from '../structs/cpf'
 import { Phone } from '../structs/phone'
 import { Rg } from '../structs/rg'
 import type { CustomerDto } from '../../dtos'
-import { Order } from '../structs'
 
 export type CustomerProps = {
   name: string
