@@ -6,7 +6,6 @@ export type CustomerWithAddressDto = {
   name: string
   lastname: string
   email: string
-  street: string
   address: AddressDto
   phones: PhoneDto[]
 }

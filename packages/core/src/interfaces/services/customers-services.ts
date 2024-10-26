@@ -1,13 +1,9 @@
-import type { Customer } from '../../domain/entities'
-import type { CustomerDto } from '../../dtos'
+import type { CustomerWithAddress } from '../../domain/entities'
 import type { ApiResponse } from '../../responses'
 
 export interface ICustomersService {
-  registerCustomer(customer: Customer): Promise<ApiResponse<void>>
-  listCustomers(): Promise<ApiResponse<void>>
-  updateCustomer(
-    customer: Partial<CustomerDto>,
-    customerId: string,
-  ): Promise<ApiResponse<void>>
+  listCustomers(): Promise<ApiResponse<CustomerWithAddress[]>>
+  registerCustomer(customer: CustomerWithAddress): Promise<ApiResponse<void>>
+  updateCustomer(customer: CustomerWithAddress): Promise<ApiResponse<void>>
   deleteCustomers(customersIds: string[]): Promise<ApiResponse<void>>
 }

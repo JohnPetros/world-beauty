@@ -40,4 +40,23 @@ export class CustomerWithAddress extends Entity<CustomerWithAddressProps> {
   get phones() {
     return this.props.phones
   }
+
+  get phonesList() {
+    return this.phones.map((phone) => phone.value).join('; ')
+  }
+
+  get formattedAddress() {
+    return `${this.address.street}, ${this.address.number}, ${this.address.city} - ${this.address.state.toUpperCase()}`
+  }
+
+  get dto() {
+    return {
+      id: this.id,
+      name: this.name,
+      lastname: this.lastname,
+      email: this.email,
+      address: this.address,
+      phones: this.phones,
+    }
+  }
 }
