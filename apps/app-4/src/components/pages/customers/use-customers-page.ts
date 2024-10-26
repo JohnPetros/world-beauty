@@ -1,70 +1,57 @@
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { Customer } from '@world-beauty/core/entities'
-import {
-  DeleteCustomersUseCase,
-  ListCustomersUseCase,
-  RegisterCustomerUseCase,
-  UpdateCustomerUseCase,
-} from '@world-beauty/core/use-cases'
-import { PAGINATION } from '@world-beauty/core/constants'
-import type { CustomerDto } from '@world-beauty/core/dtos'
+import { CustomerWithAddress } from '@world-beauty/core/entities'
 
-import { customersRepository } from '@/database'
+import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
+import { customersService } from '@/api'
 
 export function useCustomersPage() {
-  const [customers, setCustomers] = useState<Customer[]>([])
-  const [pagesCount, setPagesCount] = useState(0)
+  const [customers, setCustomers] = useState<CustomerWithAddress[]>([])
   const [selectedCustomersIds, setSelectedCustomersIds] = useState<string[]>([])
-  const [page, setPage] = useState(1)
   const [isFetching, setIsFetching] = useState(true)
 
-  const fetchCustomers = useCallback(async (page: number) => {
-    const response = await listCustomersUseCase.execute(page)
-    setCustomers(response.items.map(Customer.create))
-    setPagesCount(Math.ceil(response.itemsCount / PAGINATION.itemsPerPage))
-    setPage(page)
+  const fetchCustomers = useCallback(async () => {
+    const response = await customersService.listCustomers()
+    setCustomers(response.body.map(CustomerWithAddress.create))
   }, [])
 
   async function handleCustomersSelectionChange(selectedCustomersIds: string[]) {
     setSelectedCustomersIds(selectedCustomersIds)
   }
 
-  async function handlePageChange(page: number) {
-    await fetchCustomers(page)
-  }
-
   async function handleDeleteButtonClick() {
     setSelectedCustomersIds([])
-    await deleteCustomersUseCase.execute(selectedCustomersIds)
-    await fetchCustomers(1)
+    await customersService.deleteCustomers(selectedCustomersIds)
+    await fetchCustomers()
   }
 
-  async function handleRegisterCustomer(customerDto: CustomerDto) {
-    await registerCustomerUseCase.execute(customerDto)
-    await fetchCustomers(1)
+  async function handleRegisterCustomer(customerWithAddressDto: CustomerWithAddressDto) {
+    await customersService.registerCustomer(
+      CustomerWithAddress.create(customerWithAddressDto),
+    )
+    await fetchCustomers()
   }
 
-  async function handleUpdateCustomer(customerDto: CustomerDto, customerId: string) {
-    await updateCustomerUseCase.execute(customerDto, customerId)
-    await fetchCustomers(1)
+  async function handleUpdateCustomer(customerWithAddressDto: CustomerWithAddressDto) {
+    await customersService.updateCustomer(
+      CustomerWithAddress.create(customerWithAddressDto),
+    )
+    await fetchCustomers()
   }
 
   function handleCustomerOrderItems() {
-    fetchCustomers(page)
+    fetchCustomers()
     toast('Pedido realizado com sucesso!', { type: 'success' })
   }
 
   useEffect(() => {
-    fetchCustomers(1)
+    fetchCustomers()
     setIsFetching(false)
   }, [fetchCustomers])
 
   return {
     customers,
-    page,
-    pagesCount,
     isFetching,
     selectedCustomersIds,
     handleRegisterCustomer,
@@ -72,6 +59,5 @@ export function useCustomersPage() {
     handleDeleteButtonClick,
     handleCustomerOrderItems,
     handleCustomersSelectionChange,
-    handlePageChange,
   }
 }

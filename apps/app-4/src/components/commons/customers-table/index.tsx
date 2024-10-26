@@ -10,8 +10,8 @@ import {
   TableRow,
 } from '@nextui-org/react'
 
-import type { Customer } from '@world-beauty/core/entities'
-import type { CustomerDto } from '@world-beauty/core/dtos'
+import type { CustomerWithAddress } from '@world-beauty/core/entities'
+import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
 import type { Item } from '@world-beauty/core/abstracts'
 
 import { Icon } from '@/components/commons/icon'
@@ -20,14 +20,17 @@ import { CustomerForm } from './customer-form'
 import { useCustomersTable } from './use-customers-table'
 
 type CustomersTableProps = {
-  customers: Customer[]
+  customers: CustomerWithAddress[]
   page: number
   pagesCount: number
   hasActions: boolean
   selectedCustomersIds?: string[]
   isLoading?: boolean
   onPageChange?: (page: number) => void
-  onUpdateCustomer?: (customerDto: CustomerDto, customerId: string) => Promise<void>
+  onUpdateCustomer?: (
+    customerDto: CustomerWithAddressDto,
+    customerId: string,
+  ) => Promise<void>
   onCustomersSelectionChange?: (customersIds: string[]) => void
   onCustomerOrderItems?: (items: Item[], customerId: string) => void
 }
@@ -98,18 +101,7 @@ export const CustomersTable = ({
               <TableCell className='w-24'>
                 {<span className='truncate'>{customer.phonesList}</span>}
               </TableCell>
-              <TableCell>{customer.consumption}</TableCell>
-              <TableCell>
-                {(() => {
-                  const formatter = new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                  return formatter.format(customer.spending)
-                })()}
-              </TableCell>
+              <TableCell>{customer.formattedAddress}</TableCell>
               <TableCell>
                 {hasActions && (
                   <div className='relative flex items-center gap-2'>
@@ -131,7 +123,7 @@ export const CustomersTable = ({
                           }}
                         />
                       )}
-                    </Dialog>                 
+                    </Dialog>
                   </div>
                 )}
               </TableCell>

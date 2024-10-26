@@ -1,11 +1,11 @@
 import type { Selection } from '@nextui-org/react'
-import type { CustomerDto } from '@world-beauty/core/dtos'
-import type { Customer } from '@world-beauty/core/entities'
+import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
+import type { CustomerWithAddress } from '@world-beauty/core/entities'
 
 type CustomersTableProps = {
-  customers: Customer[]
+  customers: CustomerWithAddress[]
   onPageChange?: (page: number) => void
-  onUpdateCustomer?: (customerDto: CustomerDto, customerId: string) => void
+  onUpdateCustomer?: (customerDto: CustomerWithAddressDto, customerId: string) => void
   onCustomersSelectionChange?: (customersIds: string[]) => void
 }
 
@@ -31,7 +31,10 @@ export function useCustomersTable({
     if (onPageChange) onPageChange(page)
   }
 
-  async function handleUpdateCustomer(customerDto: CustomerDto, customerId: string) {
+  async function handleUpdateCustomer(
+    customerDto: CustomerWithAddressDto,
+    customerId: string,
+  ) {
     if (onUpdateCustomer) onUpdateCustomer(customerDto, customerId)
   }
 

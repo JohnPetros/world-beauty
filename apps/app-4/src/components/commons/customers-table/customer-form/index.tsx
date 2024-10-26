@@ -1,29 +1,23 @@
-import { Button, Divider, Input, Radio, RadioGroup } from '@nextui-org/react'
-import { Controller } from 'react-hook-form'
+import { Button, Divider, Input, Textarea } from '@nextui-org/react'
 
-import type { CustomerDto } from '@world-beauty/core/dtos'
-import type { Customer } from '@world-beauty/core/entities'
+import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
+import type { CustomerWithAddress } from '@world-beauty/core/entities'
 
 import { Icon } from '@/components/commons/icon'
 import { useCustomerForm } from './use-customer-form'
-import { Datetime } from '@world-beauty/core/libs'
 
 type CustomerFormProps = {
-  customer?: Customer
-  onSubmit: (customer: CustomerDto) => void
+  customer?: CustomerWithAddress
+  onSubmit: (customer: CustomerWithAddressDto) => void
   onCancel: () => void
 }
 
 export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps) => {
   const {
-    rgFields,
     phoneFields,
-    formControl,
     formErrors,
     registerField,
     handleSubmit,
-    handleAppendRgFieldButtonClick,
-    handlePopRgFieldButtonClick,
     handleAppendPhoneFieldButtonClick,
     handlePopPhoneFieldButtonClick,
   } = useCustomerForm(onSubmit, customer?.dto)
@@ -40,119 +34,75 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
           {...registerField('name')}
         />
         <Input
-          label='Nome social'
+          label='Sobrenome'
           variant='bordered'
-          isInvalid={Boolean(formErrors.socialName)}
-          errorMessage={formErrors.socialName?.message}
-          {...registerField('socialName')}
+          isInvalid={Boolean(formErrors.lastname)}
+          errorMessage={formErrors.lastname?.message}
+          {...registerField('lastname')}
         />
       </div>
+      <Divider />
       <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-        <Controller
-          name='gender'
-          control={formControl}
-          render={({ field: { value, onChange } }) => (
-            <RadioGroup
-              label='Gênero'
-              defaultValue={value ?? 'female'}
-              orientation='horizontal'
-              onValueChange={onChange}
-              isInvalid={Boolean(formErrors.gender?.message)}
-              errorMessage={formErrors.gender?.message}
-            >
-              <Radio value='male'>Masculino</Radio>
-              <Radio value='female'>Feminino</Radio>
-            </RadioGroup>
-          )}
-        />
-      </div>
-      <Divider />
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
         <Input
-          label='CPF'
+          autoFocus
+          label='E-mail'
           variant='bordered'
-          max={11}
-          min={11}
-          isInvalid={Boolean(formErrors.cpf?.value)}
-          errorMessage={formErrors.cpf?.value?.message}
-          {...registerField('cpf.value')}
+          isInvalid={Boolean(formErrors.email)}
+          errorMessage={formErrors.email?.message}
+          {...registerField('email')}
         />
-
-        <Controller
-          name='cpf.issueDate'
-          control={formControl}
-          render={({ field: { value, onChange } }) => (
-            <Input
-              type='date'
-              label='Data de emissão'
-              variant='bordered'
-              value={value && new Datetime(value).format('YYYY-MM-DD')}
-              onChange={(event) => onChange(new Date(event.currentTarget.value))}
-              isInvalid={Boolean(formErrors.cpf?.issueDate)}
-              errorMessage={formErrors.cpf?.issueDate?.message}
-            />
-          )}
+        <Input
+          label='Estado'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.state)}
+          errorMessage={formErrors.address?.state?.message}
+          {...registerField('address.state')}
         />
       </div>
       <Divider />
-      <div>
-        <div className='flex items-center justify-between'>
-          <Button
-            size='sm'
-            variant='bordered'
-            className='text-zinc-500'
-            onClick={() => handleAppendRgFieldButtonClick()}
-          >
-            Adicionar RG
-            <Icon name='add' size={16} />
-          </Button>
-        </div>
-        <div className='mt-1 space-y-1'>
-          {rgFields.map((rgField, index) => (
-            <div
-              key={rgField.id}
-              className='grid grid-cols-1 md:grid-cols-[1fr_1fr_0.25fr] gap-2'
-            >
-              <Input
-                label='RG'
-                variant='bordered'
-                radius='sm'
-                max={10}
-                min={10}
-                isInvalid={Boolean(formErrors.rgs?.[index]?.value?.message)}
-                errorMessage={formErrors.rgs?.[index]?.value?.message}
-                {...registerField(`rgs.${index}.value`)}
-              />
-
-              <Controller
-                name={`rgs.${index}.issueDate`}
-                control={formControl}
-                render={({ field: { value, onChange } }) => (
-                  <Input
-                    type='date'
-                    label='Data de emissão'
-                    variant='bordered'
-                    value={value && new Datetime(value).format('YYYY-MM-DD')}
-                    onChange={(event) => onChange(new Date(event.currentTarget.value))}
-                    isInvalid={Boolean(formErrors.rgs?.[index]?.issueDate?.message)}
-                    errorMessage={formErrors.rgs?.[index]?.issueDate?.message}
-                  />
-                )}
-              />
-              <Button
-                isIconOnly
-                variant='bordered'
-                radius='sm'
-                className='md:h-full w-full text-red-600'
-                onClick={() => handlePopRgFieldButtonClick(index)}
-              >
-                <Icon name='delete' size={16} />
-              </Button>
-            </div>
-          ))}
-        </div>
-        <p className='text-danger text-sm'>{formErrors.rgs?.message}</p>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+        <Input
+          autoFocus
+          label='Cidade'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.city)}
+          errorMessage={formErrors.address?.city?.message}
+          {...registerField('address.city')}
+        />
+        <Input
+          label='Código postal'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.zipcode)}
+          errorMessage={formErrors.address?.zipcode?.message}
+          {...registerField('address.zipcode')}
+        />
       </div>
+      <Divider />
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+        <Input
+          autoFocus
+          label='Rua'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.street)}
+          errorMessage={formErrors.address?.street?.message}
+          {...registerField('address.street')}
+        />
+        <Input
+          label='Número'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.number)}
+          errorMessage={formErrors.address?.number?.message}
+          {...registerField('address.number')}
+        />
+      </div>
+      <Divider />
+      <Textarea
+        label='Complemento'
+        variant='bordered'
+        isInvalid={Boolean(formErrors.address?.complement)}
+        errorMessage={formErrors.address?.complement?.message}
+        {...registerField('address.complement')}
+      />
       <Divider />
       <div>
         <div className='flex items-center justify-between'>

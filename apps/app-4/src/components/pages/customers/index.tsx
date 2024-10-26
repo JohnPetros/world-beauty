@@ -10,14 +10,11 @@ import { useCustomersPage } from './use-customers-page'
 export const CustomersPage = () => {
   const {
     customers,
-    page,
-    pagesCount,
     isFetching,
     selectedCustomersIds,
     handleCustomerOrderItems,
     handleCustomersSelectionChange,
     handleDeleteButtonClick,
-    handlePageChange,
     handleRegisterCustomer,
     handleUpdateCustomer,
   } = useCustomersPage()
@@ -60,11 +57,10 @@ export const CustomersPage = () => {
         hasActions={true}
         customers={customers}
         isLoading={isFetching}
-        page={page}
-        pagesCount={pagesCount}
+        page={0}
+        pagesCount={0}
         selectedCustomersIds={selectedCustomersIds}
         onUpdateCustomer={handleUpdateCustomer}
-        onPageChange={(page) => handlePageChange(page)}
         onCustomersSelectionChange={(customersIds) =>
           handleCustomersSelectionChange(customersIds)
         }
