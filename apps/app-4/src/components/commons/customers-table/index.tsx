@@ -98,10 +98,11 @@ export const CustomersTable = ({
             <TableRow key={customer.id}>
               <TableCell>{customer.name}</TableCell>
               <TableCell>{customer.lastname}</TableCell>
+              <TableCell>{customer.email}</TableCell>
+              <TableCell className='w-80'>{customer.formattedAddress}</TableCell>
               <TableCell className='w-24'>
                 {<span className='truncate'>{customer.phonesList}</span>}
               </TableCell>
-              <TableCell>{customer.formattedAddress}</TableCell>
               <TableCell>
                 {hasActions && (
                   <div className='relative flex items-center gap-2'>

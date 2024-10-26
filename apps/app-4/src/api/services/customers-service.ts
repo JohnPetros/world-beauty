@@ -11,8 +11,13 @@ export const CustomersService = (apiClient: IApiClient): ICustomersService => {
   return {
     async listCustomers() {
       const response = await apiClient.get<JavaServerCustomerDto[]>('/clientes')
+
+      if (response.isFailure) {
+        return new ApiResponse({ errorMessage: 'Erro ao buscar clientes' })
+      }
+
       return new ApiResponse({
-        body: response.body.map(javaServerCustomerMapper.toDomain),
+        body: response.body.map(javaServerCustomerMapper.toDto),
       })
     },
 
@@ -24,14 +29,14 @@ export const CustomersService = (apiClient: IApiClient): ICustomersService => {
     },
 
     async updateCustomer(customer: CustomerWithAddress) {
-      return await apiClient.post(
-        '/cliente/atualizar',
-        javaServerCustomerMapper.toJavaServer(customer),
-      )
+      return await apiClient.put('/cliente/atualizar', {
+        id: customer.id,
+        ...javaServerCustomerMapper.toJavaServer(customer),
+      })
     },
 
-    async deleteCustomers(customersIds: string[]) {
-      return await apiClient.post('/cliente/excluir', { id: customersIds[0] })
+    async deleteCustomers(customerIds: string[]) {
+      return await apiClient.delete('/cliente/excluir', { id: customerIds[0] })
     },
   }
 }

@@ -12,7 +12,7 @@ export const ApiClient = (): IApiClient => {
 
   return {
     async get<ResponseBody>(url: string, body: unknown) {
-      const response = await fetch(`${baseUrl}/${url}`, {
+      const response = await fetch(`${baseUrl}${url}`, {
         method: 'GET',
         headers,
         body: JSON.stringify(body),
@@ -20,7 +20,7 @@ export const ApiClient = (): IApiClient => {
       params = {}
       const data = await response.json()
 
-      if (!response.ok) {
+      if (response.status >= 400) {
         return handleApiError<ResponseBody>(data, response.status)
       }
 
@@ -31,58 +31,52 @@ export const ApiClient = (): IApiClient => {
     },
 
     async post<ResponseBody>(url: string, body: unknown) {
-      const response = await fetch(`${baseUrl}/${url}`, {
+      const response = await fetch(`${baseUrl}${url}`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(body) ?? {},
+        body: JSON.stringify(body),
       })
       params = {}
-      const data = await response.json()
 
-      if (!response.ok) {
-        return handleApiError<ResponseBody>(data, response.status)
+      if (response.status >= 400) {
+        return handleApiError<ResponseBody>({}, response.status)
       }
 
       return new ApiResponse<ResponseBody>({
-        body: data,
         statusCode: response.status,
       })
     },
 
     async put<ResponseBody>(url: string, body: unknown) {
-      const response = await fetch(`${baseUrl}/${url}`, {
+      const response = await fetch(`${baseUrl}${url}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(body) ?? {},
+        body: JSON.stringify(body),
       })
       params = {}
-      const data = await response.json()
 
-      if (!response.ok) {
-        return handleApiError<ResponseBody>(data, response.status)
+      if (response.status >= 400) {
+        return handleApiError<ResponseBody>({}, response.status)
       }
 
       return new ApiResponse<ResponseBody>({
-        body: data,
         statusCode: response.status,
       })
     },
 
     async delete(url: string, body: unknown) {
-      const response = await fetch(`${baseUrl}/${url}`, {
+      const response = await fetch(`${baseUrl}${url}`, {
         method: 'DELETE',
         headers,
         body: JSON.stringify(body),
       })
       params = {}
-      const data = await response.json()
 
-      if (!response.ok) {
-        return handleApiError(data, response.status)
+      if (response.status >= 400) {
+        return handleApiError({}, response.status)
       }
 
       return new ApiResponse({
-        body: data,
         statusCode: response.status,
       })
     },

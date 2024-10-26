@@ -3,8 +3,9 @@ import type { AddressDto } from '../../dtos'
 export class Address {
   readonly state: string
   readonly city: string
-  readonly number: number
+  readonly number: string
   readonly zipcode: string
+  readonly neighborhood: string
   readonly street: string
   readonly complement?: string
 
@@ -14,6 +15,7 @@ export class Address {
     this.number = dto.number
     this.zipcode = dto.zipcode
     this.street = dto.street
+    this.neighborhood = dto.neighborhood
     this.complement = dto.complement
   }
 

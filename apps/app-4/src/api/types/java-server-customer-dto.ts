@@ -7,12 +7,12 @@ export type JavaServerCustomerDto = {
     estado: string
     cidade: string
     rua: string
-    numero: number
+    numero: string
     codigoPostal: string
+    bairro: string
     informacoesAdicionais: string
   }
   telefones: Array<{
-    id: string
     ddd: string
     numero: string
   }>

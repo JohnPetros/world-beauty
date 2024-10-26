@@ -1,10 +1,11 @@
-import { CustomerWithAddress } from '@world-beauty/core/entities'
+import type { CustomerWithAddress } from '@world-beauty/core/entities'
 import type { JavaServerCustomerDto } from '../types'
+import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
 
 export const JavaServerCustomerMapper = () => {
   return {
-    toDomain(customer: JavaServerCustomerDto) {
-      return CustomerWithAddress.create({
+    toDto(customer: JavaServerCustomerDto): CustomerWithAddressDto {
+      return {
         id: customer.id,
         name: customer.nome,
         email: customer.email,
@@ -15,13 +16,14 @@ export const JavaServerCustomerMapper = () => {
           number: customer.endereco.numero,
           street: customer.endereco.rua,
           zipcode: customer.endereco.codigoPostal,
+          neighborhood: customer.endereco.bairro,
           complement: customer.endereco.informacoesAdicionais,
         },
         phones: customer.telefones.map((telefone) => ({
-          number: telefone.numero,
           codeArea: telefone.ddd,
+          number: telefone.numero,
         })),
-      })
+      }
     },
 
     toJavaServer(customer: CustomerWithAddress) {
@@ -31,14 +33,14 @@ export const JavaServerCustomerMapper = () => {
         email: customer.email,
         endereco: {
           estado: customer.address.state,
-          cidade: customer.address.number,
-          rua: customer.address.state,
+          cidade: customer.address.city,
+          rua: customer.address.street,
           numero: customer.address.number,
           codigoPostal: customer.address.zipcode,
+          bairro: customer.address.neighborhood,
           informacoesAdicionais: customer.address.complement,
         },
         telefones: customer.phones.map((phone) => ({
-          id: `${customer.id}-${phone.number}`,
           ddd: phone.codeArea,
           numero: phone.number,
         })),

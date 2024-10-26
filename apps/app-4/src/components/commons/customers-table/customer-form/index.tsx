@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Textarea } from '@nextui-org/react'
+import { Button, Divider, Input } from '@nextui-org/react'
 
 import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
 import type { CustomerWithAddress } from '@world-beauty/core/entities'
@@ -96,13 +96,24 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
         />
       </div>
       <Divider />
-      <Textarea
-        label='Complemento'
-        variant='bordered'
-        isInvalid={Boolean(formErrors.address?.complement)}
-        errorMessage={formErrors.address?.complement?.message}
-        {...registerField('address.complement')}
-      />
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+        <Input
+          autoFocus
+          label='Bairro'
+          variant='bordered'
+          isInvalid={Boolean(formErrors.address?.neighborhood)}
+          errorMessage={formErrors.address?.neighborhood?.message}
+          {...registerField('address.neighborhood')}
+        />
+        <Input
+          label='Complemento'
+          variant='bordered'
+          placeholder='Apartamento 2, etc.'
+          isInvalid={Boolean(formErrors.address?.complement)}
+          errorMessage={formErrors.address?.complement?.message}
+          {...registerField('address.complement')}
+        />
+      </div>
       <Divider />
       <div>
         <div className='flex items-center justify-between'>
@@ -158,7 +169,7 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
       <Divider />
       <div className='flex items-center gap-2'>
         <Button type='submit' color='primary' className='mt-3'>
-          Cadastrar
+          Enviar
         </Button>
         <Button color='danger' onClick={onCancel} className='mt-3'>
           Cancelar

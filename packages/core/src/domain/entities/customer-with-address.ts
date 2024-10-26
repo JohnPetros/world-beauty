@@ -12,13 +12,16 @@ type CustomerWithAddressProps = {
 
 export class CustomerWithAddress extends Entity<CustomerWithAddressProps> {
   static create(dto: CustomerWithAddressDto) {
-    return new CustomerWithAddress({
-      name: dto.name,
-      lastname: dto.lastname,
-      email: dto.email,
-      address: Address.create(dto.address),
-      phones: dto.phones.map(Phone.create),
-    })
+    return new CustomerWithAddress(
+      {
+        name: dto.name,
+        lastname: dto.lastname,
+        email: dto.email,
+        address: Address.create(dto.address),
+        phones: dto.phones.map(Phone.create),
+      },
+      dto.id,
+    )
   }
 
   get name() {
@@ -46,7 +49,7 @@ export class CustomerWithAddress extends Entity<CustomerWithAddressProps> {
   }
 
   get formattedAddress() {
-    return `${this.address.street}, ${this.address.number}, ${this.address.city} - ${this.address.state.toUpperCase()}`
+    return `${this.address.street}, ${this.address.number}, ${this.address.city} - ${this.address.state}`
   }
 
   get dto() {
