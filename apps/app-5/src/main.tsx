@@ -1,14 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { NextUIProvider } from '@nextui-org/react'
-
-import './styles/global.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 import { CustomersPage } from './components/pages/customers'
 import { ServicesPage } from './components/pages/services'
 import { ProductsPage } from './components/pages/products'
-import { ListsPage } from './components/pages/lists'
+import { ReportsPage } from './components/pages/reports'
 import { AppLayout } from './components/layouts/app'
+import './styles/global.css'
 
 const router = createBrowserRouter([
   {
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
         element: <ServicesPage />,
       },
       {
-        path: '/lists',
-        element: <ListsPage />,
+        path: '/reports',
+        element: <ReportsPage />,
       },
     ],
   },

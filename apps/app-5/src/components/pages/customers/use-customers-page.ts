@@ -18,7 +18,7 @@ export function useCustomersPage() {
     const response = await customersService.listCustomers(page)
 
     if (response.isFailure) {
-      toast('Não foi possível listar clientes, tente novamente mais tarde')
+      toast.error('Não foi possível listar clientes, tente novamente mais tarde')
       return
     }
 

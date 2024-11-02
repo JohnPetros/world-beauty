@@ -2,23 +2,23 @@ import { Select, SelectItem } from '@nextui-org/react'
 
 import { PageTitle } from '@/components/commons/page-title'
 
-import { useListsPage } from './use-lists-page'
+import { useReportsPage } from './use-reports-page'
 import { CustomersByGenderTable } from './customers-by-gender-table'
 import { CustomersByLessConsumptionTable } from './customers-by-less-consumption-table'
 import { CustomersByMostConsumptionTable } from './customers-by-most-consumption-table'
 import { CustomersByMostSpendingTable } from './customers-by-most-spending-table'
-import { MostConsumedProductsAndServicesTable } from './most-consumed-products-and-services-table copy'
-import { MostConsumedProductsAndServicesByGenderTable } from './most-consumed-products-and-services-table-by-gender copy'
+import { MostConsumedProductsAndServicesTable } from './most-consumed-products-and-services-table'
+import { MostConsumedProductsAndServicesByGenderTable } from './most-consumed-products-and-services-table-by-gender'
 
-export const ListsPage = () => {
-  const { selectedList, handleSelectChange } = useListsPage()
+export const ReportsPage = () => {
+  const { selectedReport, handleSelectChange } = useReportsPage()
 
   return (
     <div className='flex flex-col gap-3'>
-      <PageTitle>Listagens</PageTitle>
+      <PageTitle>Relatórios</PageTitle>
 
       <Select
-        label='Selecione uma lista'
+        label='Selecione um relatório'
         defaultSelectedKeys={['customers-by-most-consumption']}
         onChange={({ target }) => handleSelectChange(target.value)}
         className='max-w-xs'
@@ -42,22 +42,22 @@ export const ListsPage = () => {
       </Select>
 
       <div className='mt-6 pb-6'>
-        {selectedList === 'most-consumed-products-and-services-by-gender' && (
+        {selectedReport === 'most-consumed-products-and-services-by-gender' && (
           <MostConsumedProductsAndServicesByGenderTable />
-        )} 
-         {selectedList === 'most-consumed-products-and-services' && (
+        )}
+        {selectedReport === 'most-consumed-products-and-services' && (
           <MostConsumedProductsAndServicesTable />
         )}
-         {selectedList === 'customers-by-most-spending' && (
+        {selectedReport === 'customers-by-most-spending' && (
           <CustomersByMostSpendingTable />
         )}
-         {selectedList === 'customers-by-most-consumption' && (
+        {selectedReport === 'customers-by-most-consumption' && (
           <CustomersByMostConsumptionTable />
         )}
-         {selectedList === 'customers-by-less-consumption' && (
+        {selectedReport === 'customers-by-less-consumption' && (
           <CustomersByLessConsumptionTable />
         )}
-        {selectedList === 'customers-by-gender' && <CustomersByGenderTable />}
+        {selectedReport === 'customers-by-gender' && <CustomersByGenderTable />}
       </div>
     </div>
   )

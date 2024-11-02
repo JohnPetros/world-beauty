@@ -16,6 +16,12 @@ export function useProductsPage() {
 
   const fetchProducts = useCallback(async (page: number) => {
     const response = await productsService.listProducts(page)
+
+    if (response.isFailure) {
+      toast.error('Não foi possível listar produtos, tente novamente mais tarde')
+      return
+    }
+
     setProducts(response.body.items.map(Product.create))
     setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
     setPage(page)
