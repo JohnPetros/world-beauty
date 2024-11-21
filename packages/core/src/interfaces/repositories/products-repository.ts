@@ -18,5 +18,6 @@ export interface IProductsRepository {
   removeMany(productsIds: string[]): Promise<void>
   count(): Promise<number>
   update(product: Product): Promise<void>
-  add(customer: Product): Promise<void>
+  add(product: Product): Promise<void>
+  addMany(products: Product[]): Promise<void>
 }

@@ -19,4 +19,5 @@ export interface IServicesRepository {
   count(): Promise<number>
   update(service: Service): Promise<void>
   add(customer: Service): Promise<void>
+  addMany(services: Service[]): Promise<void>
 }

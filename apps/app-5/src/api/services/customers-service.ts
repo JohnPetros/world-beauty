@@ -1,7 +1,7 @@
-import type { IApiClient, ICustomersService } from '@world-beauty/core/interfaces'
 import type { Customer } from '@world-beauty/core/entities'
 import type { CustomerDto } from '@world-beauty/core/dtos'
 import type { PaginationResponse } from '@world-beauty/core/responses'
+import type { IApiClient, ICustomersService } from '@world-beauty/core/interfaces'
 
 export const CustomersService = (apiClient: IApiClient): ICustomersService => {
   return {

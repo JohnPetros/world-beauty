@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://neondb_owner:LBFAJcu8K4bS@ep-billowing-sound-a5dwa70v-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+}
+
+enum ItemCategory {
+  PRODUCT
+  SERVICE
+}
+
+enum CustomerGender {
+  MALE
+  FEMALE
+}
+
+model OrderItem {
+  id            String       @id @default(uuid())
+  name          String
+  description   String
+  price         Decimal
+  registered_at DateTime     @default(now())
+  category      ItemCategory
+
+  orders Order[]
+
+  @@map("order_items")
+}
+
+model Customer {
+  id            String         @id @default(uuid())
+  name          String
+  socialName    String
+  gender        CustomerGender @default(MALE)
+  registered_at DateTime       @default(now())
+  rgs           Rg[]
+  phones        Phone[]
+  orders        Order[]
+  cpf           Cpf?
+
+  @@map("users")
+}
+
+model Cpf {
+  id          String   @id @default(uuid())
+  value       String
+  customer_id String   @unique()
+  issued_at   DateTime
+
+  customer Customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@map("cpfs")
+}
+
+model Rg {
+  id          String   @id @default(uuid())
+  value       String
+  customer_id String
+  issued_at   DateTime
+
+  customer Customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@map("rgs")
+}
+
+model Phone {
+  id          String @id @default(uuid())
+  code_area   String
+  number      String
+  customer_id String
+
+  customer Customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+
+  @@map("phones")
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  customer_id   String
+  item_id       String
+  amount        Decimal
+  registered_at DateTime @default(now())
+
+  customer Customer  @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  item     OrderItem @relation(fields: [item_id], references: [id], onDelete: Cascade)
+
+  @@map("orders")
+}
+
+// SELECT C.*, SUM(OI.amount) consumption from customers 
+// LEFT JOIN orders O ON O.customer_id = C.id 
+// LEFT JOIN order_items OI ON O.item_id = OI.id 
+// ORDER BY SUM(OI.amount)

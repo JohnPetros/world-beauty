@@ -14,4 +14,5 @@ export interface ICustomersRepository {
   removeMany(customerIds: string[]): Promise<void>
   add(customer: Customer): Promise<void>
   update(customer: Customer): Promise<void>
+  addMany(customers: Customer[]): Promise<void>
 }

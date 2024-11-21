@@ -1,0 +1,25 @@
+{
+  "name": "node-backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/app",
+    "db:migrate": "prisma migrate dev --schema=./src/database/prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@world-beauty/core": "*",
+    "@world-beauty/validation": "*",
+    "@fastify/cors": "10.0.1",
+    "@prisma/client": "5.22.0",
+    "dotenv": "16.4.5",
+    "fastify": "5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.9.1",
+    "@world-beauty/typescript-config": "*",
+    "prisma": "^5.19.1",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3"
+  }
+}
