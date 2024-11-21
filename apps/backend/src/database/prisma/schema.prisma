@@ -41,7 +41,7 @@ model Customer {
   orders        Order[]
   cpf           Cpf?
 
-  @@map("users")
+  @@map("customers")
 }
 
 model Cpf {

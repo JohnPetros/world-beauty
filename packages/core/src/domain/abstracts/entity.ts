@@ -6,7 +6,7 @@ export class Entity<Props> {
 
   constructor(props: Props, id?: string) {
     this.props = props
-    this.id = id ?? generateId().slice(0, 4)
+    this.id = id ?? generateId()
   }
 
   isEqualTo(entity: Entity<Props>): boolean {

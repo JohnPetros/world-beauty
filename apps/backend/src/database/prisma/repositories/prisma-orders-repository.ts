@@ -28,7 +28,7 @@ export class PrismaOrdersRepository implements IOrdersRepository {
   }
 
   async addMany(orders: Order[]): Promise<void> {
-    prisma.order.createMany({
+    await prisma.order.createMany({
       data: orders.map((order) => ({
         customer_id: order.customerId,
         item_id: order.itemId,

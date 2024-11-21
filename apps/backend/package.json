@@ -8,6 +8,9 @@
     "db:migrate": "prisma migrate dev --schema=./src/database/prisma/schema.prisma",
     "db:generate": "prisma generate --schema=./src/database/prisma/schema.prisma"
   },
+  "prisma": {
+    "seed": "tsx ./src/database/prisma/seed.ts"
+  },
   "dependencies": {
     "@world-beauty/core": "*",
     "@world-beauty/validation": "*",

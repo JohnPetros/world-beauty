@@ -9,7 +9,7 @@ import { Prisma } from '@prisma/client'
 const custumersQuery = Prisma.sql`
 SELECT 
   C.*, 
-  SUM(OI.amount) spending, 
+  ROUND(SUM(O.amount), 2) spending, 
   COUNT(OI.id) consumption, 
   JSON_BUILD_OBJECT(
     'value', CPF.value,
@@ -21,7 +21,7 @@ LEFT JOIN rgs RG ON RG.customer_id = C.id
 LEFT JOIN phones P ON P.customer_id = C.id
 LEFT JOIN orders O ON O.customer_id = C.id 
 LEFT JOIN order_items OI ON O.item_id = OI.id
-`
+GROUP BY C.id, CPF.value, CPF.issued_at`
 
 export class PrismaCustomersRepository implements ICustomersRepository {
   private readonly mapper = new PrismaCustomersMapper()
@@ -138,6 +138,7 @@ export class PrismaCustomersRepository implements ICustomersRepository {
 
     await prisma.customer.create({
       data: {
+        id: customer.id,
         name: prismaCustomer.name,
         socialName: prismaCustomer.socialName,
         gender: prismaCustomer.gender,
@@ -148,37 +149,23 @@ export class PrismaCustomersRepository implements ICustomersRepository {
           },
         },
         rgs: {
-          create: prismaCustomer.rgs,
+          create: prismaCustomer.rgs.map((rg) => ({
+            value: rg.value,
+            issued_at: rg.issued_at,
+          })),
         },
         phones: {
-          create: prismaCustomer.phones,
+          create: prismaCustomer.phones.map((phone) => ({
+            number: phone.number,
+            code_area: phone.code_area,
+          })),
         },
       },
     })
   }
 
   async addMany(customers: Customer[]): Promise<void> {
-    const prismaCustomers = customers.map(this.mapper.toPrisma)
-
-    await prisma.customer.createMany({
-      data: prismaCustomers.map((prismaCustomer) => ({
-        name: prismaCustomer.name,
-        socialName: prismaCustomer.socialName,
-        gender: prismaCustomer.gender,
-        cpf: {
-          create: {
-            value: prismaCustomer.cpf.value,
-            issued_at: prismaCustomer.cpf.issued_at,
-          },
-        },
-        rgs: {
-          create: prismaCustomer.rgs,
-        },
-        phones: {
-          create: prismaCustomer.phones,
-        },
-      })),
-    })
+    for (const customer of customers) await this.add(customer)
   }
 
   async update(customer: Customer): Promise<void> {

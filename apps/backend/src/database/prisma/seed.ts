@@ -9,7 +9,7 @@ import {
   ordersRepository,
 } from '..'
 
-export const Seed = async () => {
+export async function seed() {
   const fakeProducts = ProductsFaker.fakeMany(20)
   await productsRepository.removeAll()
 
@@ -58,3 +58,7 @@ export const Seed = async () => {
 
   await ordersRepository.addMany(fakeOrders)
 }
+
+seed().then(() => {
+  console.log('Database seeded 🌱')
+})

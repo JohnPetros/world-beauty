@@ -166,7 +166,7 @@ export class PrismaProductsRepository implements IProductsRepository {
   async addMany(products: Product[]): Promise<void> {
     const prismaItems = products.map(this.mapper.toPrisma)
 
-    prisma.orderItem.createMany({
+    await prisma.orderItem.createMany({
       data: prismaItems.map((item) => ({
         id: item.id,
         name: item.name,

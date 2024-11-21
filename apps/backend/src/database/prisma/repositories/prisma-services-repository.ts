@@ -160,7 +160,7 @@ export class PrismaServicesRepository implements IServicesRepository {
   async addMany(services: Service[]): Promise<void> {
     const prismaItems = services.map(this.mapper.toPrisma)
 
-    prisma.orderItem.createMany({
+    await prisma.orderItem.createMany({
       data: prismaItems.map((item) => ({
         id: item.id,
         name: item.name,

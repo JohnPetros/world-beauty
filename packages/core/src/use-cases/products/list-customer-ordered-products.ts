@@ -2,7 +2,7 @@ import type { IProductsRepository } from '../../interfaces'
 import { PaginationResponse } from '../../responses/pagination-response'
 
 export class ListCustomerOrderedProductsUseCase {
-  constructor(private readonly productsRepository: IProductsRepository) {}
+  constructor(private readonly productsRepository: IProductsRepository) { }
 
   async execute(customerId: string, page: number) {
     const { products, count } = await this.productsRepository.findManyByCustomerId(
