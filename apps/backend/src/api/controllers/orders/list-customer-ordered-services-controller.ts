@@ -1,7 +1,7 @@
 import type { IHttp } from '@world-beauty/core/interfaces'
-import { ListCustomerOrderedProductsUseCase } from '@world-beauty/core/use-cases'
+import { ListCustomerOrderedservicesUseCase } from '@world-beauty/core/use-cases'
 
-import { productsRepository } from '../../../database'
+import { servicesRepository } from '../../../database'
 
 type QueryParams = {
   page: number
@@ -11,11 +11,11 @@ type RouteParams = {
   customerId: string
 }
 
-export class ListCustomersOrderedProductsController {
+export class ListCustomersOrderedServicesController {
   async handle(http: IHttp) {
     const { page } = http.getQueryParams<QueryParams>()
     const { customerId } = http.getRouteParams<RouteParams>()
-    const useCase = new ListCustomerOrderedProductsUseCase(productsRepository)
+    const useCase = new ListCustomerOrderedServicesUseCase(servicesRepository)
     const response = await useCase.execute(customerId, page)
 
     return http.send(response)
