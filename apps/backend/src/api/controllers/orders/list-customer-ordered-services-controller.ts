@@ -15,7 +15,7 @@ export class ListCustomersOrderedServicesController {
   async handle(http: IHttp) {
     const { page } = http.getQueryParams<QueryParams>()
     const { customerId } = http.getRouteParams<RouteParams>()
-    const useCase = new ListCustomerOrderedServicesUseCase(servicesRepository)
+    const useCase = new ListCustomerOrderedservicesUseCase(servicesRepository)
     const response = await useCase.execute(customerId, page)
 
     return http.send(response)
