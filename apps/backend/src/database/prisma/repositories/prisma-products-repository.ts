@@ -15,8 +15,8 @@ export class PrismaProductsRepository implements IProductsRepository {
     const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
       SELECT I.*, COUNT(O.id) orders_count FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product'
-      GROUP BY I.*,
+      WHERE category = 'PRODUCT'
+      GROUP BY I.id
       ORDER BY registered_at DESC
     `
     return prismaItems.map(this.mapper.toDomain)
@@ -29,8 +29,8 @@ export class PrismaProductsRepository implements IProductsRepository {
     const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
       SELECT I.*, COUNT(O.id) orders_count FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product'
-      GROUP BY I.*,
+      WHERE category = 'PRODUCT'
+      GROUP BY I.id
       ORDER BY registered_at DESC
       ${paginationQuery}
     `
@@ -49,16 +49,16 @@ export class PrismaProductsRepository implements IProductsRepository {
       SELECT I.*, COUNT  
       FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product' AND customer_id = ${customerId}
+      WHERE category = 'PRODUCT' AND customer_id = ${customerId}
       ORDER BY registered_at DESC
-      GROUPY BY I.*
+      GROUP BY I.id
       ${paginationQuery}
     `
 
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product' AND customer_id = ${customerId}
+      WHERE category = 'PRODUCT' AND customer_id = ${customerId}
     `
 
     return {
@@ -77,8 +77,8 @@ export class PrismaProductsRepository implements IProductsRepository {
       SELECT I.*, COUNT(O.id) 
       FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product'
-      GROUPY BY I.*
+      WHERE category = 'PRODUCT'
+      GROUP BY I.id
       ORDER BY COUNT(O.id) DESC
       ${paginationQuery}
     `
@@ -86,7 +86,7 @@ export class PrismaProductsRepository implements IProductsRepository {
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product'
+      WHERE category = 'PRODUCT'
     `
 
     return {
@@ -107,8 +107,8 @@ export class PrismaProductsRepository implements IProductsRepository {
       FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
       LEFT JOIN customers C ON O.customer_id = C.id
-      WHERE category = 'product' AND C.gender = ${gender}
-      GROUPY BY I.*
+      WHERE category = 'PRODUCT' AND C.gender = ${gender}
+      GROUP BY I.id
       ORDER BY COUNT(O.id) DESC
       ${paginationQuery}
     `
@@ -116,7 +116,7 @@ export class PrismaProductsRepository implements IProductsRepository {
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'product'
+      WHERE category = 'PRODUCT'
     `
 
     return {
@@ -134,7 +134,7 @@ export class PrismaProductsRepository implements IProductsRepository {
   }
 
   async count(): Promise<number> {
-    return await prisma.orderItem.count()
+    return await prisma.orderItem.count({ where: { category: 'PRODUCT' } })
   }
 
   async update(product: Product): Promise<void> {

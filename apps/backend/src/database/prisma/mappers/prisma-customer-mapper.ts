@@ -13,16 +13,20 @@ export class PrismaCustomersMapper {
         value: prismaCustomer.cpf.value,
         issueDate: prismaCustomer.cpf.issued_at,
       },
-      consumption: prismaCustomer.consumption,
-      spending: prismaCustomer.spending,
-      phones: prismaCustomer.phones.map((phone) => ({
-        number: phone.number,
-        codeArea: phone.code_area,
-      })),
-      rgs: prismaCustomer.rgs.map((rg) => ({
-        value: rg.value,
-        issueDate: rg.issued_at,
-      })),
+      consumption: Number(prismaCustomer.consumption),
+      spending: Number(prismaCustomer.spending),
+      phones: prismaCustomer.phones
+        .filter((phone) => Boolean(phone.number))
+        .map((phone) => ({
+          number: phone.number,
+          codeArea: phone.code_area,
+        })),
+      rgs: prismaCustomer.rgs
+        .filter((rg) => Boolean(rg.value))
+        .map((rg) => ({
+          value: rg.value,
+          issueDate: rg.issued_at,
+        })),
       socialName: prismaCustomer.socialName,
       gender: prismaCustomer.gender === 'MALE' ? 'male' : 'female',
     })
@@ -35,7 +39,10 @@ export class PrismaCustomersMapper {
       cpf: {
         id: '',
         value: customer.cpf.value,
-        issued_at: customer.cpf.issueDate,
+        issued_at:
+          customer.cpf.issueDate instanceof Date
+            ? customer.cpf.issueDate
+            : new Date(customer.cpf.issueDate),
         customer_id: customer.id,
       },
       socialName: customer.socialName,
@@ -43,7 +50,7 @@ export class PrismaCustomersMapper {
       rgs: customer.rgs.map((rg) => ({
         id: '',
         value: rg.value,
-        issued_at: rg.issueDate,
+        issued_at: rg.issueDate instanceof Date ? rg.issueDate : new Date(rg.issueDate),
         customer_id: customer.id,
       })),
       phones: customer.phones.map((phone) => ({

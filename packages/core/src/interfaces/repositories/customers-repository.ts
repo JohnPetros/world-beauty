@@ -1,6 +1,7 @@
 import type { Customer } from '../../domain/entities/customer'
 
 export interface ICustomersRepository {
+  findById(customerId: string): Promise<Customer | null>
   findAll(): Promise<Customer[]>
   findAllMale(): Promise<Customer[]>
   findAllFemale(): Promise<Customer[]>

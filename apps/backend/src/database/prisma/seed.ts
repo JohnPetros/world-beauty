@@ -10,14 +10,15 @@ import {
 } from '..'
 
 export async function seed() {
+  await Promise.all([
+    productsRepository.removeAll(),
+    customersRepository.removeAll(),
+    ordersRepository.removeAll(),
+    servicesRepository.removeAll(),
+  ])
+
   const fakeProducts = ProductsFaker.fakeMany(20)
-  await productsRepository.removeAll()
-
   const fakeServices = ServicesFaker.fakeMany(10)
-  await servicesRepository.removeAll()
-
-  await customersRepository.removeAll()
-  await ordersRepository.removeAll()
 
   const fakeCustomers = []
   const fakeOrders = []

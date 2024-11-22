@@ -8,18 +8,17 @@ import { PrismaServicesMapper } from '../mappers'
 import type { PrismaService } from '../types'
 import { PAGINATION } from '@world-beauty/core/constants'
 
-const servicesQuery = Prisma.sql`
-  SELECT I.*, COUNT(O.id) orders_count FROM order_items I
-  LEFT JOIN orders O ON O.item_id = I.id
-  WHERE category = 'Service'
-  ORDER BY registered_at DESC
-`
-
 export class PrismaServicesRepository implements IServicesRepository {
   private readonly mapper = new PrismaServicesMapper()
 
   async findAll(): Promise<Service[]> {
-    const prismaItems = await prisma.$queryRaw<PrismaService[]>`${servicesQuery}`
+    const prismaItems = await prisma.$queryRaw<PrismaService[]>`
+      SELECT I.*, COUNT(O.id) orders_count FROM order_items I
+      LEFT JOIN orders O ON O.item_id = I.id
+      WHERE category = 'SERVICE'
+      GROUP BY I.id
+      ORDER BY registered_at DESC
+    `
     return prismaItems.map(this.mapper.toDomain)
   }
 
@@ -27,9 +26,15 @@ export class PrismaServicesRepository implements IServicesRepository {
     const itemsPerPage = PAGINATION.itemsPerPage
     const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1})`
 
-    const prismaItems = await prisma.$queryRaw<
-      PrismaService[]
-    >`${servicesQuery} ${paginationQuery}`
+    const prismaItems = await prisma.$queryRaw<PrismaService[]>`
+      SELECT I.*, COUNT(O.id) orders_count FROM order_items I
+      LEFT JOIN orders O ON O.item_id = I.id
+      WHERE category = 'SERVICE'
+      GROUP BY I.id
+      ORDER BY registered_at DESC
+      ${paginationQuery}
+    `
+
     return prismaItems.map(this.mapper.toDomain)
   }
 
@@ -43,17 +48,17 @@ export class PrismaServicesRepository implements IServicesRepository {
     const prismaItems = await prisma.$queryRaw<PrismaService[]>`
       SELECT I.*, COUNT  
       FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'Service' AND customer_id = ${customerId}
+      LEFT JOIN orders O ON O.item_id = I.SERVICE
+      WHERE category = 'SERVICE' AND customer_id = ${customerId}
       ORDER BY registered_at DESC
-      GROUPY BY I.*
+      GROUP BY I.id
       ${paginationQuery}
     `
 
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'Service' AND customer_id = ${customerId}
+      LEFT JOIN orders O ON O.item_id = I.SERVICE
+      WHERE category = 'SERVICE' AND customer_id = ${customerId}
     `
 
     return {
@@ -73,7 +78,7 @@ export class PrismaServicesRepository implements IServicesRepository {
       FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
       WHERE category = 'SERVICE'
-      GROUPY BY I.*
+      GROUP BY I.id
       ORDER BY COUNT(O.id) DESC
       ${paginationQuery}
     `
@@ -81,7 +86,7 @@ export class PrismaServicesRepository implements IServicesRepository {
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'Service'
+      WHERE category = 'SERVICE'
     `
 
     return {
@@ -101,9 +106,9 @@ export class PrismaServicesRepository implements IServicesRepository {
       SELECT I.*, COUNT(O.id) 
       FROM order_items I
       LEFT JOIN orders O ON O.item_id = I.id
-      LEFT JOIN customers C ON O.customer_id = C.id
+      LEFT JOIN customers C ON O.customer_id = C.SERVICE
       WHERE category = 'SERVICE' AND C.gender = ${gender}
-      GROUPY BY I.*
+      GROUP BY I.id
       ORDER BY COUNT(O.id) DESC
       ${paginationQuery}
     `
@@ -111,7 +116,7 @@ export class PrismaServicesRepository implements IServicesRepository {
     const count = await prisma.$queryRaw<{ count: number }[]>`
       SELECT COUNT(I.id)
       LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'Service'
+      WHERE category = 'SERVICE'
     `
 
     return {
@@ -129,36 +134,37 @@ export class PrismaServicesRepository implements IServicesRepository {
   }
 
   async count(): Promise<number> {
-    return await prisma.orderItem.count()
+    return await prisma.orderItem.count({ where: { category: 'SERVICE' } })
   }
 
-  async update(service: Service): Promise<void> {
+  async update(Service: Service): Promise<void> {
     await prisma.orderItem.update({
       data: {
-        name: service.name,
-        price: service.price,
-        description: service.description,
+        name: Service.name,
+        price: Service.price,
+        description: Service.description,
         category: 'SERVICE',
       },
       where: {
-        id: service.id,
+        id: Service.id,
       },
     })
   }
 
-  async add(service: Service): Promise<void> {
+  async add(Service: Service): Promise<void> {
     await prisma.orderItem.create({
       data: {
-        name: service.name,
-        price: service.price,
-        description: service.description,
+        id: Service.id,
+        name: Service.name,
+        price: Service.price,
+        description: Service.description,
         category: 'SERVICE',
       },
     })
   }
 
-  async addMany(services: Service[]): Promise<void> {
-    const prismaItems = services.map(this.mapper.toPrisma)
+  async addMany(Services: Service[]): Promise<void> {
+    const prismaItems = Services.map(this.mapper.toPrisma)
 
     await prisma.orderItem.createMany({
       data: prismaItems.map((item) => ({

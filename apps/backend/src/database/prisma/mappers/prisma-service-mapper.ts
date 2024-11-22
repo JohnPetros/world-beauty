@@ -11,7 +11,7 @@ export class PrismaServicesMapper {
       category: 'service',
       price: Number(prismaService.price),
       description: prismaService.description,
-      ordersCount: prismaService.orders_count,
+      ordersCount: Number(prismaService.orders_count),
     })
   }
 

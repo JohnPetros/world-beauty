@@ -4,121 +4,414 @@ import { PAGINATION } from '@world-beauty/core/constants'
 import { prisma } from '../client'
 import { PrismaCustomersMapper } from '../mappers'
 import type { PrismaCustomer } from '../types'
-import { Prisma } from '@prisma/client'
-
-const custumersQuery = Prisma.sql`
-SELECT 
-  C.*, 
-  ROUND(SUM(O.amount), 2) spending, 
-  COUNT(OI.id) consumption, 
-  JSON_BUILD_OBJECT(
-    'value', CPF.value,
-    'issued_at', CPF.issued_at
-  ) cpf
-FROM customers C
-LEFT JOIN cpfs CPF ON CPF.customer_id = C.id 
-LEFT JOIN rgs RG ON RG.customer_id = C.id
-LEFT JOIN phones P ON P.customer_id = C.id
-LEFT JOIN orders O ON O.customer_id = C.id 
-LEFT JOIN order_items OI ON O.item_id = OI.id
-GROUP BY C.id, CPF.value, CPF.issued_at`
 
 export class PrismaCustomersRepository implements ICustomersRepository {
   private readonly mapper = new PrismaCustomersMapper()
 
+  async findById(customerId: string): Promise<Customer | null> {
+    const data = await prisma.customer.findUnique({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        id: customerId,
+      },
+    })
+
+    if (!data) return null
+
+    const prismaCustomer = {
+      id: data.id,
+      cpf: data.cpf,
+      name: data.name,
+      socialName: data.socialName,
+      gender: data.gender,
+      phones: data.phones,
+      rgs: data.rgs,
+      registered_at: data.registered_at,
+      consumption: data.orders.reduce((total) => total + 1, 0),
+      spending: data.orders.reduce((total, order) => total + Number(order.amount), 0),
+    }
+
+    return this.mapper.toDomain(prismaCustomer as PrismaCustomer)
+  }
+
   async findAll(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`${custumersQuery}`
-    return prismaCustomers.map(this.mapper.toDomain)
+    const data = await prisma.customer.findMany({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async findAllMale(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      WHERE gender = 'MALE'
-    `
-    return prismaCustomers.map(this.mapper.toDomain)
+    const data = await prisma.customer.findMany({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        gender: 'MALE',
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async findAllFemale(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      WHERE gender = 'FEMALE'
-    `
-    return prismaCustomers.map(this.mapper.toDomain)
+    const data = await prisma.customer.findMany({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        gender: 'FEMALE',
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async findManyMale(page: number): Promise<{ customers: Customer[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1});`
 
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      WHERE gender = 'MALE'
-      ${paginationQuery}
-    `
+    const data = await prisma.customer.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        gender: 'MALE',
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
 
     const count = await prisma.customer.count({ where: { gender: 'FEMALE' } })
 
-    return { customers: prismaCustomers.map(this.mapper.toDomain), count }
+    return {
+      customers: (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain),
+      count,
+    }
   }
 
   async findManyFemale(page: number): Promise<{ customers: Customer[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1});`
 
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      WHERE gender = 'FEMALE'
-      ${paginationQuery}
-    `
+    const data = await prisma.customer.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        gender: 'FEMALE',
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
 
     const count = await prisma.customer.count({ where: { gender: 'FEMALE' } })
 
-    return { customers: prismaCustomers.map(this.mapper.toDomain), count }
+    return {
+      customers: (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain),
+      count,
+    }
   }
 
   async findMany(page: number): Promise<{ customers: Customer[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1});`
 
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      ${paginationQuery}
-    `
+    const data = await prisma.customer.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
+
+    const prismaCustomers = data.map((prismaCustomer) => ({
+      id: prismaCustomer.id,
+      cpf: prismaCustomer.cpf,
+      name: prismaCustomer.name,
+      socialName: prismaCustomer.socialName,
+      gender: prismaCustomer.gender,
+      phones: prismaCustomer.phones,
+      rgs: prismaCustomer.rgs,
+      registered_at: prismaCustomer.registered_at,
+      consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+      spending: prismaCustomer.orders.reduce(
+        (total, order) => total + Number(order.amount),
+        0,
+      ),
+    }))
 
     const count = await prisma.customer.count()
 
-    return { customers: prismaCustomers.map(this.mapper.toDomain), count }
+    return {
+      customers: (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain),
+      count,
+    }
   }
 
   async findTop10CustomersByMostConsumption(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      ORDER BY COUNT(OI.id) DESC
-      LIMIT 10
-    `
+    const data = await prisma.customer.findMany({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      orderBy: {
+        registered_at: 'desc',
+      },
+    })
 
-    return prismaCustomers.map(this.mapper.toDomain)
+    const prismaCustomers = data
+      .map((prismaCustomer) => ({
+        id: prismaCustomer.id,
+        cpf: prismaCustomer.cpf,
+        name: prismaCustomer.name,
+        socialName: prismaCustomer.socialName,
+        gender: prismaCustomer.gender,
+        phones: prismaCustomer.phones,
+        rgs: prismaCustomer.rgs,
+        registered_at: prismaCustomer.registered_at,
+        consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+        spending: prismaCustomer.orders.reduce(
+          (total, order) => total + Number(order.amount),
+          0,
+        ),
+      }))
+      .sort((fisrtCustomer, secondCustomer) => {
+        return secondCustomer.consumption - fisrtCustomer.consumption
+      })
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async findTop10CustomersByLessConsumption(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-      ${custumersQuery}
-      ORDER BY SUM(OI.amount) ASC
-      LIMIT 10
-    `
+    const data = await prisma.customer.findMany({
+      take: 10,
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+    })
 
-    return prismaCustomers.map(this.mapper.toDomain)
+    const prismaCustomers = data
+      .map((prismaCustomer) => ({
+        id: prismaCustomer.id,
+        cpf: prismaCustomer.cpf,
+        name: prismaCustomer.name,
+        socialName: prismaCustomer.socialName,
+        gender: prismaCustomer.gender,
+        phones: prismaCustomer.phones,
+        rgs: prismaCustomer.rgs,
+        registered_at: prismaCustomer.registered_at,
+        consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+        spending: prismaCustomer.orders.reduce(
+          (total, order) => total + Number(order.amount),
+          0,
+        ),
+      }))
+      .sort((fisrtCustomer, secondCustomer) => {
+        return fisrtCustomer.consumption - secondCustomer.consumption
+      })
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async findTop5CustomersByMostSpending(): Promise<Customer[]> {
-    const prismaCustomers = await prisma.$queryRaw<PrismaCustomer[]>`
-    ${custumersQuery}
-    ORDER BY SUM(OI.amount) DESC
-    LIMIT 5
-  `
+    const data = await prisma.customer.findMany({
+      take: 10,
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+    })
 
-    return prismaCustomers.map(this.mapper.toDomain)
+    const prismaCustomers = data
+      .map((prismaCustomer) => ({
+        id: prismaCustomer.id,
+        cpf: prismaCustomer.cpf,
+        name: prismaCustomer.name,
+        socialName: prismaCustomer.socialName,
+        gender: prismaCustomer.gender,
+        phones: prismaCustomer.phones,
+        rgs: prismaCustomer.rgs,
+        registered_at: prismaCustomer.registered_at,
+        consumption: prismaCustomer.orders.reduce((total) => total + 1, 0),
+        spending: prismaCustomer.orders.reduce(
+          (total, order) => total + Number(order.amount),
+          0,
+        ),
+      }))
+      .sort((fisrtCustomer, secondCustomer) => {
+        return secondCustomer.spending - fisrtCustomer.spending
+      })
+
+    return (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain)
   }
 
   async removeAll(): Promise<void> {
@@ -169,9 +462,58 @@ export class PrismaCustomersRepository implements ICustomersRepository {
   }
 
   async update(customer: Customer): Promise<void> {
-    // await prisma.customer.update({
-    //   where: { id: customer.id },
-    //   data: customer,
-    // })
+    const prismaCustomer = this.mapper.toPrisma(customer)
+
+    const rgs = await prisma.rg.findMany({
+      where: { customer_id: prismaCustomer.id },
+      select: { id: true },
+    })
+    const phones = await prisma.phone.findMany({
+      where: { customer_id: customer.id },
+      select: { id: true },
+    })
+
+    await prisma.customer.update({
+      data: {
+        name: prismaCustomer.name,
+        socialName: prismaCustomer.socialName,
+        gender: prismaCustomer.gender,
+        cpf: {
+          update: {
+            value: prismaCustomer.cpf.value,
+            issued_at: prismaCustomer.cpf.issued_at,
+          },
+        },
+        rgs: {
+          update: prismaCustomer.rgs.map((rg, index) => ({
+            data: {
+              value: rg.value,
+              issued_at: rg.issued_at,
+            },
+            where: { id: rgs[index].id },
+          })),
+          create: customer.newRgs.map((rg) => ({
+            value: rg.value,
+            issued_at: rg.issueDate,
+          })),
+        },
+        phones: {
+          update: prismaCustomer.phones.map((phone, index) => ({
+            data: {
+              code_area: phone.code_area,
+              number: phone.number,
+            },
+            where: { id: phones[index].id },
+          })),
+          create: customer.newPhones.map((phone) => ({
+            code_area: phone.codeArea,
+            number: phone.number,
+          })),
+        },
+      },
+      where: {
+        id: customer.id,
+      },
+    })
   }
 }

@@ -13,4 +13,11 @@ export class Phone {
   get value(): string {
     return `+${this.codeArea} ${this.number}`
   }
+
+  get dto(): PhoneDto {
+    return {
+      codeArea: this.codeArea,
+      number: this.number,
+    }
+  }
 }

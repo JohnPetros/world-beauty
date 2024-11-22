@@ -11,6 +11,8 @@ export type CustomerProps = {
   gender: string
   rgs: Rg[]
   phones: Phone[]
+  newRgs: Rg[]
+  newPhones: Phone[]
   consumption: number
   spending: number
 }
@@ -27,6 +29,8 @@ export class Customer extends Entity<CustomerProps> {
         rgs: dto.rgs.map(Rg.create),
         consumption: dto.consumption ?? 0,
         spending: dto.spending ?? 0,
+        newRgs: [],
+        newPhones: [],
       },
       dto.id,
     )
@@ -37,8 +41,31 @@ export class Customer extends Entity<CustomerProps> {
     this.props.consumption += 1
   }
 
-  update(dto: CustomerDto): Customer {
-    return Customer.create({ ...this.dto, ...dto })
+  update(dto: Partial<CustomerDto>): Customer {
+    const updatedCustomer = Customer.create({
+      ...this.dto,
+      ...dto,
+      rgs: this.dto.rgs,
+      phones: this.dto.phones,
+    })
+
+    if (dto.rgs?.length) {
+      const newRgs = dto.rgs.filter((rg) => {
+        const currentRgs = this.rgs.map((currentRg) => currentRg.value)
+        return !currentRgs.includes(rg.value)
+      })
+      updatedCustomer.newRgs = newRgs.map(Rg.create)
+    }
+    if (dto.phones?.length) {
+      const newPhones = dto.phones.filter((phone) => {
+        const currentPhones = this.phones.map((currentPhone) => currentPhone.number)
+        return !currentPhones.includes(phone.number)
+      })
+      console.log('newPhones', newPhones)
+      updatedCustomer.newPhones = newPhones.map(Phone.create)
+    }
+
+    return updatedCustomer
   }
 
   set spending(spending: number) {
@@ -47,6 +74,22 @@ export class Customer extends Entity<CustomerProps> {
 
   set consumption(consumption: number) {
     this.props.consumption = consumption
+  }
+
+  set newPhones(phones: Phone[]) {
+    this.props.newPhones = phones
+  }
+
+  set newRgs(Rgs: Rg[]) {
+    this.props.newRgs = Rgs
+  }
+
+  get newRgs() {
+    return this.props.newRgs
+  }
+
+  get newPhones() {
+    return this.props.newPhones
   }
 
   get consumption(): number {
@@ -105,7 +148,7 @@ export class Customer extends Entity<CustomerProps> {
       gender: this.gender,
       cpf: this.cpf.dto,
       rgs: this.rgs.map((rg) => rg.dto),
-      phones: this.phones,
+      phones: this.phones.map((phone) => phone.dto),
       consumption: this.consumption,
       spending: this.spending,
     }

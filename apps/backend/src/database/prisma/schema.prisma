@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:LBFAJcu8K4bS@ep-billowing-sound-a5dwa70v-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+  url      = "postgresql://neondb_owner:LBFAJcu8K4bS@ep-billowing-sound-a5dwa70v-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require&connect_timeout=5"
 }
 
 enum ItemCategory {
@@ -46,7 +46,7 @@ model Customer {
 
 model Cpf {
   id          String   @id @default(uuid())
-  value       String
+  value       String   @unique()
   customer_id String   @unique()
   issued_at   DateTime
 
@@ -57,7 +57,7 @@ model Cpf {
 
 model Rg {
   id          String   @id @default(uuid())
-  value       String
+  value       String   @unique()
   customer_id String
   issued_at   DateTime
 
@@ -69,7 +69,7 @@ model Rg {
 model Phone {
   id          String @id @default(uuid())
   code_area   String
-  number      String
+  number      String @unique()
   customer_id String
 
   customer Customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
