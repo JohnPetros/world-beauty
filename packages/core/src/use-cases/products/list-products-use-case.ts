@@ -10,6 +10,9 @@ export class ListProductsUseCase {
       this.productsRepository.count(),
     ])
 
-    return new PaginationResponse({ items: products, itemsCount: productsCount })
+    return new PaginationResponse({
+      items: products.map((product) => product.dto),
+      itemsCount: productsCount,
+    })
   }
 }

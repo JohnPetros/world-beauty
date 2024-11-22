@@ -11,7 +11,7 @@ export class PrismaProductsMapper {
       category: 'product',
       price: Number(prismaProduct.price),
       description: prismaProduct.description,
-      ordersCount: Number(prismaProduct.orders_count),
+      ordersCount: prismaProduct._count.orders,
     })
   }
 
@@ -22,8 +22,8 @@ export class PrismaProductsMapper {
       category: 'PRODUCT',
       price: product.price as unknown as Decimal,
       description: product.description,
-      orders_count: product.ordersCount,
       registered_at: new Date(),
+      _count: { orders: product.ordersCount },
     }
   }
 }

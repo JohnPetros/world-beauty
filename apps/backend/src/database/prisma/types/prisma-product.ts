@@ -1,3 +1,7 @@
 import type { OrderItem } from '@prisma/client'
 
-export type PrismaProduct = OrderItem & { orders_count: number }
+export type PrismaProduct = OrderItem & {
+  _count: {
+    orders: number
+  }
+}

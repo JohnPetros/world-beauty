@@ -4,14 +4,14 @@ import { DeleteProductsUseCase } from '@world-beauty/core/use-cases'
 import { productsRepository } from '../../../database'
 
 type Body = {
-  ProductsIds: string[]
+  productsIds: string[]
 }
 
 export class DeleteProductsController {
   async handle(http: IHttp) {
-    const { ProductsIds } = http.getBody<Body>()
+    const { productsIds } = http.getBody<Body>()
     const useCase = new DeleteProductsUseCase(productsRepository)
-    await useCase.execute(ProductsIds)
+    await useCase.execute(productsIds)
 
     return http.send(null)
   }

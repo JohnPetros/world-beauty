@@ -1,41 +1,45 @@
-import { Prisma } from '@prisma/client'
-
 import type { Product } from '@world-beauty/core/entities'
 import type { IProductsRepository } from '@world-beauty/core/interfaces'
 
 import { prisma } from '../client'
 import { PrismaProductsMapper } from '../mappers'
-import type { PrismaProduct } from '../types'
 import { PAGINATION } from '@world-beauty/core/constants'
 
 export class PrismaProductsRepository implements IProductsRepository {
   private readonly mapper = new PrismaProductsMapper()
 
+  async findById(productId: string): Promise<Product | null> {
+    const prismaItem = await prisma.orderItem.findUnique({
+      include: { _count: { select: { orders: true } } },
+      where: { id: productId },
+    })
+
+    if (!prismaItem) return null
+
+    return this.mapper.toDomain(prismaItem)
+  }
+
   async findAll(): Promise<Product[]> {
-    const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
-      SELECT I.*, COUNT(O.id) orders_count FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT'
-      GROUP BY I.id
-      ORDER BY registered_at DESC
-    `
-    return prismaItems.map(this.mapper.toDomain)
+    const prismaProducts = await prisma.orderItem.findMany({
+      include: { _count: { select: { orders: true } } },
+      orderBy: { registered_at: 'desc' },
+    })
+
+    return prismaProducts.map(this.mapper.toDomain)
   }
 
   async findMany(page: number): Promise<Product[]> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1})`
 
-    const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
-      SELECT I.*, COUNT(O.id) orders_count FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT'
-      GROUP BY I.id
-      ORDER BY registered_at DESC
-      ${paginationQuery}
-    `
+    const prismaProducts = await prisma.orderItem.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      where: { category: 'PRODUCT' },
+      include: { _count: { select: { orders: true } } },
+      orderBy: { registered_at: 'desc' },
+    })
 
-    return prismaItems.map(this.mapper.toDomain)
+    return prismaProducts.map(this.mapper.toDomain)
   }
 
   async findManyByCustomerId(
@@ -43,27 +47,20 @@ export class PrismaProductsRepository implements IProductsRepository {
     customerId: string,
   ): Promise<{ products: Product[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1})`
 
-    const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
-      SELECT I.*, COUNT  
-      FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT' AND customer_id = ${customerId}
-      ORDER BY registered_at DESC
-      GROUP BY I.id
-      ${paginationQuery}
-    `
+    const prismaProducts = await prisma.orderItem.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      where: { category: 'PRODUCT', orders: { every: { customer_id: customerId } } },
+      include: { _count: { select: { orders: true } } },
+      orderBy: { registered_at: 'desc' },
+    })
 
-    const count = await prisma.$queryRaw<{ count: number }[]>`
-      SELECT COUNT(I.id)
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT' AND customer_id = ${customerId}
-    `
+    const count = await prisma.orderItem.count({ where: { category: 'PRODUCT' } })
 
     return {
-      products: prismaItems.map(this.mapper.toDomain),
-      count: count[0].count,
+      products: prismaProducts.map(this.mapper.toDomain),
+      count,
     }
   }
 
@@ -71,27 +68,19 @@ export class PrismaProductsRepository implements IProductsRepository {
     page: number,
   ): Promise<{ products: Product[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1})`
 
-    const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
-      SELECT I.*, COUNT(O.id) 
-      FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT'
-      GROUP BY I.id
-      ORDER BY COUNT(O.id) DESC
-      ${paginationQuery}
-    `
+    const prismaProducts = await prisma.orderItem.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      include: { _count: { select: { orders: true } } },
+      orderBy: { registered_at: 'desc', orders: { _count: 'desc' } },
+    })
 
-    const count = await prisma.$queryRaw<{ count: number }[]>`
-      SELECT COUNT(I.id)
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT'
-    `
+    const count = await prisma.orderItem.count({ where: { category: 'PRODUCT' } })
 
     return {
-      products: prismaItems.map(this.mapper.toDomain),
-      count: count[0].count,
+      products: prismaProducts.map(this.mapper.toDomain),
+      count,
     }
   }
 
@@ -100,28 +89,31 @@ export class PrismaProductsRepository implements IProductsRepository {
     gender: 'male' | 'female',
   ): Promise<{ products: Product[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
-    const paginationQuery = Prisma.sql`LIMIT ${itemsPerPage} OFFSET ${itemsPerPage} * (${page - 1})`
 
-    const prismaItems = await prisma.$queryRaw<PrismaProduct[]>`
-      SELECT I.*, COUNT(O.id) 
-      FROM order_items I
-      LEFT JOIN orders O ON O.item_id = I.id
-      LEFT JOIN customers C ON O.customer_id = C.id
-      WHERE category = 'PRODUCT' AND C.gender = ${gender}
-      GROUP BY I.id
-      ORDER BY COUNT(O.id) DESC
-      ${paginationQuery}
-    `
+    const prismaProducts = await prisma.orderItem.findMany({
+      skip: itemsPerPage * (page - 1),
+      take: itemsPerPage,
+      include: { _count: { select: { orders: true } } },
+      orderBy: { registered_at: 'desc', orders: { _count: 'desc' } },
+      where: {
+        orders: {
+          every: { customer: { gender: gender === 'male' ? 'MALE' : 'FEMALE' } },
+        },
+      },
+    })
 
-    const count = await prisma.$queryRaw<{ count: number }[]>`
-      SELECT COUNT(I.id)
-      LEFT JOIN orders O ON O.item_id = I.id
-      WHERE category = 'PRODUCT'
-    `
+    const count = await prisma.orderItem.count({
+      where: {
+        category: 'PRODUCT',
+        orders: {
+          every: { customer: { gender: gender === 'male' ? 'MALE' : 'FEMALE' } },
+        },
+      },
+    })
 
     return {
-      products: prismaItems.map(this.mapper.toDomain),
-      count: count[0].count,
+      products: prismaProducts.map(this.mapper.toDomain),
+      count,
     }
   }
 
@@ -164,10 +156,10 @@ export class PrismaProductsRepository implements IProductsRepository {
   }
 
   async addMany(products: Product[]): Promise<void> {
-    const prismaItems = products.map(this.mapper.toPrisma)
+    const prismaProducts = products.map(this.mapper.toPrisma)
 
     await prisma.orderItem.createMany({
-      data: prismaItems.map((item) => ({
+      data: prismaProducts.map((item) => ({
         id: item.id,
         name: item.name,
         price: item.price,

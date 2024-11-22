@@ -5,17 +5,17 @@ import { productsRepository } from '../../../database'
 import type { ProductDto } from '@world-beauty/core/dtos'
 
 type RouteParams = {
-  ProductId: string
+  productId: string
 }
 
-type Body = ProductDto
+type Body = Partial<ProductDto>
 
 export class UpdateProductController {
   async handle(http: IHttp) {
-    const { ProductId } = http.getRouteParams<RouteParams>()
-    const ProductDto = http.getBody<Body>()
+    const { productId } = http.getRouteParams<RouteParams>()
+    const productDto = http.getBody<Body>()
     const useCase = new UpdateProductUseCase(productsRepository)
-    await useCase.execute(ProductDto, ProductId)
+    await useCase.execute(productDto, productId)
 
     return http.send(null)
   }

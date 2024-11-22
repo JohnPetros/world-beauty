@@ -1,6 +1,7 @@
 import type { Product } from '../../domain/entities'
 
 export interface IProductsRepository {
+  findById(productId: string): Promise<Product | null>
   findAll(): Promise<Product[]>
   findMany(page: number): Promise<Product[]>
   findManyByCustomerId(
