@@ -2,7 +2,7 @@ import type { IHttp } from '@world-beauty/core/interfaces'
 import { RegisterOrdersUseCase } from '@world-beauty/core/use-cases'
 
 import { ordersRepository } from '../../../database'
-import { OrderDto } from '@world-beauty/core/dtos'
+import type { OrderDto } from '@world-beauty/core/dtos'
 
 type Body = {
   orders: OrderDto[]
