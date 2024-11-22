@@ -51,12 +51,16 @@ export class PrismaServicesRepository implements IServicesRepository {
     const prismaServices = await prisma.orderItem.findMany({
       skip: itemsPerPage * (page - 1),
       take: itemsPerPage,
-      where: { category: 'SERVICE', orders: { every: { customer_id: customerId } } },
-      include: { _count: { select: { orders: true } } },
+      where: { category: 'SERVICE', orders: { some: { customer_id: customerId } } },
+      include: {
+        _count: { select: { orders: { where: { customer_id: customerId } } } },
+      },
       orderBy: { registered_at: 'desc' },
     })
 
-    const count = await prisma.orderItem.count({ where: { category: 'SERVICE' } })
+    const count = await prisma.orderItem.count({
+      where: { category: 'SERVICE', orders: { some: { customer_id: customerId } } },
+    })
 
     return {
       services: prismaServices.map(this.mapper.toDomain),
@@ -88,31 +92,36 @@ export class PrismaServicesRepository implements IServicesRepository {
     page: number,
     gender: 'male' | 'female',
   ): Promise<{ services: Service[]; count: number }> {
+    const prismaGender = gender === 'male' ? 'MALE' : 'FEMALE'
     const itemsPerPage = PAGINATION.itemsPerPage
 
     const prismaServices = await prisma.orderItem.findMany({
       skip: itemsPerPage * (page - 1),
       take: itemsPerPage,
-      include: { _count: { select: { orders: true } } },
-      orderBy: { registered_at: 'desc', orders: { _count: 'desc' } },
-      where: {
-        orders: {
-          every: { customer: { gender: gender === 'male' ? 'MALE' : 'FEMALE' } },
+      include: {
+        _count: {
+          select: {
+            orders: {
+              where: { customer: { gender: prismaGender } },
+            },
+          },
         },
       },
-    })
-
-    const count = await prisma.orderItem.count({
+      orderBy: [{ orders: { _count: 'desc' } }, { registered_at: 'desc' }],
       where: {
         category: 'SERVICE',
-        orders: {
-          every: { customer: { gender: gender === 'male' ? 'MALE' : 'FEMALE' } },
-        },
       },
     })
 
+    const count = await prisma.orderItem.count({ where: { category: 'SERVICE' } })
+
     return {
-      services: prismaServices.map(this.mapper.toDomain),
+      services: prismaServices
+        .map(this.mapper.toDomain)
+        .sort(
+          (firstService, secondService) =>
+            secondService.ordersCount - firstService.ordersCount,
+        ),
       count,
     }
   }

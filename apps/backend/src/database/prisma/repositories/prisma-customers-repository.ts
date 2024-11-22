@@ -197,7 +197,7 @@ export class PrismaCustomersRepository implements ICustomersRepository {
       ),
     }))
 
-    const count = await prisma.customer.count({ where: { gender: 'FEMALE' } })
+    const count = await prisma.customer.count({ where: { gender: 'MALE' } })
 
     return {
       customers: (prismaCustomers as PrismaCustomer[]).map(this.mapper.toDomain),

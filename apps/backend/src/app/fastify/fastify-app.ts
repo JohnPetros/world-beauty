@@ -3,7 +3,13 @@ import Cors from '@fastify/cors'
 import { HTTP_STATUS_CODE } from '@world-beauty/core/constants'
 import type { IApp } from '@world-beauty/core/interfaces'
 
-import { CustomersRoutes, ProductsRoutes, ServicesRoutes } from './routes'
+import {
+  CustomersRoutes,
+  OrdersRoutes,
+  ProductsRoutes,
+  ReportsRoutes,
+  ServicesRoutes,
+} from './routes'
 
 export class FastifyApp implements IApp {
   private readonly app: FastifyInstance
@@ -45,5 +51,7 @@ export class FastifyApp implements IApp {
     this.app.register(CustomersRoutes, { prefix: '/customers' })
     this.app.register(ProductsRoutes, { prefix: '/products' })
     this.app.register(ServicesRoutes, { prefix: '/services' })
+    this.app.register(ReportsRoutes, { prefix: '/reports' })
+    this.app.register(OrdersRoutes, { prefix: '/orders' })
   }
 }

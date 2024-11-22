@@ -9,6 +9,7 @@
     "./abstracts": "./src/domain/abstracts/index.ts",
     "./interfaces": "./src/interfaces/index.ts",
     "./responses": "./src/responses/index.ts",
+    "./types": "./src/types/index.ts",
     "./constants": "./src/constants/index.ts",
     "./dtos": "./src/dtos/index.ts",
     "./libs": "./src/libs/index.ts",
