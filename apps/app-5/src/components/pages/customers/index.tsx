@@ -29,15 +29,16 @@ export const CustomersPage = () => {
       <div className='flex items-center gap-2'>
         <Dialog
           title='Adicionar cliente'
-          trigger={
+          trigger={(openDialog) => (
             <Button
               endContent={<Icon name='add' size={20} />}
               radius='sm'
+              onClick={openDialog}
               className='bg-zinc-800 text-zinc-50 w-max'
             >
               Cadastrar cliente
             </Button>
-          }
+          )}
         >
           {(closeDialog) => (
             <CustomerForm

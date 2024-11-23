@@ -8,6 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from '@nextui-org/react'
 
 import type { Customer } from '@world-beauty/core/entities'
@@ -100,7 +101,7 @@ export const CustomersTable = ({
           {(customer) => (
             <TableRow key={customer.id}>
               <TableCell>{customer.name}</TableCell>
-              <TableCell>{customer.cpf.value}</TableCell>
+              <TableCell className='w-32'>{customer.cpf.format}</TableCell>
               <TableCell>
                 {customer.gender === 'male' ? 'masculino' : 'feminino'}
               </TableCell>
@@ -126,11 +127,17 @@ export const CustomersTable = ({
                   <div className='relative flex items-center gap-2'>
                     <Dialog
                       title={`Atualizar cliente ${customer.name}`}
-                      trigger={
-                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                          <Icon name='edit' size={16} />
-                        </Button>
-                      }
+                      trigger={(openDialog) => (
+                        <Tooltip content='Atualizar cliente'>
+                          <Button
+                            size='sm'
+                            className='bg-gray-200 text-zinc-800'
+                            onClick={openDialog}
+                          >
+                            <Icon name='edit' size={16} />
+                          </Button>
+                        </Tooltip>
+                      )}
                     >
                       {(closeDialog) => (
                         <CustomerForm
@@ -146,11 +153,17 @@ export const CustomersTable = ({
                     <Dialog
                       title={`Fazer pedido para o cliente ${customer.name}`}
                       isLarge
-                      trigger={
-                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                          <Icon name='order' size={16} />
-                        </Button>
-                      }
+                      trigger={(openDialog) => (
+                        <Tooltip content={`Fazer pedido para o cliente ${customer.name}`}>
+                          <Button
+                            size='sm'
+                            className='bg-gray-200 text-zinc-800'
+                            onClick={openDialog}
+                          >
+                            <Icon name='order' size={16} />
+                          </Button>
+                        </Tooltip>
+                      )}
                     >
                       {(closeDialog) => (
                         <OrderForm
@@ -167,11 +180,19 @@ export const CustomersTable = ({
                     <Dialog
                       title={`Produtos e serviços consumidos por ${customer.name}`}
                       isLarge
-                      trigger={
-                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                          <Icon name='orders' size={16} />
-                        </Button>
-                      }
+                      trigger={(openDialog) => (
+                        <Tooltip
+                          content={`Produtos e serviços consumidos por ${customer.name}`}
+                        >
+                          <Button
+                            size='sm'
+                            className='bg-gray-200 text-zinc-800'
+                            onClick={openDialog}
+                          >
+                            <Icon name='orders' size={16} />
+                          </Button>
+                        </Tooltip>
+                      )}
                     >
                       {() => <OrdersTable customerId={customer.id} />}
                     </Dialog>

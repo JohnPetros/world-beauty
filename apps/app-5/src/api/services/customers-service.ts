@@ -7,22 +7,19 @@ export const CustomersService = (apiClient: IApiClient): ICustomersService => {
   return {
     async listCustomers(page: number) {
       apiClient.setParam('page', page.toString())
-      return await apiClient.get<PaginationResponse<CustomerDto>>('/clientes')
+      return await apiClient.get<PaginationResponse<CustomerDto>>('/customers')
     },
 
     async registerCustomer(customer: Customer) {
-      return await apiClient.post('/cliente/cadastrar', customer.dto)
+      return await apiClient.post('/customers', customer.dto)
     },
 
     async updateCustomer(customer: Customer) {
-      return await apiClient.put('/cliente/atualizar', {
-        id: customer.id,
-        data: customer.dto,
-      })
+      return await apiClient.put(`/customers/${customer.id}`, customer.dto)
     },
 
     async deleteCustomers(customerIds: string[]) {
-      return await apiClient.delete('/cliente/excluir', { id: customerIds[0] })
+      return await apiClient.delete('/customers', { customersIds: customerIds })
     },
   }
 }

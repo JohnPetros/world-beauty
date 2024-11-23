@@ -8,6 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from '@nextui-org/react'
 
 import type { Service } from '@world-beauty/core/entities'
@@ -109,12 +110,18 @@ export const ServicesTable = ({
               {hasActions && (
                 <div className='relative flex items-center gap-2'>
                   <Dialog
-                    title='Atualizar produto'
-                    trigger={
-                      <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                        <Icon name='edit' size={16} />
-                      </Button>
-                    }
+                    title='Atualizar serviço'
+                    trigger={(openDialog) => (
+                      <Tooltip content='Atualizar serviço'>
+                        <Button
+                          size='sm'
+                          className='bg-gray-200 text-zinc-800'
+                          onClick={openDialog}
+                        >
+                          <Icon name='edit' size={16} />
+                        </Button>
+                      </Tooltip>
+                    )}
                   >
                     {(closeDialog) => (
                       <ServiceForm

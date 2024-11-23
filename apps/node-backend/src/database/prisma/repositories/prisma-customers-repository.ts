@@ -473,47 +473,37 @@ export class PrismaCustomersRepository implements ICustomersRepository {
       select: { id: true },
     })
 
-    await prisma.customer.update({
-      data: {
-        name: prismaCustomer.name,
-        socialName: prismaCustomer.socialName,
-        gender: prismaCustomer.gender,
-        cpf: {
-          update: {
-            value: prismaCustomer.cpf.value,
-            issued_at: prismaCustomer.cpf.issued_at,
+    await prisma.$transaction([
+      prisma.rg.deleteMany({ where: { customer_id: customer.id } }),
+      prisma.phone.deleteMany({ where: { customer_id: customer.id } }),
+      prisma.customer.update({
+        data: {
+          name: prismaCustomer.name,
+          socialName: prismaCustomer.socialName,
+          gender: prismaCustomer.gender,
+          cpf: {
+            update: {
+              value: prismaCustomer.cpf.value,
+              issued_at: prismaCustomer.cpf.issued_at,
+            },
+          },
+          rgs: {
+            create: customer.rgs.map((rg) => ({
+              value: rg.value,
+              issued_at: rg.issueDate,
+            })),
+          },
+          phones: {
+            create: customer.phones.map((phone) => ({
+              code_area: phone.codeArea,
+              number: phone.number,
+            })),
           },
         },
-        rgs: {
-          update: prismaCustomer.rgs.map((rg, index) => ({
-            data: {
-              value: rg.value,
-              issued_at: rg.issued_at,
-            },
-            where: { id: rgs[index].id },
-          })),
-          create: customer.newRgs.map((rg) => ({
-            value: rg.value,
-            issued_at: rg.issueDate,
-          })),
+        where: {
+          id: customer.id,
         },
-        phones: {
-          update: prismaCustomer.phones.map((phone, index) => ({
-            data: {
-              code_area: phone.code_area,
-              number: phone.number,
-            },
-            where: { id: phones[index].id },
-          })),
-          create: customer.newPhones.map((phone) => ({
-            code_area: phone.codeArea,
-            number: phone.number,
-          })),
-        },
-      },
-      where: {
-        id: customer.id,
-      },
-    })
+      }),
+    ])
   }
 }

@@ -57,7 +57,7 @@ export function useCustomerForm(
   }, [appendRgField])
 
   const addPhoneField = useCallback(() => {
-    appendPhoneField({ number: '', codeArea: '12' })
+    appendPhoneField({ number: '', codeArea: '' })
   }, [appendPhoneField])
 
   function handleAppendRgFieldButtonClick() {

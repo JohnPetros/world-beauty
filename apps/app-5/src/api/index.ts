@@ -1,4 +1,4 @@
-import { ApiClient } from './client'
+import { AxiosApiClient } from './axios/client'
 import {
   CustomersService,
   ProductsService,
@@ -7,8 +7,8 @@ import {
   ReportsService,
 } from './services'
 
-const apiClient = ApiClient()
-apiClient.setBaseUrl('http://localhost:32832')
+const apiClient = AxiosApiClient()
+apiClient.setBaseUrl('http://localhost:3333')
 
 export const customersService = CustomersService(apiClient)
 export const productsService = ProductsService(apiClient)

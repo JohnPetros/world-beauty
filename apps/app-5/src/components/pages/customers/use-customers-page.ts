@@ -15,6 +15,7 @@ export function useCustomersPage() {
   const [isFetching, setIsFetching] = useState(true)
 
   const fetchCustomers = useCallback(async (page: number) => {
+    setIsFetching(true)
     const response = await customersService.listCustomers(page)
 
     if (response.isFailure) {
@@ -29,7 +30,7 @@ export function useCustomersPage() {
   }, [])
 
   async function handleCustomersSelectionChange(newSelectedCustomersIds: string[]) {
-    setSelectedCustomersIds([String(newSelectedCustomersIds.at(-1))])
+    setSelectedCustomersIds(newSelectedCustomersIds)
   }
 
   async function handlePageChange(page: number) {
@@ -37,33 +38,54 @@ export function useCustomersPage() {
   }
 
   async function handleDeleteButtonClick() {
+    const shouldDelete = confirm('Deseja deletar esse(s) cliente(s)?')
+    if (!shouldDelete) return
+
     setSelectedCustomersIds([])
 
-    await customersService.deleteCustomers(selectedCustomersIds)
+    const response = await customersService.deleteCustomers(selectedCustomersIds)
+    if (response.isFailure) {
+      toast.error(response.errorMessage)
+      return
+    }
+
     await fetchCustomers(1)
     toast.success('Cliente deletado com sucessso')
   }
 
   async function handleRegisterCustomer(customerDto: CustomerDto) {
+    setIsFetching(true)
+
     const response = await customersService.registerCustomer(Customer.create(customerDto))
     if (response.isFailure) {
       toast.error('Erro ao registrar cliente')
-      return
     }
-    await fetchCustomers(1)
-    toast.success('Cliente criado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchCustomers(1)
+      toast.success('Cliente criado com sucessso')
+    }
+
+    setIsFetching(false)
   }
 
   async function handleUpdateCustomer(customerDto: CustomerDto, customerId: string) {
-    const response = await customersService.updateCustomer(
-      Customer.create({ id: customerId, ...customerDto }),
-    )
+    const customer = customers.find((customer) => customer.id === customerId)
+    if (!customer) return
+    setIsFetching(true)
+
+    const response = await customersService.updateCustomer(customer.update(customerDto))
     if (response.isFailure) {
       toast.error('Erro ao atualizar cliente')
       return
     }
-    await fetchCustomers(1)
-    toast.success('Cliente atualizado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchCustomers(1)
+      toast.success('Cliente atualizado com sucessso')
+    }
+
+    setIsFetching(false)
   }
 
   function handleCustomerOrderItems() {

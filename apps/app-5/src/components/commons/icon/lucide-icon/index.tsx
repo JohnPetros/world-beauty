@@ -1,7 +1,13 @@
 import { ICONS } from './icons'
 import type { IconProps } from '../types'
+import { type ForwardedRef, forwardRef } from 'react'
 
-export const LucideIcon = ({ name, className, size }: IconProps) => {
+const LucideIconComponent = (
+  { name, className, size }: IconProps,
+  ref: ForwardedRef<SVGSVGElement>,
+) => {
   const Icon = ICONS[name]
-  return <Icon className={className} size={size ?? 24} />
+  return <Icon ref={ref} className={className} size={size ?? 24} />
 }
+
+export const LucideIcon = forwardRef(LucideIconComponent)

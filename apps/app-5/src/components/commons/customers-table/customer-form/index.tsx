@@ -143,7 +143,7 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
                 isIconOnly
                 variant='bordered'
                 radius='sm'
-                className='md:h-full w-full text-red-600'
+                className='w-full text-red-600'
                 onClick={() => handlePopRgFieldButtonClick(index)}
               >
                 <Icon name='delete' size={16} />
@@ -196,7 +196,7 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
                 variant='bordered'
                 radius='sm'
                 onClick={() => handlePopPhoneFieldButtonClick(index)}
-                className='md:h-full w-full text-red-600'
+                className='w-full text-red-600'
               >
                 <Icon name='delete' size={16} />
               </Button>
@@ -208,7 +208,7 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
       <Divider />
       <div className='flex items-center gap-2'>
         <Button type='submit' color='primary' className='mt-3'>
-          Cadastrar
+          Enviar
         </Button>
         <Button color='danger' onClick={onCancel} className='mt-3'>
           Cancelar

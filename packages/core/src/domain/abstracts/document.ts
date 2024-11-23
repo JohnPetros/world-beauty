@@ -6,10 +6,12 @@ export abstract class Document {
 
   protected constructor(value: string, issueDate: Date) {
     this.value = value
-    this.issueDate = issueDate
+    this.issueDate = issueDate instanceof Date ? issueDate : new Date(issueDate)
   }
 
   get issueDateAsString(): string {
     return new Datetime(this.issueDate).format('YYYY-MM-DD')
   }
+
+  abstract get format(): string
 }

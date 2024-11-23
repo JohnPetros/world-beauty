@@ -45,27 +45,17 @@ export class Customer extends Entity<CustomerProps> {
     const updatedCustomer = Customer.create({
       ...this.dto,
       ...dto,
-      rgs: this.dto.rgs,
-      phones: this.dto.phones,
     })
 
-    if (dto.rgs?.length) {
-      const newRgs = dto.rgs.filter((rg) => {
-        const currentRgs = this.rgs.map((currentRg) => currentRg.value)
-        return !currentRgs.includes(rg.value)
-      })
-      updatedCustomer.newRgs = newRgs.map(Rg.create)
-    }
-    if (dto.phones?.length) {
-      const newPhones = dto.phones.filter((phone) => {
-        const currentPhones = this.phones.map((currentPhone) => currentPhone.number)
-        return !currentPhones.includes(phone.number)
-      })
-      console.log('newPhones', newPhones)
-      updatedCustomer.newPhones = newPhones.map(Phone.create)
-    }
-
     return updatedCustomer
+  }
+
+  addRgs(rgs: Rg[]) {
+    for (const rg of rgs) this.props.rgs.push(rg)
+  }
+
+  addPhones(phones: Phone[]) {
+    for (const phone of phones) this.props.phones.push(phone)
   }
 
   set spending(spending: number) {
@@ -137,7 +127,7 @@ export class Customer extends Entity<CustomerProps> {
   }
 
   get rgsList(): string {
-    return this.rgs.map((rg) => rg.value).join('; ')
+    return this.rgs.map((rg) => rg.format).join('; ')
   }
 
   get dto(): CustomerDto {
