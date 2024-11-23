@@ -130,8 +130,8 @@ export class PrismaServicesRepository implements IServicesRepository {
     await prisma.orderItem.deleteMany({ where: { category: 'SERVICE' } })
   }
 
-  async removeMany(ServicesIds: string[]): Promise<void> {
-    await prisma.orderItem.deleteMany({ where: { id: { in: ServicesIds } } })
+  async removeMany(servicesIds: string[]): Promise<void> {
+    await prisma.orderItem.deleteMany({ where: { id: { in: servicesIds } } })
   }
 
   async count(): Promise<number> {

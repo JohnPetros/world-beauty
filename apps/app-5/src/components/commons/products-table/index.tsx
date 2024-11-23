@@ -92,7 +92,9 @@ export const ProductsTable = ({
       >
         {(product) => (
           <TableRow key={product.id}>
-            <TableCell>{product.name}</TableCell>
+            <TableCell>
+              <span className='truncate'>{product.name}</span>
+            </TableCell>
             <TableCell>
               {(() => {
                 const formatter = new Intl.NumberFormat('pt-BR', {
@@ -104,8 +106,12 @@ export const ProductsTable = ({
                 return formatter.format(product.price)
               })()}
             </TableCell>
-            <TableCell>{product.description}</TableCell>
-            <TableCell>{product.ordersCount}</TableCell>
+            <TableCell>
+              <span className='truncate'>{product.description}</span>
+            </TableCell>
+            <TableCell>
+              <span className='truncate'>{product.ordersCount}</span>
+            </TableCell>
             <TableCell>
               {hasActions && (
                 <div className='relative flex items-center gap-2'>

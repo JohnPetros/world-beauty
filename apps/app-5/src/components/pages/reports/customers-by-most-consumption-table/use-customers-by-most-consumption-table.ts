@@ -8,8 +8,10 @@ import { reportsService } from '@/api'
 export function useCustomersByMostConsumptionTable() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [page, setPage] = useState(1)
+  const [isFetching, setIsFetching] = useState(true)
 
   const fetchCustomers = useCallback(async () => {
+    setIsFetching(true)
     const response = await reportsService.listCustomersByMostConsumption()
 
     if (response.isFailure) {
@@ -20,6 +22,7 @@ export function useCustomersByMostConsumptionTable() {
     }
 
     setCustomers(response.body.map(Customer.create))
+    setIsFetching(false)
   }, [])
 
   async function handlePageChange(page: number) {
@@ -31,6 +34,7 @@ export function useCustomersByMostConsumptionTable() {
   }, [fetchCustomers])
 
   return {
+    isFetching,
     page,
     customers,
     handlePageChange,

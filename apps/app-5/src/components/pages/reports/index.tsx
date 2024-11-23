@@ -14,7 +14,7 @@ export const ReportsPage = () => {
   const { selectedReport, handleSelectChange } = useReportsPage()
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-3 pb-12'>
       <PageTitle>Relatórios</PageTitle>
 
       <Select

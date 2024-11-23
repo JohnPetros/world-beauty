@@ -15,10 +15,20 @@ export function useServicesPage() {
   const [isFetching, setIsFetching] = useState(true)
 
   const fetchServices = useCallback(async (page: number) => {
+    setIsFetching(true)
     const response = await servicesService.listServices(page)
-    setServices(response.body.items.map(Service.create))
-    setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-    setPage(page)
+
+    if (response.isFailure) {
+      toast.error(response.errorMessage)
+    }
+
+    if (response.isSuccess) {
+      setServices(response.body.items.map(Service.create))
+      setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+      setPage(page)
+    }
+
+    setIsFetching(false)
   }, [])
 
   function handleServicesSelectionChange(selectedServicesIds: string[]) {
@@ -30,9 +40,27 @@ export function useServicesPage() {
   }
 
   async function handleDeleteButtonClick() {
+    const shouldDelete = confirm('Deseja deletar esse(s) Serviços(s)?')
+    if (!shouldDelete) return
+
+    setIsFetching(true)
+
+    const response = await servicesService.deleteServices(selectedServicesIds)
+    if (response.isFailure) {
+      toast.error(response.errorMessage)
+    }
+
+    if (response.isSuccess) {
+      await fetchServices(1)
+      toast.success(
+        selectedServicesIds.length > 1
+          ? 'Serviços deletados com sucessso'
+          : 'Serviço deletado com sucessso',
+      )
+    }
+
     setSelectedServicesIds([])
-    await servicesService.deleteServices(selectedServicesIds)
-    await fetchServices(1)
+    setIsFetching(false)
   }
 
   async function handleUpdateService(ServiceDto: ServiceDto, ServiceId: string) {
@@ -40,26 +68,33 @@ export function useServicesPage() {
       Service.create({ id: ServiceId, ...ServiceDto }),
     )
     if (response.isFailure) {
-      toast.error('Erro ao atualizar cliente')
-      return
+      toast.error(response.errorMessage)
     }
-    await fetchServices(1)
-    toast.success('Cliente atualizado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchServices(1)
+      toast.success('Serviço atualizado com sucessso')
+    }
+
+    setIsFetching(false)
   }
 
   async function handleRegisterService(ServiceDto: ServiceDto) {
+    setIsFetching(true)
+
     const response = await servicesService.registerService(Service.create(ServiceDto))
     if (response.isFailure) {
-      toast.error('Erro ao registrar cliente')
-      return
+      toast.error(response.errorMessage)
     }
-    await fetchServices(1)
-    toast.success('Cliente criado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchServices(1)
+      toast.success('Serviço registrado com sucessso')
+    }
   }
 
   useEffect(() => {
     fetchServices(1)
-    setIsFetching(false)
   }, [fetchServices])
 
   return {

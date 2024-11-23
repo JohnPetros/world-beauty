@@ -38,19 +38,31 @@ export function useCustomersPage() {
   }
 
   async function handleDeleteButtonClick() {
-    const shouldDelete = confirm('Deseja deletar esse(s) cliente(s)?')
+    const shouldDelete = confirm(
+      selectedCustomersIds.length > 1
+        ? 'Deseja deletar esses clientes?'
+        : 'Deseja deletar esse cliente?',
+    )
     if (!shouldDelete) return
 
-    setSelectedCustomersIds([])
+    setIsFetching(true)
 
     const response = await customersService.deleteCustomers(selectedCustomersIds)
     if (response.isFailure) {
       toast.error(response.errorMessage)
-      return
     }
 
-    await fetchCustomers(1)
-    toast.success('Cliente deletado com sucessso')
+    if (response.isSuccess) {
+      await fetchCustomers(1)
+      toast.success(
+        selectedCustomersIds.length > 1
+          ? 'Clientes deletados com sucessso'
+          : 'Cliente deletado com sucessso',
+      )
+    }
+
+    setSelectedCustomersIds([])
+    setIsFetching(false)
   }
 
   async function handleRegisterCustomer(customerDto: CustomerDto) {
@@ -76,8 +88,7 @@ export function useCustomersPage() {
 
     const response = await customersService.updateCustomer(customer.update(customerDto))
     if (response.isFailure) {
-      toast.error('Erro ao atualizar cliente')
-      return
+      toast.error(response.errorMessage)
     }
 
     if (response.isSuccess) {

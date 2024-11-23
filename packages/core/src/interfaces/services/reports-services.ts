@@ -9,6 +9,7 @@ export interface IReportsService {
   ): Promise<ApiResponse<PaginationResponse<CustomerDto>>>
   listCustomersByLessConsumption(): Promise<ApiResponse<CustomerDto[]>>
   listCustomersByMostConsumption(): Promise<ApiResponse<CustomerDto[]>>
+  listCustomersByMostSpending(): Promise<ApiResponse<CustomerDto[]>>
   listMostConsumedProducts(
     page: number,
     customerGender?: Gender,

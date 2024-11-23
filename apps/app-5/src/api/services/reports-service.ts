@@ -8,16 +8,16 @@ export const ReportsService = (apiClient: IApiClient): IReportsService => {
       apiClient.setParam('page', page.toString())
 
       return await apiClient.get<PaginationResponse<CustomerDto>>(
-        `/customers-by-gender/${gender}`,
+        `/reports/customers-by-gender/${gender}`,
       )
     },
 
     async listCustomersByLessConsumption() {
-      return await apiClient.get<CustomerDto[]>('/customers-by-less-consumption')
+      return await apiClient.get<CustomerDto[]>('/reports/customers-by-less-consumption')
     },
 
     async listCustomersByMostConsumption() {
-      return await apiClient.get<CustomerDto[]>('/customers-by-most-consumption')
+      return await apiClient.get<CustomerDto[]>('/reports/customers-by-most-consumption')
     },
 
     async listMostConsumedProducts(page: number, gender) {
@@ -25,7 +25,7 @@ export const ReportsService = (apiClient: IApiClient): IReportsService => {
       if (gender) apiClient.setParam('gender', gender)
 
       return await apiClient.get<PaginationResponse<ProductDto>>(
-        '/most-consumed-products',
+        '/reports/most-consumed-products',
       )
     },
 
@@ -34,7 +34,7 @@ export const ReportsService = (apiClient: IApiClient): IReportsService => {
       if (gender) apiClient.setParam('gender', gender)
 
       return await apiClient.get<PaginationResponse<ServiceDto>>(
-        '/most-consumed-services',
+        '/reports/most-consumed-services',
       )
     },
   }

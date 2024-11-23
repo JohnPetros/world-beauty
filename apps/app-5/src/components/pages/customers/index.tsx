@@ -23,7 +23,7 @@ export const CustomersPage = () => {
   } = useCustomersPage()
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-3 pb-12'>
       <PageTitle>Clientes</PageTitle>
 
       <div className='flex items-center gap-2'>

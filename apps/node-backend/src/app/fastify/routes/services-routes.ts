@@ -11,7 +11,7 @@ import { FastifyHttp } from '../fastify-http'
 export const ServicesRoutes = async (app: FastifyInstance) => {
   const registerServiceController = new RegisterServiceController()
   const listServiceController = new ListServicesController()
-  const deleteServiceController = new DeleteServicesController()
+  const deleteServicesController = new DeleteServicesController()
   const updateServiceController = new UpdateServiceController()
 
   app.get('/', async (request, response) => {
@@ -31,6 +31,6 @@ export const ServicesRoutes = async (app: FastifyInstance) => {
 
   app.delete('/', async (request, response) => {
     const http = new FastifyHttp(request, response)
-    return deleteServiceController.handle(http)
+    return deleteServicesController.handle(http)
   })
 }

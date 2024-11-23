@@ -15,16 +15,20 @@ export function useProductsPage() {
   const [isFetching, setIsFetching] = useState(true)
 
   const fetchProducts = useCallback(async (page: number) => {
+    setIsFetching(true)
     const response = await productsService.listProducts(page)
 
     if (response.isFailure) {
-      toast.error('Não foi possível listar produtos, tente novamente mais tarde')
-      return
+      toast.error(response.errorMessage)
     }
 
-    setProducts(response.body.items.map(Product.create))
-    setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-    setPage(page)
+    if (response.isSuccess) {
+      setProducts(response.body.items.map(Product.create))
+      setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+      setPage(page)
+    }
+
+    setIsFetching(false)
   }, [])
 
   function handleProductsSelectionChange(selectedProductsIds: string[]) {
@@ -36,9 +40,27 @@ export function useProductsPage() {
   }
 
   async function handleDeleteButtonClick() {
+    const shouldDelete = confirm('Deseja deletar esse(s) produtos(s)?')
+    if (!shouldDelete) return
+
+    setIsFetching(true)
+
+    const response = await productsService.deleteProducts(selectedProductsIds)
+    if (response.isFailure) {
+      toast.error(response.errorMessage)
+    }
+
+    if (response.isSuccess) {
+      await fetchProducts(1)
+      toast.success(
+        selectedProductsIds.length > 1
+          ? 'Produtos deletados com sucessso'
+          : 'Produto deletado com sucessso',
+      )
+    }
+
     setSelectedProductsIds([])
-    await productsService.deleteProducts(selectedProductsIds)
-    await fetchProducts(1)
+    setIsFetching(false)
   }
 
   async function handleUpdateProduct(productDto: ProductDto, productId: string) {
@@ -46,26 +68,33 @@ export function useProductsPage() {
       Product.create({ id: productId, ...productDto }),
     )
     if (response.isFailure) {
-      toast.error('Erro ao atualizar cliente')
-      return
+      toast.error(response.errorMessage)
     }
-    await fetchProducts(1)
-    toast.success('Cliente atualizado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchProducts(1)
+      toast.success('Produto atualizado com sucessso')
+    }
+
+    setIsFetching(false)
   }
 
   async function handleRegisterProduct(productDto: ProductDto) {
+    setIsFetching(true)
+
     const response = await productsService.registerProduct(Product.create(productDto))
     if (response.isFailure) {
-      toast.error('Erro ao registrar cliente')
-      return
+      toast.error(response.errorMessage)
     }
-    await fetchProducts(1)
-    toast.success('Cliente criado com sucessso')
+
+    if (response.isSuccess) {
+      await fetchProducts(1)
+      toast.success('Produto registrado com sucessso')
+    }
   }
 
   useEffect(() => {
     fetchProducts(1)
-    setIsFetching(false)
   }, [fetchProducts])
 
   return {

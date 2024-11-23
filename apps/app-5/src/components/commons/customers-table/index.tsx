@@ -101,15 +101,19 @@ export const CustomersTable = ({
           {(customer) => (
             <TableRow key={customer.id}>
               <TableCell>{customer.name}</TableCell>
-              <TableCell className='w-32'>{customer.cpf.format}</TableCell>
+              <TableCell>
+                <span className='truncate'>{customer.cpf.format}</span>
+              </TableCell>
               <TableCell>
                 {customer.gender === 'male' ? 'masculino' : 'feminino'}
               </TableCell>
               <TableCell>{customer.socialName}</TableCell>
-              <TableCell className='w-24'>
-                {<span className='truncate'>{customer.phonesList}</span>}
+              <TableCell>
+                <span className='truncate'>{customer.phonesList}</span>
               </TableCell>
-              <TableCell>{customer.rgsList}</TableCell>
+              <TableCell>
+                <span className='truncate'>{customer.rgsList}</span>
+              </TableCell>
               <TableCell>{customer.consumption}</TableCell>
               <TableCell>
                 {(() => {

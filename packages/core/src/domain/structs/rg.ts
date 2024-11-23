@@ -7,7 +7,7 @@ export class Rg extends Document {
   }
 
   get format() {
-    const formattedRG = `${this.value.slice(0, 3)}.${this.value.slice(3, 6)}.${this.value.slice(6, 9)}-${this.value[9]}`
+    const formattedRG = `${this.value.slice(0, 2)}.${this.value.slice(3, 6)}.${this.value.slice(6, 9)}-${this.value[8]}`
     return formattedRG
   }
 

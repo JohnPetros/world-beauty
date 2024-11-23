@@ -58,7 +58,7 @@ export const ServicesTable = ({
       color='default'
       selectionMode={hasSelection ? 'multiple' : 'none'}
       selectedKeys={selectedServicesIds}
-      aria-label='Tabela de produtos'
+      aria-label='Tabela de serviço s'
       onSelectionChange={(selection) => handleServicesSelectionChange(selection)}
       bottomContent={
         pagesCount > 1 && (
@@ -81,18 +81,20 @@ export const ServicesTable = ({
         <TableColumn>Nome</TableColumn>
         <TableColumn>Preço</TableColumn>
         <TableColumn>Descrição</TableColumn>
-        <TableColumn>Qtd. de vezes que esse produto foi consumido</TableColumn>
+        <TableColumn>Qtd. de vezes que esse serviço foi consumido</TableColumn>
         <TableColumn> </TableColumn>
       </TableHeader>
       <TableBody
         isLoading={isLoading}
         loadingContent={<Spinner />}
-        emptyContent='Nenhum produto cadastrado'
+        emptyContent='Nenhum serviço cadastrado'
         items={services}
       >
         {(service) => (
           <TableRow key={service.id}>
-            <TableCell>{service.name}</TableCell>
+            <TableCell>
+              <span className='truncate'>{service.name}</span>
+            </TableCell>
             <TableCell>
               {(() => {
                 const formatter = new Intl.NumberFormat('pt-BR', {
@@ -104,7 +106,9 @@ export const ServicesTable = ({
                 return formatter.format(service.price)
               })()}
             </TableCell>
-            <TableCell>{service.description}</TableCell>
+            <TableCell>
+              <span className='truncate'>{service.description}</span>
+            </TableCell>
             <TableCell>{service.ordersCount}</TableCell>
             <TableCell>
               {hasActions && (

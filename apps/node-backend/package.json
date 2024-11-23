@@ -7,7 +7,7 @@
     "dev": "tsx watch src/app",
     "db:migrate": "prisma migrate dev --schema=./src/database/prisma/schema.prisma",
     "db:generate": "prisma generate --schema=./src/database/prisma/schema.prisma",
-    "db:deploy": "prisma migrate deploy --schema=./src/database/prisma/schema.prisma"
+    "db:seed": "prisma db seed"
   },
   "prisma": {
     "seed": "tsx ./src/database/prisma/seed.ts"

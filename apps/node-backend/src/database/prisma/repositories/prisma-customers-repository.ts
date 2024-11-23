@@ -300,6 +300,7 @@ export class PrismaCustomersRepository implements ICustomersRepository {
 
   async findTop10CustomersByMostConsumption(): Promise<Customer[]> {
     const data = await prisma.customer.findMany({
+      take: 10,
       include: {
         cpf: true,
         phones: true,
@@ -463,15 +464,6 @@ export class PrismaCustomersRepository implements ICustomersRepository {
 
   async update(customer: Customer): Promise<void> {
     const prismaCustomer = this.mapper.toPrisma(customer)
-
-    const rgs = await prisma.rg.findMany({
-      where: { customer_id: prismaCustomer.id },
-      select: { id: true },
-    })
-    const phones = await prisma.phone.findMany({
-      where: { customer_id: customer.id },
-      select: { id: true },
-    })
 
     await prisma.$transaction([
       prisma.rg.deleteMany({ where: { customer_id: customer.id } }),

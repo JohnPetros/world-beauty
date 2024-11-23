@@ -13,7 +13,7 @@ export const NavMenu = () => {
         <NavbarLink icon='service' link='/services' title='Seviços' />
       </li>
       <li>
-        <NavbarLink icon='list' link='/lists' title='Listagens' />
+        <NavbarLink icon='list' link='/reports' title='Relatórios' />
       </li>
     </ul>
   )

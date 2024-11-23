@@ -5,7 +5,7 @@ import type { DocumentDto } from '../../dtos'
 export class RgsFaker {
   static fakeDto(): DocumentDto {
     return {
-      value: faker.number.int({ min: 1000000000, max: 9999999999 }).toString(),
+      value: faker.number.int({ min: 100000000, max: 999999999 }).toString(),
       issueDate: faker.date.past(),
     }
   }
