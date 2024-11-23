@@ -20,7 +20,12 @@ export const ReportsService = (apiClient: IApiClient): IReportsService => {
       return await apiClient.get<CustomerDto[]>('/reports/customers-by-most-consumption')
     },
 
+    async listCustomersByMostSpending() {
+      return await apiClient.get<CustomerDto[]>('/reports/customers-by-most-spending')
+    },
+
     async listMostConsumedProducts(page: number, gender) {
+      apiClient.clearParams()
       apiClient.setParam('page', page.toString())
       if (gender) apiClient.setParam('gender', gender)
 
@@ -30,6 +35,7 @@ export const ReportsService = (apiClient: IApiClient): IReportsService => {
     },
 
     async listMostConsumedServices(page: number, gender) {
+      apiClient.clearParams()
       apiClient.setParam('page', page.toString())
       if (gender) apiClient.setParam('gender', gender)
 

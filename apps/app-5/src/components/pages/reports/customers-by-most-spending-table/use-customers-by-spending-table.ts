@@ -8,18 +8,21 @@ import { reportsService } from '@/api'
 export function useCustomersByMostSpendingTable() {
   const [customers, setCustomers] = useState<Customer[]>([])
   const [page, setPage] = useState(1)
+  const [isFetching, setIsFetching] = useState(true)
 
   const fetchCustomers = useCallback(async () => {
-    const response = await reportsService.listCustomersByMostConsumption()
+    setIsFetching(true)
+    const response = await reportsService.listCustomersByMostSpending()
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar os clientes que mais consumiram em valor, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setCustomers(response.body.map(Customer.create))
+    if (response.isSuccess) {
+      setCustomers(response.body.map(Customer.create))
+    }
+
+    setIsFetching(false)
   }, [])
 
   async function handlePageChange(page: number) {
@@ -31,6 +34,7 @@ export function useCustomersByMostSpendingTable() {
   }, [fetchCustomers])
 
   return {
+    isFetching,
     page,
     customers,
     handlePageChange,

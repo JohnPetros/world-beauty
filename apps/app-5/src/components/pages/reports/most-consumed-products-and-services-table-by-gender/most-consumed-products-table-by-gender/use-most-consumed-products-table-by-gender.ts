@@ -14,39 +14,45 @@ export function useMostConsumedProductsTableByGender() {
   const [femaleCustomersProductsPage, setFemaleCustomersProductsPage] = useState(0)
   const [femaleCustomersProductsPagesCount, setFemaleCustomersProductsPagesCount] =
     useState(0)
+  const [isFetchingMaleCustomers, setIsFetchingMaleCustomers] = useState(true)
+  const [isFetchingFemaleCustomers, setIsFetchingFemaleCustomers] = useState(true)
 
   const fetchMaleCustomersProducts = useCallback(async (page: number) => {
+    setIsFetchingMaleCustomers(true)
     const response = await reportsService.listMostConsumedProducts(page, 'male')
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar produtos mais consumidos por gênero masculino, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setMaleCustomersProducts(response.body.items.map(Product.create))
-    setMaleCustomersProductsPage(page)
-    setMaleCustomersProductsPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setMaleCustomersProducts(response.body.items.map(Product.create))
+      setMaleCustomersProductsPage(page)
+      setMaleCustomersProductsPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingMaleCustomers(false)
   }, [])
 
   const fetchFemaleCustomersProducts = useCallback(async (page: number) => {
+    setIsFetchingFemaleCustomers(true)
     const response = await reportsService.listMostConsumedProducts(page, 'female')
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar produtos mais consumidos por gênero feminino, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setFemaleCustomersProducts(response.body.items.map(Product.create))
-    setFemaleCustomersProductsPage(page)
-    setFemaleCustomersProductsPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setFemaleCustomersProducts(response.body.items.map(Product.create))
+      setFemaleCustomersProductsPage(page)
+      setFemaleCustomersProductsPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingFemaleCustomers(false)
   }, [])
 
   async function handleMaleCustomersProductsPageChange(page: number) {
@@ -54,7 +60,7 @@ export function useMostConsumedProductsTableByGender() {
   }
 
   async function handleFemaleCustomersProductsPageChange(page: number) {
-    await fetchMaleCustomersProducts(page)
+    await fetchFemaleCustomersProducts(page)
   }
 
   useEffect(() => {
@@ -63,6 +69,8 @@ export function useMostConsumedProductsTableByGender() {
   }, [fetchMaleCustomersProducts, fetchFemaleCustomersProducts])
 
   return {
+    isFetchingMaleCustomers,
+    isFetchingFemaleCustomers,
     maleCustomersProducts,
     maleCustomersProductsPage,
     maleCustomersProductsPagesCount,

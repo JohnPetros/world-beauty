@@ -4,6 +4,7 @@ import {
   ListCustomersByGenderController,
   ListCustomersByLessConsumptionController,
   ListCustomersByMostConsumptionController,
+  ListCustomersByMostSpendingController,
   ListMostConsumedProductsController,
   ListMostConsumedServicesController,
 } from '../../../api/controllers'
@@ -15,6 +16,8 @@ export const ReportsRoutes = async (app: FastifyInstance) => {
     new ListCustomersByLessConsumptionController()
   const listCustomersByMostConsumptionController =
     new ListCustomersByMostConsumptionController()
+  const listCustomersByMostSpendingController =
+    new ListCustomersByMostSpendingController()
   const listMostConsumedProductsController = new ListMostConsumedProductsController()
   const listMostConsumedServicesController = new ListMostConsumedServicesController()
 
@@ -31,6 +34,11 @@ export const ReportsRoutes = async (app: FastifyInstance) => {
   app.get('/customers-by-most-consumption', async (request, response) => {
     const http = new FastifyHttp(request, response)
     return listCustomersByMostConsumptionController.handle(http)
+  })
+
+  app.get('/customers-by-most-spending', async (request, response) => {
+    const http = new FastifyHttp(request, response)
+    return listCustomersByMostSpendingController.handle(http)
   })
 
   app.get('/most-consumed-products', async (request, response) => {

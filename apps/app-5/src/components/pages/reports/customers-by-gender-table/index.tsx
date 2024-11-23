@@ -3,6 +3,8 @@ import { useCustomersByGenderTable } from './use-customers-by-gender-table'
 
 export const CustomersByGenderTable = () => {
   const {
+    isFetchingMaleCustomers,
+    isFetchingFemaleCustomers,
     maleCustomers,
     maleCustomersPage,
     maleCustomersPagesCount,
@@ -24,6 +26,7 @@ export const CustomersByGenderTable = () => {
           customers={maleCustomers}
           page={maleCustomersPage}
           pagesCount={maleCustomersPagesCount}
+          isLoading={isFetchingMaleCustomers}
           onPageChange={(page) => handleMaleCustomersPageChange(page)}
         />
       </div>
@@ -36,6 +39,7 @@ export const CustomersByGenderTable = () => {
           customers={femaleCustomers}
           page={femaleCustomersPage}
           pagesCount={femaleCustomersPagesCount}
+          isLoading={isFetchingFemaleCustomers}
           onPageChange={(page) => handlefemaleCustomersPageChange(page)}
         />
       </div>

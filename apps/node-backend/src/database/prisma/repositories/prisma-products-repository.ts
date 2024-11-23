@@ -77,6 +77,7 @@ export class PrismaProductsRepository implements IProductsRepository {
       skip: itemsPerPage * (page - 1),
       take: itemsPerPage,
       include: { _count: { select: { orders: true } } },
+      where: { category: 'PRODUCT' },
       orderBy: [{ orders: { _count: 'desc' } }, { registered_at: 'desc' }],
     })
 
@@ -110,10 +111,16 @@ export class PrismaProductsRepository implements IProductsRepository {
       orderBy: [{ orders: { _count: 'desc' } }, { registered_at: 'desc' }],
       where: {
         category: 'PRODUCT',
+        orders: { some: { customer: { gender: prismaGender } } },
       },
     })
 
-    const count = await prisma.orderItem.count({ where: { category: 'PRODUCT' } })
+    const count = await prisma.orderItem.count({
+      where: {
+        category: 'PRODUCT',
+        orders: { some: { customer: { gender: prismaGender } } },
+      },
+    })
 
     return {
       products: prismaProducts

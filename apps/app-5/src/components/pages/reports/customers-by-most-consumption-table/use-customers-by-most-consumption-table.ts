@@ -15,9 +15,7 @@ export function useCustomersByMostConsumptionTable() {
     const response = await reportsService.listCustomersByMostConsumption()
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar os clientes que menos consumiram em quantidade, tente novamente mais tarde',
-      )
+      toast.error(response.errorMessage)
       return
     }
 

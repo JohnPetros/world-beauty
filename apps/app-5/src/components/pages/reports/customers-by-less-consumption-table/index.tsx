@@ -2,7 +2,7 @@ import { CustomersTable } from '@/components/commons/customers-table'
 import { useCustomersByLessConsumptionTable } from './use-customers-by-less-consumption-table'
 
 export const CustomersByLessConsumptionTable = () => {
-  const { customers, page, handlePageChange } =
+  const { isFetching, customers, page, handlePageChange } =
     useCustomersByLessConsumptionTable()
 
   return (
@@ -16,6 +16,7 @@ export const CustomersByLessConsumptionTable = () => {
           customers={customers}
           page={page}
           pagesCount={0}
+          isLoading={isFetching}
           onPageChange={(page) => handlePageChange(page)}
         />
       </div>

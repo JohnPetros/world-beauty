@@ -106,5 +106,9 @@ export const AxiosApiClient = (): IApiClient => {
     setBaseUrl(url: string): void {
       axios.defaults.baseURL = url
     },
+
+    clearParams(): void {
+      axios.defaults.params = {}
+    },
   }
 }

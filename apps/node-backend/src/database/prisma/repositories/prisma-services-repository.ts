@@ -73,17 +73,18 @@ export class PrismaServicesRepository implements IServicesRepository {
   ): Promise<{ services: Service[]; count: number }> {
     const itemsPerPage = PAGINATION.itemsPerPage
 
-    const prismaServices = await prisma.orderItem.findMany({
+    const prismaProducts = await prisma.orderItem.findMany({
       skip: itemsPerPage * (page - 1),
       take: itemsPerPage,
       include: { _count: { select: { orders: true } } },
-      orderBy: { registered_at: 'desc', orders: { _count: 'desc' } },
+      where: { category: 'SERVICE' },
+      orderBy: [{ orders: { _count: 'desc' } }, { registered_at: 'desc' }],
     })
 
     const count = await prisma.orderItem.count({ where: { category: 'SERVICE' } })
 
     return {
-      services: prismaServices.map(this.mapper.toDomain),
+      services: prismaProducts.map(this.mapper.toDomain),
       count,
     }
   }
@@ -110,10 +111,16 @@ export class PrismaServicesRepository implements IServicesRepository {
       orderBy: [{ orders: { _count: 'desc' } }, { registered_at: 'desc' }],
       where: {
         category: 'SERVICE',
+        orders: { some: { customer: { gender: prismaGender } } },
       },
     })
 
-    const count = await prisma.orderItem.count({ where: { category: 'SERVICE' } })
+    const count = await prisma.orderItem.count({
+      where: {
+        category: 'SERVICE',
+        orders: { some: { customer: { gender: prismaGender } } },
+      },
+    })
 
     return {
       services: prismaServices

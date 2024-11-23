@@ -14,39 +14,45 @@ export function useMostConsumedServicesTableByGender() {
   const [femaleCustomersServicesPage, setFemaleCustomersServicesPage] = useState(0)
   const [femaleCustomersServicesPagesCount, setFemaleCustomersServicesPagesCount] =
     useState(0)
+  const [isFetchingMaleCustomers, setIsFetchingMaleCustomers] = useState(true)
+  const [isFetchingFemaleCustomers, setIsFetchingFemaleCustomers] = useState(true)
 
   const fetchMaleCustomersServices = useCallback(async (page: number) => {
+    setIsFetchingMaleCustomers(true)
     const response = await reportsService.listMostConsumedServices(page, 'male')
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar serviços mais consumidos por gênero masculino, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setMaleCustomersServices(response.body.items.map(Service.create))
-    setMaleCustomersServicesPage(page)
-    setMaleCustomersServicesPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setMaleCustomersServices(response.body.items.map(Service.create))
+      setMaleCustomersServicesPage(page)
+      setMaleCustomersServicesPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingMaleCustomers(false)
   }, [])
 
   const fetchFemaleCustomersServices = useCallback(async (page: number) => {
+    setIsFetchingFemaleCustomers(true)
     const response = await reportsService.listMostConsumedServices(page, 'female')
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar serviços mais consumidos por gênero feminino, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setFemaleCustomersServices(response.body.items.map(Service.create))
-    setFemaleCustomersServicesPage(page)
-    setFemaleCustomersServicesPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setFemaleCustomersServices(response.body.items.map(Service.create))
+      setFemaleCustomersServicesPage(page)
+      setFemaleCustomersServicesPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingFemaleCustomers(false)
   }, [])
 
   async function handleMaleCustomersServicesPageChange(page: number) {
@@ -63,6 +69,8 @@ export function useMostConsumedServicesTableByGender() {
   }, [fetchMaleCustomersServices, fetchFemaleCustomersServices])
 
   return {
+    isFetchingMaleCustomers,
+    isFetchingFemaleCustomers,
     maleCustomersServices,
     maleCustomersServicesPage,
     maleCustomersServicesPagesCount,

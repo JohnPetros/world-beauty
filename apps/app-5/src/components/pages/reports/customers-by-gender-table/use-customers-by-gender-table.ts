@@ -12,39 +12,47 @@ export function useCustomersByGenderTable() {
   const [femaleCustomers, setFemaleCustomers] = useState<Customer[]>([])
   const [femaleCustomersPage, setFemaleCustomersPage] = useState(1)
   const [femaleCustomersPagesCount, setFemaleCustomersPagesCount] = useState(0)
+  const [isFetchingMaleCustomers, setIsFetchingMaleCustomers] = useState(true)
+  const [isFetchingFemaleCustomers, setIsFetchingFemaleCustomers] = useState(true)
 
   const fetchMaleCustomers = useCallback(async (page: number) => {
+    setIsFetchingMaleCustomers(true)
     const response = await reportsService.listCustomersByGender('male', page)
 
     if (response.isFailure) {
       toast.error(
         'Não foi possível listar clientes masculinos, tente novamente mais tarde',
       )
-      return
     }
 
-    setMaleCustomers(response.body.items.map(Customer.create))
-    setMaleCustomersPage(page)
-    setMaleCustomersPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setMaleCustomers(response.body.items.map(Customer.create))
+      setMaleCustomersPage(page)
+      setMaleCustomersPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingMaleCustomers(false)
   }, [])
 
   const fetchFemaleCustomers = useCallback(async (page: number) => {
+    setIsFetchingFemaleCustomers(true)
     const response = await reportsService.listCustomersByGender('female', page)
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar clientes femininos, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setFemaleCustomers(response.body.items.map(Customer.create))
-    setFemaleCustomersPage(page)
-    setFemaleCustomersPagesCount(
-      Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
-    )
+    if (response.isSuccess) {
+      setFemaleCustomers(response.body.items.map(Customer.create))
+      setFemaleCustomersPage(page)
+      setFemaleCustomersPagesCount(
+        Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+      )
+    }
+
+    setIsFetchingFemaleCustomers(false)
   }, [])
 
   async function handleMaleCustomersPageChange(page: number) {
@@ -62,6 +70,8 @@ export function useCustomersByGenderTable() {
   }, [fetchFemaleCustomers, fetchMaleCustomers])
 
   return {
+    isFetchingMaleCustomers,
+    isFetchingFemaleCustomers,
     maleCustomers,
     maleCustomersPage,
     maleCustomersPagesCount,

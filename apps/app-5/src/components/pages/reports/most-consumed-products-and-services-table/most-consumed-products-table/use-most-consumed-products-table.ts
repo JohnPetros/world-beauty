@@ -9,20 +9,23 @@ export function useMostConsumedProductsTable() {
   const [products, setProducts] = useState<Product[]>([])
   const [page, setPage] = useState(1)
   const [pagesCount, setPagesCount] = useState(0)
+  const [isFetching, setIsFetching] = useState(true)
 
   const fetchProducts = useCallback(async (page: number) => {
+    setIsFetching(true)
     const response = await reportsService.listMostConsumedProducts(page)
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar os produtos mais consumidos, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setProducts(response.body.items.map(Product.create))
-    setPage(page)
-    setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+    if (response.isSuccess) {
+      setProducts(response.body.items.map(Product.create))
+      setPage(page)
+      setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+    }
+
+    setIsFetching(false)
   }, [])
 
   async function handlePageChange(page: number) {
@@ -34,6 +37,7 @@ export function useMostConsumedProductsTable() {
   }, [fetchProducts])
 
   return {
+    isFetching,
     products,
     page,
     pagesCount,

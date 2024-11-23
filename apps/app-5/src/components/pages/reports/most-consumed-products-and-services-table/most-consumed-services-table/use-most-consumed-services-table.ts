@@ -6,23 +6,26 @@ import { Service } from '@world-beauty/core/entities'
 import { reportsService } from '@/api'
 
 export function useMostConsumedServicesTable() {
-  const [Services, setServices] = useState<Service[]>([])
+  const [services, setServices] = useState<Service[]>([])
   const [page, setPage] = useState(1)
   const [pagesCount, setPagesCount] = useState(0)
+  const [isFetching, setIsFetching] = useState(true)
 
   const fetchServices = useCallback(async (page: number) => {
+    setIsFetching(true)
     const response = await reportsService.listMostConsumedServices(page)
 
     if (response.isFailure) {
-      toast.error(
-        'Não foi possível listar os serviços mais consumidos, tente novamente mais tarde',
-      )
-      return
+      toast.error(response.errorMessage)
     }
 
-    setServices(response.body.items.map(Service.create))
-    setPage(page)
-    setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+    if (response.isSuccess) {
+      setServices(response.body.items.map(Service.create))
+      setPage(page)
+      setPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+    }
+
+    setIsFetching(false)
   }, [])
 
   async function handlePageChange(page: number) {
@@ -34,7 +37,8 @@ export function useMostConsumedServicesTable() {
   }, [fetchServices])
 
   return {
-    Services,
+    isFetching,
+    services,
     page,
     pagesCount,
     handlePageChange,
