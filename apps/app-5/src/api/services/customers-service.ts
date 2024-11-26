@@ -14,8 +14,8 @@ export const CustomersService = (apiClient: IApiClient): ICustomersService => {
       return await apiClient.post('/customers', customer.dto)
     },
 
-    async updateCustomer(customer: Customer) {
-      return await apiClient.put(`/customers/${customer.id}`, customer.dto)
+    async updateCustomer(customer: Partial<CustomerDto>, customerId: string) {
+      return await apiClient.put(`/customers/${customerId}`, customer)
     },
 
     async deleteCustomers(customerIds: string[]) {

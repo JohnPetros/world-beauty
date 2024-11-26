@@ -27,7 +27,7 @@ export class PrismaCustomersMapper {
           value: rg.value,
           issueDate: rg.issued_at,
         })),
-      socialName: prismaCustomer.socialName,
+      socialName: prismaCustomer.socialName ?? undefined,
       gender: prismaCustomer.gender === 'MALE' ? 'male' : 'female',
     })
   }

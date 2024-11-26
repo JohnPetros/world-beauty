@@ -3,9 +3,10 @@ import z from 'zod'
 import { issueDateSchema } from './issue-date-schema'
 
 export const cpfSchema = z.object({
-  value: z
-    .string()
-    .min(11, 'cpf deve conter 11 caracteres')
-    .max(11, 'cpf deve conter 11 caracteres'),
+  value: z.coerce
+    .number({ message: 'cpf deve ser um número inteiro' })
+    .int({ message: 'cpf deve ser um número inteiro' })
+    .refine((value) => String(value).length === 11, 'cpf deve conter 11 dígitos')
+    .transform((value) => String(value)),
   issueDate: issueDateSchema,
 })

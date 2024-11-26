@@ -33,7 +33,7 @@ model OrderItem {
 model Customer {
   id            String         @id @default(uuid())
   name          String
-  socialName    String
+  socialName    String?
   gender        CustomerGender @default(MALE)
   registered_at DateTime       @default(now())
   rgs           Rg[]

@@ -43,6 +43,111 @@ export class PrismaCustomersRepository implements ICustomersRepository {
     return this.mapper.toDomain(prismaCustomer as PrismaCustomer)
   }
 
+  async findByCpf(customerCpf: string): Promise<Customer | null> {
+    const data = await prisma.customer.findFirst({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        cpf: { value: customerCpf },
+      },
+    })
+
+    if (!data) return null
+
+    const prismaCustomer = {
+      id: data.id,
+      cpf: data.cpf,
+      name: data.name,
+      socialName: data.socialName,
+      gender: data.gender,
+      phones: data.phones,
+      rgs: data.rgs,
+      registered_at: data.registered_at,
+      consumption: data.orders.reduce((total) => total + 1, 0),
+      spending: data.orders.reduce((total, order) => total + Number(order.amount), 0),
+    }
+
+    return this.mapper.toDomain(prismaCustomer as PrismaCustomer)
+  }
+
+  async findByRg(customerRg: string): Promise<Customer | null> {
+    const data = await prisma.customer.findFirst({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        rgs: { some: { value: customerRg } },
+      },
+    })
+
+    if (!data) return null
+
+    const prismaCustomer = {
+      id: data.id,
+      cpf: data.cpf,
+      name: data.name,
+      socialName: data.socialName,
+      gender: data.gender,
+      phones: data.phones,
+      rgs: data.rgs,
+      registered_at: data.registered_at,
+      consumption: data.orders.reduce((total) => total + 1, 0),
+      spending: data.orders.reduce((total, order) => total + Number(order.amount), 0),
+    }
+
+    return this.mapper.toDomain(prismaCustomer as PrismaCustomer)
+  }
+
+  async findByPhone(customerPhone: string): Promise<Customer | null> {
+    const data = await prisma.customer.findFirst({
+      include: {
+        cpf: true,
+        phones: true,
+        rgs: true,
+        orders: {
+          select: {
+            amount: true,
+          },
+        },
+      },
+      where: {
+        phones: { some: { number: customerPhone } },
+      },
+    })
+
+    if (!data) return null
+
+    const prismaCustomer = {
+      id: data.id,
+      cpf: data.cpf,
+      name: data.name,
+      socialName: data.socialName,
+      gender: data.gender,
+      phones: data.phones,
+      rgs: data.rgs,
+      registered_at: data.registered_at,
+      consumption: data.orders.reduce((total) => total + 1, 0),
+      spending: data.orders.reduce((total, order) => total + Number(order.amount), 0),
+    }
+
+    return this.mapper.toDomain(prismaCustomer as PrismaCustomer)
+  }
+
   async findAll(): Promise<Customer[]> {
     const data = await prisma.customer.findMany({
       include: {

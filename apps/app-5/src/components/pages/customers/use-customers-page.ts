@@ -70,7 +70,7 @@ export function useCustomersPage() {
 
     const response = await customersService.registerCustomer(Customer.create(customerDto))
     if (response.isFailure) {
-      toast.error('Erro ao registrar cliente')
+      toast.error(response.errorMessage)
     }
 
     if (response.isSuccess) {
@@ -82,11 +82,9 @@ export function useCustomersPage() {
   }
 
   async function handleUpdateCustomer(customerDto: CustomerDto, customerId: string) {
-    const customer = customers.find((customer) => customer.id === customerId)
-    if (!customer) return
     setIsFetching(true)
 
-    const response = await customersService.updateCustomer(customer.update(customerDto))
+    const response = await customersService.updateCustomer(customerDto, customerId)
     if (response.isFailure) {
       toast.error(response.errorMessage)
     }

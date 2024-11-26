@@ -107,7 +107,7 @@ export const CustomersTable = ({
               <TableCell>
                 {customer.gender === 'male' ? 'masculino' : 'feminino'}
               </TableCell>
-              <TableCell>{customer.socialName}</TableCell>
+              <TableCell>{customer.socialName ? customer.socialName : '----'}</TableCell>
               <TableCell>
                 <span className='truncate'>{customer.phonesList}</span>
               </TableCell>

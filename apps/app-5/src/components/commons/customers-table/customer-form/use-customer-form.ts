@@ -1,10 +1,9 @@
 import { z } from 'zod'
+import { useCallback } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import type { CustomerDto } from '@world-beauty/core/dtos'
-
-import { useCallback } from 'react'
 import {
   cpfSchema,
   genderSchema,
@@ -15,7 +14,7 @@ import {
 
 const customerSchema = z.object({
   name: nameSchema,
-  socialName: nameSchema,
+  socialName: z.string().optional(),
   cpf: cpfSchema,
   gender: genderSchema,
   rgs: z.array(rgSchema).min(1, 'deve haver pelo menos 1 rg'),
@@ -77,16 +76,32 @@ export function useCustomerForm(
   }
 
   function handleFormSubmit(fields: CustomerFormFields) {
-    const customerDto: CustomerDto = {
+    if (customerDto) {
+      let partialCustomerDto: Partial<CustomerDto> = {}
+
+      for (const dirtyfield of Object.keys(formState.dirtyFields)) {
+        if (dirtyfield in fields)
+          partialCustomerDto = {
+            ...partialCustomerDto,
+            [dirtyfield]: fields[dirtyfield as keyof CustomerFormFields],
+          }
+      }
+
+      if (Object.keys(partialCustomerDto).length > 0)
+        onSubmit(partialCustomerDto as CustomerDto)
+      return
+    }
+
+    const newCustomerDto: CustomerDto = {
       name: fields.name,
+      gender: fields.gender,
       socialName: fields.socialName,
       cpf: fields.cpf,
-      gender: fields.gender,
       phones: fields.phones,
       rgs: fields.rgs,
     }
 
-    onSubmit(customerDto)
+    onSubmit(newCustomerDto)
   }
 
   return {

@@ -2,6 +2,9 @@ import type { Customer } from '../../domain/entities/customer'
 
 export interface ICustomersRepository {
   findById(customerId: string): Promise<Customer | null>
+  findByCpf(customerCpf: string): Promise<Customer | null>
+  findByRg(customerRg: string): Promise<Customer | null>
+  findByPhone(customerPhone: string): Promise<Customer | null>
   findAll(): Promise<Customer[]>
   findAllMale(): Promise<Customer[]>
   findAllFemale(): Promise<Customer[]>
