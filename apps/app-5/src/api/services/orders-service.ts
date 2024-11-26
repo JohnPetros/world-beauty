@@ -11,12 +11,16 @@ export const OrdersService = (apiClient: IApiClient): IOrdersService => {
 
     async listProducts(customerId: string, page: number) {
       apiClient.setParam('page', page.toString())
-      return await apiClient.get<PaginationResponse<ProductDto>>(`${customerId}/products`)
+      return await apiClient.get<PaginationResponse<ProductDto>>(
+        `/orders/${customerId}/products`,
+      )
     },
 
     async listServices(customerId: string, page: number) {
       apiClient.setParam('page', page.toString())
-      return await apiClient.get<PaginationResponse<ServiceDto>>(`${customerId}/services`)
+      return await apiClient.get<PaginationResponse<ServiceDto>>(
+        `/orders/${customerId}/services`,
+      )
     },
   }
 }

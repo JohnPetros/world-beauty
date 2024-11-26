@@ -10,6 +10,8 @@ type OrderFormProps = {
 
 export const OrdersTable = ({ customerId }: OrderFormProps) => {
   const {
+    isFetchingProducts,
+    isFetchingServices,
     products,
     productsPage,
     productsPagesCount,
@@ -35,6 +37,7 @@ export const OrdersTable = ({ customerId }: OrderFormProps) => {
             page={productsPage}
             pagesCount={productsPagesCount}
             selectedProductsIds={selectedProductsIds}
+            isLoading={isFetchingProducts}
             onPageChange={(page) => handleProductsPageChange(page)}
             onProductsSelectionChange={(productsIds) =>
               handleProductsSelectionChange(productsIds)
@@ -48,6 +51,7 @@ export const OrdersTable = ({ customerId }: OrderFormProps) => {
             services={services}
             page={servicesPage}
             pagesCount={servicesPagesCount}
+            isLoading={isFetchingServices}
             onPageChange={(page) => handleServicesPageChange(page)}
             selectedServicesIds={selectedServicesIds}
             onServicesSelectionChange={(servicesIds) =>

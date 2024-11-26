@@ -16,21 +16,28 @@ export function useOrderForm(customerId: string, onOrderItems: (items: Item[]) =
   const [productsPagesCount, setProductsPagesCount] = useState(0)
   const [servicesPage, setServicesPage] = useState(0)
   const [servicesPagesCount, setServicesPagesCount] = useState(0)
+  const [isFetchingProducts, setIsFetchingProducts] = useState(true)
+  const [isFetchingServices, setIsFetchingServices] = useState(true)
 
   const fetchProducts = useCallback(async (page: number) => {
+    setIsFetchingProducts(true)
     const response = await productsService.listProducts(page)
 
     if (response.isFailure) {
       toast.error('Não foi possível listar produtos, tente novamente mais tarde')
-      return
     }
 
-    setProducts(response.body.items.map(Product.create))
-    setProductsPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-    setProductsPage(page)
+    if (response.isSuccess) {
+      setProducts(response.body.items.map(Product.create))
+      setProductsPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+      setProductsPage(page)
+    }
+
+    setIsFetchingProducts(false)
   }, [])
 
   const fetchServices = useCallback(async (page: number) => {
+    setIsFetchingServices(true)
     const response = await servicesService.listServices(page)
 
     if (response.isFailure) {
@@ -38,9 +45,13 @@ export function useOrderForm(customerId: string, onOrderItems: (items: Item[]) =
       return
     }
 
-    setServices(response.body.items.map(Service.create))
-    setServicesPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-    setServicesPage(page)
+    if (response.isSuccess) {
+      setServices(response.body.items.map(Service.create))
+      setServicesPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
+      setServicesPage(page)
+    }
+
+    setIsFetchingServices(false)
   }, [])
 
   async function handleProductsPageChange(page: number) {
@@ -60,6 +71,9 @@ export function useOrderForm(customerId: string, onOrderItems: (items: Item[]) =
   }
 
   async function handleOrderButtonClick() {
+    setIsFetchingProducts(true)
+    setIsFetchingServices(true)
+
     const selectedProducts = products.filter((product) =>
       selectedProductsIds.includes(product.id),
     )
@@ -87,8 +101,16 @@ export function useOrderForm(customerId: string, onOrderItems: (items: Item[]) =
       )
     }
 
-    await ordersService.registerOrders(orders)
-    onOrderItems([...selectedProducts, ...selectedServices])
+    const response = await ordersService.registerOrders(orders)
+
+    if (response.isFailure) {
+      toast.error(response.errorMessage)
+    }
+
+    if (response.isSuccess) onOrderItems([...selectedProducts, ...selectedServices])
+
+    setIsFetchingProducts(false)
+    setIsFetchingServices(false)
   }
 
   useEffect(() => {
@@ -96,6 +118,8 @@ export function useOrderForm(customerId: string, onOrderItems: (items: Item[]) =
   }, [fetchProducts, fetchServices])
 
   return {
+    isFetchingProducts,
+    isFetchingServices,
     products,
     productsPage,
     productsPagesCount,

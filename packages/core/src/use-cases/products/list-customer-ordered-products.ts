@@ -16,6 +16,9 @@ export class ListCustomerOrderedProductsUseCase {
       customerId,
     )
 
-    return new PaginationResponse({ items: products, itemsCount: count })
+    return new PaginationResponse({
+      items: products.map((product) => product.dto),
+      itemsCount: count,
+    })
   }
 }

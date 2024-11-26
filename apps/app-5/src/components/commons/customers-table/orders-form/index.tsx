@@ -14,6 +14,8 @@ type OrderFormProps = {
 
 export const OrderForm = ({ customerId, onOrderItems, onCancel }: OrderFormProps) => {
   const {
+    isFetchingProducts,
+    isFetchingServices,
     products,
     productsPage,
     productsPagesCount,
@@ -40,6 +42,7 @@ export const OrderForm = ({ customerId, onOrderItems, onCancel }: OrderFormProps
             page={productsPage}
             pagesCount={productsPagesCount}
             selectedProductsIds={selectedProductsIds}
+            isLoading={isFetchingProducts}
             onPageChange={(page) => handleProductsPageChange(page)}
             onProductsSelectionChange={(productsIds) =>
               handleProductsSelectionChange(productsIds)
@@ -55,6 +58,7 @@ export const OrderForm = ({ customerId, onOrderItems, onCancel }: OrderFormProps
             pagesCount={servicesPagesCount}
             onPageChange={(page) => handleServicesPageChange(page)}
             selectedServicesIds={selectedServicesIds}
+            isLoading={isFetchingServices}
             onServicesSelectionChange={(servicesIds) =>
               handleServicesSelectionChange(servicesIds)
             }
@@ -65,7 +69,9 @@ export const OrderForm = ({ customerId, onOrderItems, onCancel }: OrderFormProps
         <Button
           color='primary'
           isDisabled={
-            selectedServicesIds.length === 0 && selectedProductsIds.length === 0
+            (selectedServicesIds.length === 0 && selectedProductsIds.length === 0) ||
+            isFetchingProducts ||
+            isFetchingServices
           }
           onClick={handleOrderButtonClick}
         >

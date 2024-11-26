@@ -15,35 +15,49 @@ export function useOrdersTable(customerId: string) {
   const [productsPagesCount, setProductsPagesCount] = useState(0)
   const [servicesPage, setServicesPage] = useState(0)
   const [servicesPagesCount, setServicesPagesCount] = useState(0)
+  const [isFetchingProducts, setIsFetchingProducts] = useState(true)
+  const [isFetchingServices, setIsFetchingServices] = useState(true)
 
   const fetchProducts = useCallback(
     async (page: number) => {
+      setIsFetchingProducts(true)
       const response = await ordersService.listProducts(customerId, page)
 
       if (response.isFailure) {
         toast.error('Não foi possível listar produtos, tente novamente mais tarde')
-        return
       }
 
-      setProducts(response.body.items.map(Product.create))
-      setProductsPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-      setProductsPage(page)
+      if (response.isSuccess) {
+        setProducts(response.body.items.map(Product.create))
+        setProductsPagesCount(
+          Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+        )
+        setProductsPage(page)
+      }
+
+      setIsFetchingProducts(false)
     },
     [customerId],
   )
 
   const fetchServices = useCallback(
     async (page: number) => {
+      setIsFetchingServices(true)
       const response = await ordersService.listServices(customerId, page)
 
       if (response.isFailure) {
         toast.error('Não foi possível listar produtos, tente novamente mais tarde')
-        return
       }
 
-      setServices(response.body.items.map(Service.create))
-      setServicesPagesCount(Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage))
-      setServicesPage(page)
+      if (response.isSuccess) {
+        setServices(response.body.items.map(Service.create))
+        setServicesPagesCount(
+          Math.ceil(response.body.itemsCount / PAGINATION.itemsPerPage),
+        )
+        setServicesPage(page)
+      }
+
+      setIsFetchingServices(false)
     },
     [customerId],
   )
@@ -69,6 +83,8 @@ export function useOrdersTable(customerId: string) {
   }, [fetchProducts, fetchServices])
 
   return {
+    isFetchingProducts,
+    isFetchingServices,
     products,
     productsPage,
     productsPagesCount,

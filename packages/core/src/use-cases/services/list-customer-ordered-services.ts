@@ -16,6 +16,9 @@ export class ListCustomerOrderedservicesUseCase {
       customerId,
     )
 
-    return new PaginationResponse({ items: services, itemsCount: count })
+    return new PaginationResponse({
+      items: services.map((service) => service.dto),
+      itemsCount: count,
+    })
   }
 }

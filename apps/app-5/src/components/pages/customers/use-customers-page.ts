@@ -99,8 +99,8 @@ export function useCustomersPage() {
     setIsFetching(false)
   }
 
-  function handleCustomerOrderItems() {
-    fetchCustomers(1)
+  async function handleCustomerOrderItems() {
+    await fetchCustomers(1)
     toast('Pedido realizado com sucesso!', { type: 'success' })
   }
 
