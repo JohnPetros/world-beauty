@@ -22,21 +22,22 @@ export const ServicesPage = () => {
   } = useServicesPage()
 
   return (
-    <div className='flex flex-col gap-3'>
-      <PageTitle>Produtos</PageTitle>
+    <div className='flex flex-col gap-3 pb-24'>
+      <PageTitle>Serviços</PageTitle>
 
       <div className='flex items-center gap-2'>
         <Dialog
-          title='Adicionar produto'
-          trigger={
+          title='Adicionar serviço'
+          trigger={(openDialog) => (
             <Button
               endContent={<Icon name='add' size={20} />}
               radius='sm'
               className='bg-zinc-800 text-zinc-50 w-max'
+              onClick={openDialog}
             >
-              Cadastrar produto
+              Cadastrar serviço
             </Button>
-          }
+          )}
         >
           {(closeDialog) => (
             <ServiceForm
@@ -47,7 +48,7 @@ export const ServicesPage = () => {
         </Dialog>
         {selectedServicesIds.length > 0 && (
           <Button radius='sm' color='danger' onClick={() => handleDeleteButtonClick()}>
-            Deletar produto(s)
+            Deletar serviço(s)
           </Button>
         )}
       </div>

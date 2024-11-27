@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { string, z } from 'zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -15,7 +15,7 @@ import {
 
 const customerSchema = z.object({
   name: nameSchema,
-  socialName: nameSchema,
+  socialName: string().optional(),
   cpf: cpfSchema,
   gender: genderSchema,
   rgs: z.array(rgSchema).min(1, 'deve haver pelo menos 1 rg'),
@@ -53,11 +53,11 @@ export function useCustomerForm(
   } = useFieldArray({ control, name: 'phones' })
 
   const addRgField = useCallback(() => {
-    appendRgField({ value: '', issueDate: new Date(1995, 12, 12) })
+    appendRgField({ value: '', issueDate: null as unknown as Date })
   }, [appendRgField])
 
   const addPhoneField = useCallback(() => {
-    appendPhoneField({ number: '', codeArea: '12' })
+    appendPhoneField({ number: '', codeArea: '' })
   }, [appendPhoneField])
 
   function handleAppendRgFieldButtonClick() {

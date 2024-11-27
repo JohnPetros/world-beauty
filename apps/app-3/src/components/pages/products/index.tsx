@@ -22,20 +22,21 @@ export const ProductsPage = () => {
   } = useProductsPage()
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-3 pb-24'>
       <PageTitle>Produtos</PageTitle>
 
       <div className='flex items-center gap-2'>
         <Dialog
           title='Adicionar produto'
           trigger={
-            <Button
-              endContent={<Icon name='add' size={20} />}
-              radius='sm'
-              className='bg-zinc-800 text-zinc-50 w-max'
-            >
-              Cadastrar produto
-            </Button>
+          (openDialog) =>   <Button
+          endContent={<Icon name='add' size={20} />}
+          radius='sm'
+          className='bg-zinc-800 text-zinc-50 w-max'
+          onClick={openDialog}
+        >
+          Cadastrar produto
+        </Button>
           }
         >
           {(closeDialog) => (

@@ -14,7 +14,7 @@ export const ListsPage = () => {
   const { selectedList, handleSelectChange } = useListsPage()
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-3 pb-24'>
       <PageTitle>Listagens</PageTitle>
 
       <Select

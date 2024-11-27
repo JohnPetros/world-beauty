@@ -1,3 +1,4 @@
+import { Component } from 'react'
 import {
   Button,
   Pagination,
@@ -8,6 +9,8 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
+  type Selection,
 } from '@nextui-org/react'
 
 import type { Service } from '@world-beauty/core/entities'
@@ -16,123 +19,138 @@ import type { ServiceDto } from '@world-beauty/core/dtos'
 import { Icon } from '@/components/commons/icon'
 import { Dialog } from '@/components/commons/dialog'
 import { ServiceForm } from './service-form'
-import { useServicesTable } from './use-services-table'
 
 type ServicesTableProps = {
   services: Service[]
   page: number
   pagesCount: number
   hasActions: boolean
-  hasSelection: boolean
   isLoading?: boolean
+  hasSelection?: boolean
   selectedServicesIds?: string[]
   onPageChange?: (page: number) => void
-  onUpdateService?: (ServiceDto: ServiceDto, serviceId: string) => void
-  onServicesSelectionChange?: (ServicesIds: string[]) => void
+  onUpdateService?: (serviceDto: ServiceDto, serviceId: string) => void
+  onServicesSelectionChange?: (servicesIds: string[]) => void
 }
 
-export const ServicesTable = ({
-  services,
-  hasActions,
-  hasSelection,
-  page,
-  pagesCount,
-  isLoading,
-  selectedServicesIds,
-  onPageChange,
-  onServicesSelectionChange,
-  onUpdateService,
-}: ServicesTableProps) => {
-  const { handlePageChange, handleServicesSelectionChange, handleUpdateService } =
-    useServicesTable({
-      services,
-      onPageChange,
-      onServicesSelectionChange,
-      onUpdateService,
-    })
+export class ServicesTable extends Component<ServicesTableProps> {
+  async handleServicesSelectionChange(servicesSelection: Selection) {
+    let selectedServicesIds: string[] = []
 
-  return (
-    <Table
-      key={pagesCount}
-      color='default'
-      selectionMode={hasSelection ? 'multiple' : 'none'}
-      selectedKeys={selectedServicesIds}
-      aria-label='Tabela de produtos'
-      onSelectionChange={(selection) => handleServicesSelectionChange(selection)}
-      bottomContent={
-        pagesCount > 1 && (
-          <Pagination
-            color='primary'
-            total={pagesCount}
-            initialPage={page}
-            onChange={(page) => handlePageChange(page)}
-          />
-        )
-      }
-      className='w-full'
-      checkboxesProps={{
-        classNames: {
-          wrapper: 'after:bg-foreground after:text-background text-background',
-        },
-      }}
-    >
-      <TableHeader>
-        <TableColumn>Nome</TableColumn>
-        <TableColumn>Preço</TableColumn>
-        <TableColumn>Descrição</TableColumn>
-        <TableColumn>Qtd. de vezes que esse produto foi consumido</TableColumn>
-        <TableColumn> </TableColumn>
-      </TableHeader>
-      <TableBody
-        isLoading={isLoading}
-        loadingContent={<Spinner />}
-        emptyContent='Nenhum produto cadastrado'
-        items={services}
+    if (servicesSelection === 'all') {
+      selectedServicesIds = this.props.services.map((service) => service.id)
+    } else {
+      selectedServicesIds = Array.from(servicesSelection).map(String)
+    }
+
+    if (this.props.onServicesSelectionChange)
+      this.props.onServicesSelectionChange(selectedServicesIds)
+  }
+
+  handlePageChange(page: number) {
+    if (this.props.onPageChange) this.props.onPageChange(page)
+  }
+
+  async handleUpdateService(serviceDto: ServiceDto, serviceId: string) {
+    if (this.props.onUpdateService) this.props.onUpdateService(serviceDto, serviceId)
+  }
+
+  render() {
+    return (
+      <Table
+        key={this.props.pagesCount}
+        color='default'
+        selectionMode={this.props.hasSelection ? 'multiple' : 'none'}
+        selectedKeys={this.props.selectedServicesIds}
+        aria-label='Tabela de serviços'
+        onSelectionChange={(selection) => this.handleServicesSelectionChange(selection)}
+        bottomContent={
+          this.props.pagesCount > 1 && (
+            <Pagination
+              color='primary'
+              total={this.props.pagesCount}
+              initialPage={this.props.page}
+              onChange={(page) => this.handlePageChange(page)}
+            />
+          )
+        }
+        className='w-full'
+        checkboxesProps={{
+          classNames: {
+            wrapper: 'after:bg-foreground after:text-background text-background',
+          },
+        }}
       >
-        {(service) => (
-          <TableRow key={service.id}>
-            <TableCell>{service.name}</TableCell>
-            <TableCell>
-              {(() => {
-                const formatter = new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-                return formatter.format(service.price)
-              })()}
+        <TableHeader>
+          <TableColumn>Nome</TableColumn>
+          <TableColumn>Preço</TableColumn>
+          <TableColumn>Descrição</TableColumn>
+          <TableColumn>Qtd. de clientes que consumiram esse serviço</TableColumn>
+          <TableColumn> </TableColumn>
+        </TableHeader>
+        <TableBody
+          isLoading={this.props.isLoading}
+          loadingContent={<Spinner />}
+          emptyContent='Nenhum serviço cadastrado'
+          items={this.props.services}
+        >
+          {(service) => (
+            <TableRow key={service.id}>
+               <TableCell>
+              <span className='truncate'>{service.name}</span>
             </TableCell>
-            <TableCell>{service.description}</TableCell>
+              <TableCell>
+                {(() => {
+                  const formatter = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                  return formatter.format(service.price)
+                })()}
+              </TableCell>
+              <TableCell>
+              <span className='truncate'>{service.description}</span>
+            </TableCell>
             <TableCell>{service.ordersCount}</TableCell>
-            <TableCell>
-              {hasActions && (
-                <div className='relative flex items-center gap-2'>
-                  <Dialog
-                    title='Atualizar produto'
-                    trigger={
-                      <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                        <Icon name='edit' size={16} />
-                      </Button>
-                    }
-                  >
-                    {(closeDialog) => (
-                      <ServiceForm
-                        service={service}
-                        onCancel={closeDialog}
-                        onSubmit={async (serviceDto) => {
-                          closeDialog()
-                          await handleUpdateService(serviceDto, service.id)
-                        }}
-                      />
-                    )}
-                  </Dialog>
-                </div>
-              )}
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-  )
+              <TableCell>
+                {this.props.hasActions && (
+                  <div className='relative flex items-center gap-2'>
+                    <Dialog
+                      title='Atualizar serviço'
+                      trigger={
+                        (openDialog) => (
+                          <Tooltip content='Atualizar serviço'>
+                            <Button
+                              size='sm'
+                              className='bg-gray-200 text-zinc-800'
+                              onClick={openDialog}
+                            >
+                              <Icon name='edit' size={16} />
+                            </Button>
+                          </Tooltip>
+                        )
+                      }
+                    >
+                      {(closeDialog) => (
+                        <ServiceForm
+                          service={service}
+                          onCancel={closeDialog}
+                          onSubmit={async (serviceDto) => {
+                            closeDialog()
+                            await this.handleUpdateService(serviceDto, service.id)
+                          }}
+                        />
+                      )}
+                    </Dialog>
+                  </div>
+                )}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    )
+  }
 }

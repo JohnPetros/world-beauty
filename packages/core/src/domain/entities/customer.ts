@@ -3,11 +3,10 @@ import { Cpf } from '../structs/cpf'
 import { Phone } from '../structs/phone'
 import { Rg } from '../structs/rg'
 import type { CustomerDto } from '../../dtos'
-import { Order } from '../structs'
 
 export type CustomerProps = {
   name: string
-  socialName: string
+  socialName: string | null
   cpf: Cpf
   gender: string
   rgs: Rg[]
@@ -22,7 +21,7 @@ export class Customer extends Entity<CustomerProps> {
       {
         name: dto.name,
         gender: dto.gender,
-        socialName: dto.socialName,
+        socialName: dto.socialName ?? null,
         cpf: Cpf.create(dto.cpf),
         phones: dto.phones?.map(Phone.create),
         rgs: dto.rgs.map(Rg.create),
@@ -70,7 +69,7 @@ export class Customer extends Entity<CustomerProps> {
     return this.props.name
   }
 
-  get socialName(): string {
+  get socialName(): string | null {
     return this.props.socialName
   }
 
@@ -102,7 +101,7 @@ export class Customer extends Entity<CustomerProps> {
     return {
       id: this.id,
       name: this.name,
-      socialName: this.socialName,
+      socialName: this.socialName ?? undefined,
       gender: this.gender,
       cpf: this.cpf.dto,
       rgs: this.rgs.map((rg) => rg.dto),

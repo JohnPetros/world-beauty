@@ -1,37 +1,62 @@
-import type { ReactNode } from 'react'
-import { Slot } from '@radix-ui/react-slot'
+import { Component, type ReactNode } from 'react'
 import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
-import { useDialog } from './use-dialog'
 
 type DialogProps = {
   title: string
   children: (closeDialog: VoidFunction) => ReactNode
-  trigger: ReactNode
+  trigger: (openDialog: VoidFunction) => ReactNode
   isLarge?: boolean
 }
 
-export const Dialog = ({ children, title, trigger, isLarge }: DialogProps) => {
-  const { isOpen, close, handleTriggerClick } = useDialog()
+type DialogState = {
+  isOpen: boolean
+}
 
-  return (
-    <>
-      <Slot onClick={() => handleTriggerClick()}>{trigger}</Slot>
-      <Modal
-        isOpen={isOpen}
-        onClose={() => close()}
-        onOpenChange={() => close()}
-        classNames={{ header: 'ml-6' }}
-        size={isLarge ? '5xl' : 'lg'}
-      >
-        <ModalContent className='p-1 py-4'>
-          <>
-            <ModalHeader className='p-0'>{title}</ModalHeader>
-            <ModalBody className='max-h-[36rem] overflow-y-auto overflow-x-hidden'>
-              {children(() => close())}
-            </ModalBody>
-          </>
-        </ModalContent>
-      </Modal>
-    </>
-  )
+export class Dialog extends Component<DialogProps, DialogState> {
+  constructor(props: DialogProps) {
+    super(props)
+    this.state = {
+      isOpen: false,
+    }
+  }
+
+  close() {
+    this.setState({
+      isOpen: false,
+    })
+  }
+
+  open() {
+    this.setState({
+      isOpen: true,
+    })
+  }
+
+  handleTriggerClick() {
+    this.open()
+  }
+
+  render() {
+    return (
+      <>
+        {this.props.trigger(() => this.handleTriggerClick())}
+        <Modal
+          isOpen={this.state.isOpen}
+          onClose={() => this.close()}
+          onOpenChange={() => this.close()}
+          classNames={{ header: 'ml-6' }}
+          size={this.props.isLarge ? '5xl' : 'lg'}
+        >
+          <ModalContent className='p-1 py-4'>
+            <>
+              <ModalHeader className='p-0'>{this.props.title}</ModalHeader>
+              <ModalBody className='max-h-[36rem] overflow-y-auto overflow-x-hidden'>
+                {this.props.children(() => this.close())}
+              </ModalBody>
+            </>
+          </ModalContent>
+        </Modal>
+      </>
+    )
+  }
 }

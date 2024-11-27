@@ -1,5 +1,7 @@
 import { Button } from '@nextui-org/react'
 
+import type { CustomerDto } from '@world-beauty/core/dtos'
+
 import { PageTitle } from '@/components/commons/page-title'
 import { Dialog } from '@/components/commons/dialog'
 import { CustomersTable } from '@/components/commons/customers-table'
@@ -23,53 +25,62 @@ export const CustomersPage = () => {
   } = useCustomersPage()
 
   return (
-    <div className='flex flex-col gap-3'>
-      <PageTitle>Clientes</PageTitle>
+    <div className='flex flex-col gap-3 pb-24'>
+    <PageTitle>Clientes</PageTitle>
 
-      <div className='flex items-center gap-2'>
-        <Dialog
-          title='Adicionar cliente'
-          trigger={
+    <div className='flex items-center gap-2'>
+      <Dialog
+        title='Adicionar cliente'
+        trigger={
+          (openDialog) => (
             <Button
               endContent={<Icon name='add' size={20} />}
               radius='sm'
+              onClick={openDialog}
               className='bg-zinc-800 text-zinc-50 w-max'
             >
               Cadastrar cliente
             </Button>
-          }
-        >
-          {(closeDialog) => (
-            <CustomerForm
-              onCancel={closeDialog}
-              onSubmit={async (customerDto) => {
-                closeDialog()
-                await handleRegisterCustomer(customerDto)
-              }}
-            />
-          )}
-        </Dialog>
-        {selectedCustomersIds.length > 0 && (
-          <Button radius='sm' color='danger' onClick={() => handleDeleteButtonClick()}>
-            Deletar cliente(s)
-          </Button>
-        )}
-      </div>
-
-      <CustomersTable
-        hasActions={true}
-        customers={customers}
-        isLoading={isFetching}
-        page={page}
-        pagesCount={pagesCount}
-        selectedCustomersIds={selectedCustomersIds}
-        onUpdateCustomer={handleUpdateCustomer}
-        onPageChange={(page) => handlePageChange(page)}
-        onCustomersSelectionChange={(customersIds) =>
-          handleCustomersSelectionChange(customersIds)
+          )
         }
-        onCustomerOrderItems={() => handleCustomerOrderItems()}
-      />
+      >
+        {(closeDialog) => (
+          <CustomerForm
+            onCancel={closeDialog}
+            onSubmit={async (customerDto) => {
+              closeDialog()
+              await handleRegisterCustomer(customerDto)
+            }}
+          />
+        )}
+      </Dialog>
+      {selectedCustomersIds.length > 0 && (
+        <Button
+          radius='sm'
+          color='danger'
+          onClick={() => handleDeleteButtonClick()}
+        >
+          Deletar cliente(s)
+        </Button>
+      )}
     </div>
+
+    <CustomersTable
+      hasActions={true}
+      customers={customers}
+      isLoading={isFetching}
+      page={page}
+      pagesCount={pagesCount}
+      selectedCustomersIds={selectedCustomersIds}
+      onUpdateCustomer={(customerDto: CustomerDto, customerId: string) =>
+        handleUpdateCustomer(customerDto, customerId)
+      }
+      onPageChange={(page) => handlePageChange(page)}
+      onCustomersSelectionChange={(customersIds) =>
+        handleCustomersSelectionChange(customersIds)
+      }
+      onCustomerOrderItems={() => handleCustomerOrderItems()}
+    />
+  </div>
   )
 }

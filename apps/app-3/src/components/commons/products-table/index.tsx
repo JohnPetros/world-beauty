@@ -8,6 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from '@nextui-org/react'
 
 import type { Product } from '@world-beauty/core/entities'
@@ -53,86 +54,100 @@ export const ProductsTable = ({
 
   return (
     <Table
-      key={pagesCount}
-      color='default'
-      selectionMode={hasSelection ? 'multiple' : 'none'}
-      selectedKeys={selectedProductsIds}
-      aria-label='Tabela de produtos'
-      onSelectionChange={(selection) => handleProductsSelectionChange(selection)}
-      bottomContent={
-        pagesCount > 1 && (
-          <Pagination
-            color='primary'
-            total={pagesCount}
-            initialPage={page}
-            onChange={(page) => handlePageChange(page)}
-          />
-        )
-      }
-      className='w-full'
-      checkboxesProps={{
-        classNames: {
-          wrapper: 'after:bg-foreground after:text-background text-background',
-        },
-      }}
+    key={pagesCount}
+    color='default'
+    selectionMode={hasSelection ? 'multiple' : 'none'}
+    selectedKeys={selectedProductsIds}
+    aria-label='Tabela de produtos'
+    onSelectionChange={(selection) => handleProductsSelectionChange(selection)}
+    bottomContent={
+      pagesCount > 1 && (
+        <Pagination
+          color='primary'
+          total={pagesCount}
+          initialPage={page}
+          onChange={(page) => handlePageChange(page)}
+        />
+      )
+    }
+    className='w-full'
+    checkboxesProps={{
+      classNames: {
+        wrapper: 'after:bg-foreground after:text-background text-background',
+      },
+    }}
+  >
+    <TableHeader>
+      <TableColumn>Nome</TableColumn>
+      <TableColumn>Preço</TableColumn>
+      <TableColumn>Descrição</TableColumn>
+      <TableColumn>Qtd. de vezes que esse produto foi consumido</TableColumn>
+      <TableColumn> </TableColumn>
+    </TableHeader>
+    <TableBody
+      isLoading={isLoading}
+      loadingContent={<Spinner />}
+      emptyContent='Nenhum produto cadastrado'
+      items={products}
     >
-      <TableHeader>
-        <TableColumn>Nome</TableColumn>
-        <TableColumn>Preço</TableColumn>
-        <TableColumn>Descrição</TableColumn>
-        <TableColumn>Qtd. de vezes que esse produto foi consumido</TableColumn>
-        <TableColumn> </TableColumn>
-      </TableHeader>
-      <TableBody
-        isLoading={isLoading}
-        loadingContent={<Spinner />}
-        emptyContent='Nenhum produto cadastrado'
-        items={products}
-      >
-        {(product) => (
-          <TableRow key={product.id}>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>
-              {(() => {
-                const formatter = new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-                return formatter.format(product.price)
-              })()}
-            </TableCell>
-            <TableCell>{product.description}</TableCell>
-            <TableCell>{product.ordersCount}</TableCell>
-            <TableCell>
-              {hasActions && (
-                <div className='relative flex items-center gap-2'>
-                  <Dialog
-                    title='Atualizar produto'
-                    trigger={
-                      <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                        <Icon name='edit' size={16} />
-                      </Button>
-                    }
-                  >
-                    {(closeDialog) => (
-                      <ProductForm
-                        product={product}
-                        onCancel={closeDialog}
-                        onSubmit={async (productDto) => {
-                          closeDialog()
-                          await handleUpdateProduct(productDto, product.id)
-                        }}
-                      />
-                    )}
-                  </Dialog>
-                </div>
-              )}
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+      {(product) => (
+        <TableRow key={product.id}>
+         <TableCell>
+          <span className='truncate'>{product.name}</span>
+        </TableCell>
+          <TableCell>
+            {(() => {
+              const formatter = new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+              return formatter.format(product.price)
+            })()}
+          </TableCell>
+          <TableCell>
+          <span className='truncate'>{product.description}</span>
+        </TableCell>
+        <TableCell>
+          <span className='truncate'>{product.ordersCount}</span>
+        </TableCell>
+          <TableCell>
+            {hasActions && (
+              <div className='relative flex items-center gap-2'>
+                <Dialog
+                  title='Atualizar produto'
+                  trigger={
+                    (openDialog) => (
+                      <Tooltip content='Atualizar produto'>
+                        <Button
+                          size='sm'
+                          className='bg-gray-200 text-zinc-800'
+                          onClick={openDialog}
+                        >
+                          <Icon name='edit' size={16} />
+                        </Button>
+                      </Tooltip>
+                    )
+                  }
+                >
+                  {(closeDialog) => (
+                    <ProductForm
+                      product={product}
+                      onCancel={closeDialog}
+                      onSubmit={async (productDto) => {
+                        closeDialog()
+                        await handleUpdateProduct(productDto, product.id)
+                      }}
+                    />
+                  )}
+                </Dialog>
+              </div>
+            )}
+          </TableCell>
+        </TableRow>
+      )}
+    </TableBody>
+  </Table>
   )
 }
