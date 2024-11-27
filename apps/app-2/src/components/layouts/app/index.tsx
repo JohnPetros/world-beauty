@@ -56,7 +56,7 @@ export class AppLayout extends Component<any, AppLayoutState> {
             <Sidebar />
           </Drawer>
         </div>
-        <main className='w-full pl-6 md:pl-56 md:pr-8 pt-12 md:pt-8'>
+        <main className='w-full h-full pl-6 md:pl-56 md:pr-8 pt-12 md:pt-8 bg-zinc-50'>
           <Outlet />
         </main>
         <ToastContainer />
