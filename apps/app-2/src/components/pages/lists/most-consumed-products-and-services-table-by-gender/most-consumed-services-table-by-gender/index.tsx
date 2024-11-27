@@ -64,7 +64,7 @@ export class MostConsumedServicesTableByGender extends Component<any, ServicesPa
   }
 
   async handleFemaleCustomersServicesPageChange(page: number) {
-    await this.fetchMaleCustomersServices(page)
+    await this.fetchFemaleCustomersServices(page)
   }
 
   async componentDidMount() {
