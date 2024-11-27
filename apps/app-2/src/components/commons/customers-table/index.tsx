@@ -9,6 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
   type Selection,
 } from '@nextui-org/react'
 
@@ -106,11 +107,11 @@ export class CustomersTable extends Component<CustomersTableProps> {
             {(customer) => (
               <TableRow key={customer.id}>
                 <TableCell>{customer.name}</TableCell>
-                <TableCell>{customer.cpf.value}</TableCell>
+                <TableCell>{customer.cpf.format}</TableCell>
                 <TableCell>
                   {customer.gender === 'male' ? 'masculino' : 'feminino'}
                 </TableCell>
-                <TableCell>{customer.socialName}</TableCell>
+                <TableCell>{customer.socialName ? customer.socialName  : '----'}</TableCell>
                 <TableCell className='w-24'>
                   {<span className='truncate'>{customer.phonesList}</span>}
                 </TableCell>
@@ -133,9 +134,17 @@ export class CustomersTable extends Component<CustomersTableProps> {
                       <Dialog
                         title={`Atualizar cliente ${customer.name}`}
                         trigger={
-                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='edit' size={16} />
-                          </Button>
+                          (openDialog) => (
+                            <Tooltip content='Atualizar cliente'>
+                              <Button
+                                size='sm'
+                                className='bg-gray-200 text-zinc-800'
+                                onClick={openDialog}
+                              >
+                                <Icon name='edit' size={16} />
+                              </Button>
+                            </Tooltip>
+                          )
                         }
                       >
                         {(closeDialog) => (
@@ -153,9 +162,17 @@ export class CustomersTable extends Component<CustomersTableProps> {
                         title={`Fazer pedido para o cliente ${customer.name}`}
                         isLarge
                         trigger={
-                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='order' size={16} />
-                          </Button>
+                          (openDialog) => (
+                            <Tooltip content={`Fazer pedido para o cliente ${customer.name}`}>
+                              <Button
+                                size='sm'
+                                className='bg-gray-200 text-zinc-800'
+                                onClick={openDialog}
+                              >
+                                <Icon name='order' size={16} />
+                              </Button>
+                            </Tooltip>
+                          )
                         }
                       >
                         {(closeDialog) => (
@@ -174,9 +191,19 @@ export class CustomersTable extends Component<CustomersTableProps> {
                         title={`Produtos e serviços consumidos por ${customer.name}`}
                         isLarge
                         trigger={
-                          <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                            <Icon name='orders' size={16} />
-                          </Button>
+                          (openDialog) => (
+                            <Tooltip
+                              content={`Produtos e serviços consumidos por ${customer.name}`}
+                            >
+                              <Button
+                                size='sm'
+                                className='bg-gray-200 text-zinc-800'
+                                onClick={openDialog}
+                              >
+                                <Icon name='orders' size={16} />
+                              </Button>
+                            </Tooltip>
+                          )
                         }
                       >
                         {() => <OrdersTable customerId={customer.id} />}

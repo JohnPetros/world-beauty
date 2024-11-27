@@ -102,13 +102,16 @@ export class CustomersPage extends Component<any, CustomersPageState> {
           <Dialog
             title='Adicionar cliente'
             trigger={
-              <Button
-                endContent={<Icon name='add' size={20} />}
-                radius='sm'
-                className='bg-zinc-800 text-zinc-50 w-max'
-              >
-                Cadastrar cliente
-              </Button>
+              (openDialog) => (
+                <Button
+                  endContent={<Icon name='add' size={20} />}
+                  radius='sm'
+                  onClick={openDialog}
+                  className='bg-zinc-800 text-zinc-50 w-max'
+                >
+                  Cadastrar cliente
+                </Button>
+              )
             }
           >
             {(closeDialog) => (

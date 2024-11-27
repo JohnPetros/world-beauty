@@ -98,13 +98,16 @@ export class ServicesPage extends Component<any, ServicesPageState> {
           <Dialog
             title='Adicionar serviço'
             trigger={
-              <Button
-                endContent={<Icon name='add' size={20} />}
-                radius='sm'
-                className='bg-zinc-800 text-zinc-50 w-max'
-              >
-                Cadastrar serviço
-              </Button>
+              (openDialog) => (
+                <Button
+                  endContent={<Icon name='add' size={20} />}
+                  radius='sm'
+                  onClick={openDialog}
+                  className='bg-zinc-800 text-zinc-50 w-max'
+                >
+                  Cadastrar serviço
+                </Button>
+              )
             }
           >
             {(closeDialog) => (

@@ -15,7 +15,7 @@ export class CustomersFaker {
       name: faker.person.firstName(),
       socialName: faker.person.lastName(),
       cpf: {
-        value: faker.number.int({ min: 1000000000, max: 9999999999 }).toString(),
+        value: faker.number.int({ min: 10000000000, max: 99999999999 }).toString(),
         issueDate: faker.date.past(),
       },
       gender: faker.helpers.arrayElement(['male', 'female']),

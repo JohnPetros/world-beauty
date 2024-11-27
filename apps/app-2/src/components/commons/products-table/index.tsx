@@ -9,6 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
   type Selection,
 } from '@nextui-org/react'
 
@@ -115,9 +116,17 @@ export class ProductsTable extends Component<ProductsTableProps> {
                     <Dialog
                       title='Atualizar produto'
                       trigger={
-                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                          <Icon name='edit' size={16} />
-                        </Button>
+                        (openDialog) => (
+                          <Tooltip content='Atualizar produto'>
+                            <Button
+                              size='sm'
+                              className='bg-gray-200 text-zinc-800'
+                              onClick={openDialog}
+                            >
+                              <Icon name='edit' size={16} />
+                            </Button>
+                          </Tooltip>
+                        )
                       }
                     >
                       {(closeDialog) => (

@@ -9,6 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
   type Selection,
 } from '@nextui-org/react'
 
@@ -61,7 +62,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
         color='default'
         selectionMode={this.props.hasSelection ? 'multiple' : 'none'}
         selectedKeys={this.props.selectedServicesIds}
-        aria-label='Tabela de produtos'
+        aria-label='Tabela de serviços'
         onSelectionChange={(selection) => this.handleServicesSelectionChange(selection)}
         bottomContent={
           this.props.pagesCount > 1 && (
@@ -90,7 +91,7 @@ export class ServicesTable extends Component<ServicesTableProps> {
         <TableBody
           isLoading={this.props.isLoading}
           loadingContent={<Spinner />}
-          emptyContent='Nenhum produto cadastrado'
+          emptyContent='Nenhum serviço cadastrado'
           items={this.props.services}
         >
           {(service) => (
@@ -113,11 +114,19 @@ export class ServicesTable extends Component<ServicesTableProps> {
                 {this.props.hasActions && (
                   <div className='relative flex items-center gap-2'>
                     <Dialog
-                      title='Atualizar produto'
+                      title='Atualizar serviço'
                       trigger={
-                        <Button size='sm' className='bg-gray-200 text-zinc-800'>
-                          <Icon name='edit' size={16} />
-                        </Button>
+                        (openDialog) => (
+                          <Tooltip content='Atualizar serviço'>
+                            <Button
+                              size='sm'
+                              className='bg-gray-200 text-zinc-800'
+                              onClick={openDialog}
+                            >
+                              <Icon name='edit' size={16} />
+                            </Button>
+                          </Tooltip>
+                        )
                       }
                     >
                       {(closeDialog) => (

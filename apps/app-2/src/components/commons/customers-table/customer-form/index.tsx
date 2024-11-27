@@ -14,8 +14,8 @@ type RegisterCustomerFormProps = {
 }
 
 type RegisterCustomerFormState = {
-  rgFieldsCount: number
-  phoneFieldsCount: number
+  rgFields: number[]
+  phoneFields: number[]
 }
 
 export class CustomerForm extends Component<
@@ -25,18 +25,39 @@ export class CustomerForm extends Component<
   constructor(props: RegisterCustomerFormProps) {
     super(props)
     this.state = {
-      rgFieldsCount: 1,
-      phoneFieldsCount: 1,
+      rgFields: props.customer?.rgs ? props.customer?.rgs.map((_, index) => index) : [0],
+      phoneFields: props.customer?.phones ? props.customer?.phones.map((_, index) => index) : [0],
+    }
+  }
+
+  componentDidMount(): void {
+    this.state = {
+      rgFields: this.props.customer?.rgs ? this.props.customer?.rgs.map((_, index) => index) : [0],
+      phoneFields: this.props.customer?.phones ? this.props.customer?.phones.map((_, index) => index) : [0],
     }
   }
 
   handleAppendRgFieldButtonClick() {
-    this.setState({ ...this.state, rgFieldsCount: this.state.rgFieldsCount + 1 })
+    const lastField =  this.state.rgFields.at(-1)
+    this.setState({ ...this.state, rgFields: [...this.state.rgFields, lastField ? lastField + 1 : 1] })
   }
 
-  handlePopRgFieldButtonClick() {
-    if (this.state.rgFieldsCount > 1)
-      this.setState({ ...this.state, rgFieldsCount: this.state.rgFieldsCount - 1 })
+  handlePopRgFieldButtonClick(fieldId: number) {
+    if (this.state.rgFields.length > 1) {
+      this.setState({ ...this.state, rgFields: this.state.rgFields.filter(field => field !== fieldId) })
+    }
+  }
+
+  handleAppendPhoneFieldButtonClick() {
+    const lastField =  this.state.phoneFields.at(-1)
+    console.log(lastField)
+    this.setState({ ...this.state, phoneFields: [...this.state.phoneFields, lastField ? lastField + 1 : 1] })
+  }
+
+  handlePopPhoneFieldButtonClick(fieldId: number) {
+    if (this.state.phoneFields.length > 1) {
+      this.setState({ ...this.state, phoneFields: this.state.phoneFields.filter(field => field !== fieldId) })
+    }
   }
 
   async handleSubmit(event: FormEvent) {
@@ -111,9 +132,8 @@ export class CustomerForm extends Component<
           <Input
             label='Nome social'
             name='social-name'
-            defaultValue={this.props.customer?.socialName}
+            defaultValue={this.props.customer?.socialName ?? ''}
             variant='bordered'
-            required
           />
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
@@ -121,7 +141,7 @@ export class CustomerForm extends Component<
             name='gender'
             label='Gênero'
             orientation='horizontal'
-            defaultValue={this.props.customer?.gender}
+            defaultValue={this.props.customer?.gender ?? 'male'}
           >
             <Radio value='male'>Masculino</Radio>
             <Radio value='female'>Feminino</Radio>
@@ -159,9 +179,9 @@ export class CustomerForm extends Component<
             </Button>
           </div>
           <div className='mt-1 space-y-1'>
-            {Array.from({ length: this.state.rgFieldsCount }).map((_, index) => (
+            {this.state.rgFields.map((id) => (
               <div
-                key={String(index)}
+                key={String(id)}
                 className='grid grid-cols-1 md:grid-cols-[1fr_1fr_0.25fr] gap-2'
               >
                 <Input
@@ -169,7 +189,7 @@ export class CustomerForm extends Component<
                   name='rg-name[]'
                   variant='bordered'
                   radius='sm'
-                  defaultValue={this.props.customer?.rgs[index]?.value}
+                  defaultValue={this.props.customer?.rgs[id]?.value}
                   required
                 />
                 <Input
@@ -178,7 +198,7 @@ export class CustomerForm extends Component<
                   label='Data de emissão'
                   variant='bordered'
                   radius='sm'
-                  defaultValue={this.props.customer?.rgs[index]?.issueDateAsString}
+                  defaultValue={this.props.customer?.rgs[id]?.issueDateAsString}
                   required
                 />
                 <Button
@@ -186,7 +206,7 @@ export class CustomerForm extends Component<
                   variant='bordered'
                   radius='sm'
                   className='md:h-full w-full text-red-600'
-                  onClick={() => this.handlePopRgFieldButtonClick()}
+                  onClick={() => this.handlePopRgFieldButtonClick(id)}
                 >
                   <Icon name='delete' size={16} />
                 </Button>
@@ -197,29 +217,29 @@ export class CustomerForm extends Component<
         <Divider />
         <div>
           <div className='flex items-center justify-between'>
-            <Button size='sm' radius='sm' variant='bordered' className='text-zinc-500'>
-              Adicionar telefone
+            <Button size='sm' radius='sm' variant='bordered' className='text-zinc-500' onClick={() => this.handleAppendPhoneFieldButtonClick()}>
+                Adicionar telefone
               <Icon name='add' size={16} />
             </Button>
           </div>
           <div className='mt-1 space-y-1'>
-            {Array.from({ length: this.state.phoneFieldsCount }).map((_, index) => (
+            {this.state.phoneFields.map((id) => (
               <div
-                key={String(index)}
+                key={String(id)}
                 className='grid grid-cols-1 md:grid-cols-[1fr_1fr_0.25fr] gap-2'
               >
                 <Input
                   label='DDD'
                   name='phone-code-area[]'
                   variant='bordered'
-                  defaultValue={this.props.customer?.phones[index].codeArea}
+                  defaultValue={this.props.customer?.phones[id]?.codeArea}
                   required
                 />
                 <Input
                   label='Número'
                   name='phone-number[]'
                   variant='bordered'
-                  defaultValue={this.props.customer?.phones[index].number}
+                  defaultValue={this.props.customer?.phones[id]?.number}
                   required
                 />
                 <Button
@@ -227,7 +247,7 @@ export class CustomerForm extends Component<
                   variant='bordered'
                   radius='sm'
                   className='md:h-full w-full text-red-600'
-                  onClick={() => this.handlePopRgFieldButtonClick()}
+                  onClick={() => this.handlePopPhoneFieldButtonClick(id)}
                 >
                   <Icon name='delete' size={16} />
                 </Button>
@@ -238,7 +258,7 @@ export class CustomerForm extends Component<
         <Divider />
         <div className='flex items-center gap-2'>
           <Button type='submit' color='primary' className='mt-3'>
-            Cadastrar
+            Enviar
           </Button>
           <Button color='danger' onClick={() => this.props.onCancel()} className='mt-3'>
             Cancelar
