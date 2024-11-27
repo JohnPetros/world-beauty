@@ -52,7 +52,7 @@ export function useCustomerForm(
   } = useFieldArray({ control, name: 'phones' })
 
   const addRgField = useCallback(() => {
-    appendRgField({ value: '', issueDate: new Date(1995, 12, 12) })
+    appendRgField({ value: '', issueDate: null as unknown as Date })
   }, [appendRgField])
 
   const addPhoneField = useCallback(() => {
@@ -87,8 +87,8 @@ export function useCustomerForm(
           }
       }
 
-      if (Object.keys(partialCustomerDto).length > 0)
-        onSubmit(partialCustomerDto as CustomerDto)
+      // if (Object.keys(partialCustomerDto).length > 0)
+      //   onSubmit(partialCustomerDto as CustomerDto)
       return
     }
 
