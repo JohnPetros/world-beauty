@@ -47,7 +47,7 @@ export function useMostConsumedServicesTableByGender() {
   }
 
   async function handleFemaleCustomersServicesPageChange(page: number) {
-    await fetchMaleCustomersServices(page)
+    await fetchFemaleCustomersServices(page)
   }
 
   useEffect(() => {

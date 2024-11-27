@@ -15,7 +15,7 @@ export const ListsPage = () => {
 
   return (
     <div className='flex flex-col gap-3 pb-24'>
-      <PageTitle>Listagens</PageTitle>
+      <PageTitle>Relatórios</PageTitle>
 
       <Select
         label='Selecione uma lista'
@@ -44,17 +44,17 @@ export const ListsPage = () => {
       <div className='mt-6 pb-6'>
         {selectedList === 'most-consumed-products-and-services-by-gender' && (
           <MostConsumedProductsAndServicesByGenderTable />
-        )} 
-         {selectedList === 'most-consumed-products-and-services' && (
+        )}
+        {selectedList === 'most-consumed-products-and-services' && (
           <MostConsumedProductsAndServicesTable />
         )}
-         {selectedList === 'customers-by-most-spending' && (
+        {selectedList === 'customers-by-most-spending' && (
           <CustomersByMostSpendingTable />
         )}
-         {selectedList === 'customers-by-most-consumption' && (
+        {selectedList === 'customers-by-most-consumption' && (
           <CustomersByMostConsumptionTable />
         )}
-         {selectedList === 'customers-by-less-consumption' && (
+        {selectedList === 'customers-by-less-consumption' && (
           <CustomersByLessConsumptionTable />
         )}
         {selectedList === 'customers-by-gender' && <CustomersByGenderTable />}
