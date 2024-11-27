@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         element: <ServicesPage />,
       },
       {
-        path: '/lists',
+        path: '/reports',
         element: <ListsPage />,
       },
     ],

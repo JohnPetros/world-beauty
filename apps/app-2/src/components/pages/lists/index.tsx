@@ -25,8 +25,8 @@ export class ListsPage extends Component<any, ListsPageState> {
 
   render() {
     return (
-      <div className='flex flex-col gap-3'>
-        <PageTitle>Listagens</PageTitle>
+      <div className='flex flex-col gap-3 pb-24'>
+        <PageTitle>Relatórios</PageTitle>
 
         <Select
           label='Selecione uma lista'

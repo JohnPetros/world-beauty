@@ -96,7 +96,9 @@ export class ServicesTable extends Component<ServicesTableProps> {
         >
           {(service) => (
             <TableRow key={service.id}>
-              <TableCell>{service.name}</TableCell>
+               <TableCell>
+              <span className='truncate'>{service.name}</span>
+            </TableCell>
               <TableCell>
                 {(() => {
                   const formatter = new Intl.NumberFormat('pt-BR', {
@@ -108,8 +110,10 @@ export class ServicesTable extends Component<ServicesTableProps> {
                   return formatter.format(service.price)
                 })()}
               </TableCell>
-              <TableCell>{service.description}</TableCell>
-              <TableCell>{service.ordersCount}</TableCell>
+              <TableCell>
+              <span className='truncate'>{service.description}</span>
+            </TableCell>
+            <TableCell>{service.ordersCount}</TableCell>
               <TableCell>
                 {this.props.hasActions && (
                   <div className='relative flex items-center gap-2'>

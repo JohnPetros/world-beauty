@@ -91,7 +91,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
 
   render() {
     return (
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 pb-24'>
         <PageTitle>Serviços</PageTitle>
 
         <div className='flex items-center gap-2'>
@@ -133,6 +133,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
         <div className='w-full'>
           <ServicesTable
             hasActions={true}
+            hasSelection={true}
             services={this.state.services}
             page={this.state.page}
             pagesCount={this.state.pagesCount}

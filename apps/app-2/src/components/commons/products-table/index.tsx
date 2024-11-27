@@ -96,7 +96,9 @@ export class ProductsTable extends Component<ProductsTableProps> {
         >
           {(product) => (
             <TableRow key={product.id}>
-              <TableCell>{product.name}</TableCell>
+             <TableCell>
+              <span className='truncate'>{product.name}</span>
+            </TableCell>
               <TableCell>
                 {(() => {
                   const formatter = new Intl.NumberFormat('pt-BR', {
@@ -108,8 +110,12 @@ export class ProductsTable extends Component<ProductsTableProps> {
                   return formatter.format(product.price)
                 })()}
               </TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell>{product.ordersCount}</TableCell>
+              <TableCell>
+              <span className='truncate'>{product.description}</span>
+            </TableCell>
+            <TableCell>
+              <span className='truncate'>{product.ordersCount}</span>
+            </TableCell>
               <TableCell>
                 {this.props.hasActions && (
                   <div className='relative flex items-center gap-2'>

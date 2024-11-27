@@ -91,7 +91,7 @@ export class ProductsPage extends Component<any, ProductsPageState> {
 
   render() {
     return (
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 pb-24'>
         <PageTitle>Produtos</PageTitle>
 
         <div className='flex items-center gap-2'>
