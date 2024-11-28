@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 export class RgsFaker {
   static fake() {
     return new Rg(
-      faker.number.int({ min: 1000000000, max: 9999999999 }).toString(),
+      faker.number.int({ min: 100000000, max: 999999999 }).toString(),
       dayjs(faker.date.past()).format('DD/MM/YYYY'),
     )
   }

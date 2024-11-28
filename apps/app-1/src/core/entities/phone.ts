@@ -4,6 +4,10 @@ export class Phone {
     private _number: string,
   ) {}
 
+  public get value(): string {
+    return `(${this._codeArea}) ${this._number}`
+  }
+
   public get codeArea(): string {
     return this._codeArea
   }
