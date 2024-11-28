@@ -77,7 +77,7 @@ export class ConsumeProductrOrService extends UseCase {
 
       this.output.clear()
       this.output.success(
-        `Produto ${product.id} adicionado ao cliente ${customer.id} com sucesso`,
+        `Produto ${product.id} pedido ao cliente ${customer.id} com sucesso`,
       )
       break
     }
@@ -104,7 +104,7 @@ export class ConsumeProductrOrService extends UseCase {
 
       this.output.clear()
       this.output.success(
-        `Serviço ${service.id} adicionado ao cliente ${customer.id} com sucesso`,
+        `Serviço ${service.id} pedido ao cliente ${customer.id} com sucesso`,
       )
       break
     }

@@ -41,7 +41,7 @@ export class App {
         ['Clientes'],
         ['Produtos'],
         ['Serviços'],
-        ['Listagens'],
+        ['Relatórios'],
         ['Sair'],
       ])
 
@@ -55,7 +55,7 @@ export class App {
         case 'Serviços':
           await this.handleServicesOptions()
           break
-        case 'Listagens':
+        case 'Relatórios':
           await this.handleListingOptions()
           break
         case 'Sair':
@@ -74,8 +74,8 @@ export class App {
       ['Atualizar um cliente', 'update'],
       ['Deletar o cadastro de um cliente', 'delete'],
       ['Listar todos os clientes', 'list'],
-      ['Consumir produto ou serviço', 'consume-product-or-service'],
-      ['Lista produtos ou serviços consumidos', 'list-products-or-services'],
+      ['Fazer pedido para um cliente', 'consume-product-or-service'],
+      ['Listar produtos ou serviços consumidos de um cliente', 'list-products-or-services'],
       ['Voltar', 'back'],
     ])
 
@@ -229,11 +229,6 @@ export class App {
   private async handleListingOptions() {
     this.output.clear()
     const option = await this.input.select('Escolha uma das opções:', [
-      ['Listar clientes por gênero', 'list-customer-by-gender'],
-      [
-        'Listar os 10 clientes que mais consumiram produtos ou serviços',
-        'list-customers-by-most-consumption',
-      ],
       [
         'Listar os produtos ou serviços mais consumidos',
         'list-products-and-services-by-most-consumption',
@@ -243,6 +238,10 @@ export class App {
         'list-products-and-services-by-most-consumption-and-gender',
       ],
       [
+        'Listar os 10 clientes que mais consumiram produtos ou serviços',
+        'list-customers-by-most-consumption',
+      ],
+      [
         'Listar os 10 clientes que menos consumiram produtos ou serviços',
         'list-customers-by-less-consumption',
       ],
@@ -250,6 +249,7 @@ export class App {
         'Listar os 5 clientes que mais consumiram em valor',
         'list-customers-by-most-spending',
       ],
+      ['Listar clientes por gênero', 'list-customer-by-gender'],
       ['Sair', 'back'],
     ])
 
