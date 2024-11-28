@@ -23,7 +23,7 @@ export class ListCustomers extends List {
         CPF: customer.cpf.format,
         Gênero: customer.gender,
         Telefones: customer.phones.map((phone) => phone.value).join(', '),
-        'Nome social': customer.socialName,
+        'Nome social': customer.socialName === '' ? '----' : customer.socialName,
         "RG's": customer.rgs.map((rg) => rg.format).join(', '),
         'Consumo em quantidade': customer.consumedProductsOrServicesCount,
         'Consumo em R$': customer.spending,

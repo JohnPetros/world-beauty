@@ -81,6 +81,14 @@ export class Customer extends EntityWithId {
     this._consumedServices[serviceIndex] = cosumedService
   }
 
+  public hasRg(rgValue: string): boolean {
+    return this.rgs.map((rg) => rg.value).includes(rgValue)
+  }
+
+  public hasPhone(phoneNumber: string): boolean {
+    return this.phones.map((phone) => phone.number).includes(phoneNumber)
+  }
+
   public get consumedProductsOrServicesCount(): number {
     return this.consumedProductsCount + this.consumedServicesCount
   }

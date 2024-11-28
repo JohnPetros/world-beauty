@@ -9,10 +9,18 @@ export class Validator {
     validateText(text: string) {
         return !!text
     }
+
+    validateNumber(number: string) {
+        if(!number || isNaN(Number(number))) {
+            this.output.error('Digite apenas números')
+            return false
+         }
+         return true
+    }
     
     validateIssueDate(issueDate: string) {
          if(!ISSUE_DATE_REGEX.test(issueDate)) {
-            this.output.error('Data de emissão deve estar no formato (dd/mm/yyyy')
+            this.output.error('Data de emissão deve ser uma data válida e estar no formato (dd/mm/yyyy)')
             return false
          }
          return true
@@ -44,7 +52,7 @@ export class Validator {
     }
 
     validatePhoneNumber(codeArea: string) {
-        if(isNaN(Number(codeArea)) || codeArea.length!== 2) {
+        if(isNaN(Number(codeArea)) || codeArea.length!== 9) {
             this.output.error('Número de telefone deve conter 9 dígitos')
             return false
          }

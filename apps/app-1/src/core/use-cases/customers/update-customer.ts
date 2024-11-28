@@ -2,14 +2,17 @@ import { Cpf, Rg, type Customer } from '../../entities'
 import type { Input, Output } from '../../interfaces'
 import { Update } from '../update'
 import { ListCustomers } from '../listing'
+import { Validator } from '@/core/utils'
 
 export class UpdateCustomer extends Update {
   private isRunning = true
   private customers: Customer[]
+  private validator: Validator
 
   constructor(customers: Customer[], input: Input, output: Output) {
     super(input, output)
     this.customers = customers
+    this.validator = new Validator(output)
   }
 
   public async update(): Promise<void> {
@@ -19,7 +22,6 @@ export class UpdateCustomer extends Update {
 
     while (this.customers.length && this.isRunning) {
       const id = await this.input.text('ID do cliente:')
-
       const customer = this.customers.find((customer) => customer.id === id)
 
       if (!customer) {
@@ -39,18 +41,27 @@ export class UpdateCustomer extends Update {
       ['Nome social', 'socialName'],
       ['Gênero', 'gender'],
       ["RG's", 'rgs'],
-      ['Telefones', 'rgs'],
+      ['Telefones', 'phones'],
     ])
 
     switch (option) {
       case 'name':
-        customer.name = await this.input.text('Insira o novo nome do Cliente:')
+        let name = ''
+        while (true) {
+          name = await this.input.text('Novo nome do cliente:')
+          if (!this.validator.validateText(name)) {
+            this.output.error('Nome é obrigatório')
+            continue
+          }
+          break
+        }
+        customer.name = name
         break
       case 'socialName':
-        customer.socialName = await this.input.text('Nome social do cliente:')
+        customer.socialName = await this.input.text('Novo nome social do cliente')
         break
       case 'gender':
-        customer.gender = await this.input.select('Gênero:', [
+        customer.gender = await this.input.select('Novo gênero:', [
           ['masculino'],
           ['feminino'],
         ])
@@ -112,11 +123,32 @@ export class UpdateCustomer extends Update {
 
         switch (option) {
           case 'number':
-            phone.number = await this.input.text('Novo número do telefone:')
+            let number = ''
+      
+            while (true) {
+              number = await this.input.text('Novo número:')
+              if (!this.validator.validatePhoneNumber(number)) continue
+      
+              const customer = this.customers.find(customer => customer.hasPhone(number))
+              if (customer) {
+                this.output.error('Telefone já em uso por outro cliente')
+                continue
+              }
+              break
+            }
+
+            phone.number = number
             isRunning = false
             break
           case 'codeArea':
-            phone.codeArea = await this.input.text('date de emissão do CPF (dd/mm/yyyy):')
+            let codeArea = ''
+      
+            while (true) {
+              codeArea = await this.input.text('Novo DDD:')
+              if (!this.validator.validatePhoneCodeArea(codeArea)) continue
+              break
+            }
+            phone.codeArea = codeArea
             isRunning = false
             break
           default:
@@ -157,11 +189,30 @@ export class UpdateCustomer extends Update {
 
         switch (option) {
           case 'value':
-            rg.value = await this.input.text('Novo valor do CPF:')
+            let value = ''
+      
+            while (true) {
+              value = await this.input.text('Novo valor do RG:')
+              if (!this.validator.validateRgValue(value)) continue
+      
+              const customer = this.customers.find(customer => customer.hasRg(value))
+              if (customer) {
+                this.output.error('RG já em uso por outro cliente')
+                continue
+              }
+              break
+            }
+            rg.value = value
             isRunning = false
             break
           case 'issueDate':
-            rg.issueDate = await this.input.text('date de emissão do CPF (dd/mm/yyyy):')
+            let issueDate = ''
+            while (true) {
+              issueDate = await this.input.text('Nova data de emissão do RG (dd/mm/yyyy):')
+              if (!this.validator.validateIssueDate(issueDate)) continue
+              break
+            }
+            rg.issueDate = issueDate
             isRunning = false
             break
           default:
@@ -184,12 +235,29 @@ export class UpdateCustomer extends Update {
 
       switch (option) {
         case 'value':
-          customer.cpf.value = await this.input.text('Novo valor do CPF:')
+          let cpfValue = ''
+          while (true) {
+            cpfValue = await this.input.text('CPF: (Digite apenas números)')
+            if (!this.validator.validateCpfValue(cpfValue)) continue
+      
+            const customer = this.customers.find(customer => customer.cpf.value === cpfValue)
+            if (customer) {
+              this.output.error('CPF já em uso por outro cliente')
+              continue
+            }
+      
+            break
+          }
+          customer.cpf.value = cpfValue
           return
         case 'issueDate':
-          customer.cpf.issueDate = await this.input.text(
-            'date de emissão do CPF (dd/mm/yyyy):',
-          )
+          let cpfIssueDate = ''
+          while (true) {
+            cpfIssueDate = await this.input.text('Data de emissão do CPF (dd/mm/yyyy):')
+            if (!this.validator.validateIssueDate(cpfIssueDate))  continue
+            break
+          }
+          customer.cpf.issueDate = cpfIssueDate
           return
         default:
           this.output.unknownCommand()

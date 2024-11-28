@@ -1,4 +1,3 @@
-import { ISSUE_DATE_REGEX } from '@/core/constants'
 import { Cpf, Customer, Phone, Rg } from '../../entities'
 import type { Input, Output } from '../../interfaces'
 import { Register } from '../register'
@@ -33,7 +32,14 @@ export class RegisterCustomer extends Register {
 
     while (true) {
       cpfValue = await this.input.text('CPF: (Digite apenas números)')
-      if (!validator.validateCpfValue(cpfValue))  continue
+      if (!validator.validateCpfValue(cpfValue)) continue
+
+      const customer = this.customers.find(customer => customer.cpf.value === cpfValue)
+      if (customer) {
+        this.output.error('CPF já em uso por outro cliente')
+        continue
+      }
+
       break
     }
 
@@ -52,29 +58,48 @@ export class RegisterCustomer extends Register {
       cpf: new Cpf(cpfValue, cpfIssueDate),
     })
 
-    const rgsCount = await this.input.number("Quantidade de RG's:")
+    let rgsCount = ''
 
-    for (let count = 0; count < rgsCount; count++) {
+    while (true) {
+      rgsCount = await this.input.text("Quantidade de RG's:")
+      if (!validator.validateNumber(rgsCount))  continue
+      break
+    }
+
+
+    for (let count = 0; count < Number(rgsCount); count++) {
       let value = ''
       let issueDate = ''
 
       while (true) {
-        value = await this.input.text(`Por favor, informe o RG ${count + 1}:`)
+        value = await this.input.text(`Por favor, informe o RG ${count + 1}: (Digite apenas números)`)
         if (!validator.validateRgValue(value)) continue
+
+        const customer = this.customers.find(customer => customer.hasRg(value))
+        if (customer) {
+          this.output.error('RG já em uso por outro cliente')
+          continue
+        }
         break
       }
 
       while (true) {
-        issueDate = await this.input.text('Data de emissão do CPF (dd/mm/yyyy):')
+        issueDate = await this.input.text('Data de emissão do RG (dd/mm/yyyy):')
         if (!validator.validateIssueDate(issueDate)) continue
         break
       }
       customer.rgs.push(new Rg(value, issueDate))
     }
 
-    const phonesCount = await this.input.number('Quantidade de telefones:')
+    let phonesCount = ''
 
-    for (let count = 0; count < phonesCount; count++) {
+    while (true) {
+      phonesCount = await this.input.text("Quantidade de telefones:")
+      if (!validator.validateNumber(phonesCount))  continue
+      break
+    }
+
+    for (let count = 0; count < Number(phonesCount); count++) {
       let codeArea = ''
       let number = ''
 
@@ -87,6 +112,12 @@ export class RegisterCustomer extends Register {
       while (true) {
         number = await this.input.text('Número:')
         if (!validator.validatePhoneNumber(number)) continue
+
+        const customer = this.customers.find(customer => customer.hasPhone(number))
+        if (customer) {
+          this.output.error('Telefone já em uso por outro cliente')
+          continue
+        }
         break
       }
 
