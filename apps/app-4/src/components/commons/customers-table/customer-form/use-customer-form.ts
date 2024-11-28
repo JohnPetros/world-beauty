@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { string, z } from 'zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -8,14 +8,15 @@ import { useCallback } from 'react'
 import {
   nameSchema,
   phoneSchema,
-  emailSchema,
   addressSchema,
 } from '@world-beauty/validation/schemas'
+
+const EMAIL_REGEX =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const customerSchema = z.object({
   name: nameSchema,
   lastname: nameSchema,
-  email: emailSchema,
+  email: string().refine((value) => value === '' ? true : EMAIL_REGEX.test(value), 'e-mail inválido'),
   address: addressSchema,
   phones: z.array(phoneSchema).min(1, 'deve haver pelo menos 1 telefone'),
 })

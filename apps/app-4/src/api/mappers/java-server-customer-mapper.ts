@@ -5,6 +5,7 @@ import type { CustomerWithAddressDto } from '@world-beauty/core/dtos'
 export const JavaServerCustomerMapper = () => {
   return {
     toDto(customer: JavaServerCustomerDto): CustomerWithAddressDto {
+      console.log(customer)
       return {
         id: customer.id,
         name: customer.nome,

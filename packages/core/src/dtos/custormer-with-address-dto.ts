@@ -5,7 +5,7 @@ export type CustomerWithAddressDto = {
   id?: string
   name: string
   lastname: string
-  email: string
+  email?: string
   address: AddressDto
   phones: PhoneDto[]
 }

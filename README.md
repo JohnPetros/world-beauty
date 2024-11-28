@@ -34,7 +34,7 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 
 - [Git](https://git-scm.com/)
 - [NodeJs](https://www.python.org/) pelo menos igual ou acima da versão 20.
-- [NodeJs](Java) JDK pelo menos igual ou acima da versão 17.
+- [Java](https://www.java.com/pt-BR/) pelo menos igual ou acima da versão 17.
 
 ### Close o repositório
 
@@ -51,10 +51,10 @@ cd apps/java-backend
 ### Execute a aplicação backend
 
 ```bash
-java --jar java-backend/executavel/wbbackend.jar
+java -jar executavel/wbbackend.jar
 ```
 
-### Acesse a pasta da aplicação frontend
+### Abra outro terminal e acesse a pasta da aplicação frontend
 
 ```bash
 cd ../app-4

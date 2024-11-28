@@ -157,7 +157,7 @@ export const CustomerForm = ({ onCancel, onSubmit, customer }: CustomerFormProps
                 variant='bordered'
                 radius='sm'
                 onClick={() => handlePopPhoneFieldButtonClick(index)}
-                className='md:h-full w-full text-red-600'
+                className='w-full text-red-600'
               >
                 <Icon name='delete' size={16} />
               </Button>

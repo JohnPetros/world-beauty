@@ -1,14 +1,13 @@
 import { z } from 'zod'
 
-import { nameSchema } from './name-schema'
 import { numberSchema } from './number-schema'
 
 export const addressSchema = z.object({
-  state: nameSchema,
-  city: nameSchema,
+  state: z.string({message: 'estado é obrigatório'}),
+  city: z.string({message: 'cidade é obrigatório'}),
   number: numberSchema.transform((number) => String(number)),
-  street: nameSchema,
-  zipcode: nameSchema,
-  neighborhood: nameSchema,
+  street: z.string({message: 'rua é obrigatório'}),
+  zipcode: z.string({message: 'cep é obrigatório'}),
+  neighborhood: z.string({message: 'bairro é obrigatório'}),
   complement: z.string().optional(),
 })
