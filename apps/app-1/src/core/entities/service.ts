@@ -52,6 +52,10 @@ export class Service extends EntityWithId {
     return this._description
   }
 
+  public set description(description: string) {
+    this._description = description
+  }
+
   public get ordersCount(): number {
     return this._ordersCount
   }

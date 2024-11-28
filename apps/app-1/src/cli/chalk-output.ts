@@ -26,6 +26,10 @@ export class ChalkOutput implements Output {
     table.printTable()
   }
 
+  loading() {
+    this.log(chalk.blue('Aguarde...'))
+  }
+
   clear(): void {
     console.clear()
   }

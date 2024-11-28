@@ -18,7 +18,7 @@ export class DeleteProduct extends Delete {
     productsList.list()
 
     while (this.isRunning) {
-      const id = await this.input.text('ID do produto:')
+      const id = await this.input.text('ID do produto: ')
 
       const product = this.products.find((product) => product.id === id)
 
@@ -39,6 +39,9 @@ export class DeleteProduct extends Delete {
     this.products.splice(productIndex, 1)
 
     this.output.clear()
+
+    new ListProducts(this.products, this.input, this.output).list()
+
     this.output.success('Produto deletado com sucesso')
   }
 }

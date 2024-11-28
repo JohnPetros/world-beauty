@@ -39,6 +39,9 @@ export class DeleteCustomer extends Delete {
     this.customers.splice(customerIndex, 1)
 
     this.output.clear()
+
+    new ListCustomers(this.customers, this.input, this.output).list()
+
     this.output.success('Customer deletado com sucesso')
   }
 }

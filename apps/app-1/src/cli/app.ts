@@ -11,8 +11,6 @@ import {
   ListServices,
 } from '../core/use-cases/listing'
 import type { Company } from '../core/entities/company'
-import { InquirerInput } from './inquirer-input'
-import { ChalkOutput } from './chalk-output'
 import { CompanyFaker } from '../__tests__/fakers'
 import { DeleteProduct, RegisterProduct, UpdateProduct } from '../core/use-cases/products'
 import { DeleteService, RegisterService, UpdateService } from '../core/use-cases/services'
@@ -22,15 +20,16 @@ import {
   ListCustomerProductsOrServices,
   UpdateCustomer,
 } from '../core/use-cases/customers'
+import { Input, Output } from '@/core/interfaces'
 
 export class App {
-  private input: InquirerInput
-  private output: ChalkOutput
+  private input: Input
+  private output: Output
   private company: Company
 
-  constructor() {
-    this.input = new InquirerInput()
-    this.output = new ChalkOutput()
+  constructor(input: Input, output: Output) {
+    this.input = input
+    this.output = output
     this.company = CompanyFaker.fake()
   }
 

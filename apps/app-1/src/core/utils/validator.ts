@@ -13,6 +13,12 @@ export class Validator {
     validateNumber(number: string) {
         if(!number || isNaN(Number(number))) {
             this.output.error('Digite apenas números')
+            
+            if (Number(number) < 0) {
+                this.output.error('Digite um número maior que zero')
+                return false
+            }
+
             return false
          }
          return true

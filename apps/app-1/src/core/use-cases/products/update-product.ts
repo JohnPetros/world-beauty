@@ -2,6 +2,7 @@ import type { Product } from '../../entities'
 import type { Input, Output } from '../../interfaces'
 import { Update } from '../update'
 import { ListProducts } from '../listing'
+import { Validator } from '@/core/utils'
 
 export class UpdateProduct extends Update {
   private isRunning = true
@@ -40,15 +41,44 @@ export class UpdateProduct extends Update {
       ['voltar', 'back'],
     ])
 
+    const validator = new Validator(this.output)
+
     switch (option) {
       case 'name':
-        product.name = await this.input.text('Insira o novo nome do produto:')
+        let name = ''
+        while (true) {
+          name = await this.input.text('Novo nome do produto:')
+          if (!validator.validateText(name)) {
+            this.output.error('Nome é obrigatório')
+            continue
+          }
+          break
+        }
+        product.name = name
         break
       case 'description':
-        product.description = await this.input.text('Insira a nova descrição do produto:')
+        let description = ''
+        while (true) {
+          description = await this.input.text('Nova descrição do produto:')
+          if (!validator.validateText(description)) {
+            this.output.error('Descrição é obrigatória')
+            continue
+          }
+          break
+        }
+        product.description = description
         break
       case 'price':
-        product.price = await this.input.number('Insira o novo preço do produto:')
+        let price = ''
+        while (true) {
+          price = await this.input.text('Novo preço do produto:')
+          if (!validator.validateNumber(price)) {
+            continue
+          }
+          break
+        }
+    
+        product.price = Number(price)
         break
       case 'back':
         return
@@ -60,6 +90,10 @@ export class UpdateProduct extends Update {
       currentProduct.isEqualTo(product),
     )
     this.products.splice(productIndex, 1, product)
+
+    this.output.clear()
+    
+    new ListProducts(this.products, this.input, this.output).list()
 
     this.output.success('Produto atualizado com sucesso')
   }

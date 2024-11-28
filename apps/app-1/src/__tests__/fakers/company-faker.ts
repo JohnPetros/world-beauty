@@ -1,5 +1,5 @@
 import { Company } from '../../core/entities'
-import { fakerPT_BR as faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 import { ProductsFaker } from './products-faker'
 import { ServicesFaker } from './services-faker'
@@ -13,7 +13,9 @@ export class CompanyFaker {
       customers: [],
     })
 
+
     const fakeCustomers = []
+
 
     for (let index = 0; index < 30; index++) {
       const fakeProducts = []

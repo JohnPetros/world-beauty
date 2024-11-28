@@ -2,6 +2,7 @@ import type { Service } from '../../entities'
 import type { Input, Output } from '../../interfaces'
 import { Update } from '../update'
 import { ListServices } from '../listing'
+import { Validator } from '@/core/utils'
 
 export class UpdateService extends Update {
   private isRunning = true
@@ -13,6 +14,7 @@ export class UpdateService extends Update {
   }
 
   public async update(): Promise<void> {
+    this.output.clear()
     const servicesList = new ListServices(this.services, this.input, this.output)
     servicesList.list()
 
@@ -39,15 +41,44 @@ export class UpdateService extends Update {
       ['voltar', 'back'],
     ])
 
+    const validator = new Validator(this.output)
+
     switch (option) {
       case 'name':
-        service.name = await this.input.text('Insira o novo nome do serviço:')
+        let name = ''
+        while (true) {
+          name = await this.input.text('Novo nome do serviço:')
+          if (!validator.validateText(name)) {
+            this.output.error('Nome é obrigatório')
+            continue
+          }
+          break
+        }
+        service.name = name
         break
       case 'description':
-        service.description = await this.input.text('Insira a nova descrição do serviço:')
+        let description = ''
+        while (true) {
+          description = await this.input.text('Nova descrição do serviço:')
+          if (!validator.validateText(description)) {
+            this.output.error('Descrição é obrigatória')
+            continue
+          }
+          break
+        }
+        service.description = description
         break
       case 'price':
-        service.price = await this.input.number('Insira o novo preço do serviço:')
+        let price = ''
+        while (true) {
+          price = await this.input.text('Novo preço do serviço:')
+          if (!validator.validateNumber(price)) {
+            continue
+          }
+          break
+        }
+    
+        service.price = Number(price)
         break
       case 'back':
         return
@@ -61,6 +92,9 @@ export class UpdateService extends Update {
     this.services.splice(serviceIndex, 1, service)
 
     this.output.clear()
+    
+    new ListServices(this.services, this.input, this.output).list()
+
     this.output.success('Serviço atualizado com sucesso')
   }
 }

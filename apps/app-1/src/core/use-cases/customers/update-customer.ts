@@ -87,6 +87,9 @@ export class UpdateCustomer extends Update {
     this.customers.splice(customerIndex, 1, customer)
 
     this.output.clear()
+
+    new ListCustomers(this.customers, this.input, this.output).list()
+
     this.output.success('Cliente atualizado com sucesso')
   }
 

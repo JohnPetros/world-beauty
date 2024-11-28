@@ -1,5 +1,6 @@
 import { Cpf, Customer, Phone, Rg } from '../../entities'
 import type { Input, Output } from '../../interfaces'
+import { ListCustomers } from '../listing'
 import { Register } from '../register'
 import { Validator } from '@/core/utils'
 
@@ -126,6 +127,9 @@ export class RegisterCustomer extends Register {
 
     this.customers.push(customer)
     this.output.clear()
+
+    new ListCustomers(this.customers, this.input, this.output).list()
+
     this.output.success('Cliente cadastrado com sucesso')
   }
 }
