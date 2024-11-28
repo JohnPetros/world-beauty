@@ -1,4 +1,4 @@
-<h1 align="center">World Beauty</h1>
+<h1 align="center">World Beauty 💅</h1>
 
 <div align="center">
    <a href="https://github.com/JohnPetros">
@@ -19,7 +19,7 @@
 
 ## 🖥️ Sobre o projeto
 
-Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi divido em 5 *branchs*, cada um contendo uma aplicação diferente, que são:
+Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi dividido em 5 *branchs*, cada um contendo uma aplicação diferente, que são:
 - **app-1**: Aplicação CLI.
 - **app-2**: Aplicação React utilizando class components. 
 - **app-3**: Aplicação React utilizando functional compoments. 
