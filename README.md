@@ -65,7 +65,7 @@ npm run db:generate
 npm run dev
 ```
 
-> A aplicação frontend estará rodando no endereço http://localhost:3333
+> A aplicação backend estará rodando no endereço http://localhost:3333
 
 ### Abra outro terminal e acesse a pasta da aplicação frontend
 
