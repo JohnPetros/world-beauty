@@ -36,7 +36,7 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 - [NodeJs](https://www.python.org/) pelo menos igual ou acima da versão 20.
 - [Java](https://www.java.com/pt-BR/) pelo menos igual ou acima da versão 17.
 
-### Close o repositório
+### Clone o repositório
 
 ```bash
 git clone https://github.com/JohnPetros/world-beauty.git
