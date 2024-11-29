@@ -96,10 +96,18 @@ export const CustomersTable = ({
         >
           {(customer) => (
             <TableRow key={customer.id}>
-              <TableCell>{customer.name}</TableCell>
-              <TableCell>{customer.lastname}</TableCell>
-              <TableCell>{customer.email}</TableCell>
-              <TableCell className='w-80'>{customer.formattedAddress}</TableCell>
+              <TableCell>
+                <span className='truncate'>{customer.name}</span>
+              </TableCell>
+              <TableCell>
+                <span className='truncate'>{customer.lastname}</span>
+              </TableCell>
+              <TableCell>
+                <span className='truncate'>{customer.email}</span>
+              </TableCell>
+              <TableCell className='w-80'>
+                <span className='truncate'>{customer.formattedAddress}</span>
+              </TableCell>
               <TableCell className='w-24'>
                 {<span className='truncate'>{customer.phonesList}</span>}
               </TableCell>

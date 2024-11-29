@@ -12,14 +12,18 @@ export function useCustomersPage() {
   const [isFetching, setIsFetching] = useState(true)
 
   const fetchCustomers = useCallback(async () => {
+    setIsFetching(true)
     const response = await customersService.listCustomers()
-    console.log(response.body)
     setCustomers(response.body.map(CustomerWithAddress.create))
     setIsFetching(false)
   }, [])
 
   async function handleCustomersSelectionChange(newSelectedCustomersIds: string[]) {
-    setSelectedCustomersIds([String(newSelectedCustomersIds.at(-1))])
+    if (newSelectedCustomersIds.length) {
+      setSelectedCustomersIds([String(newSelectedCustomersIds.at(-1))])
+      return
+    }
+    setSelectedCustomersIds([])
   }
 
   async function handleDeleteButtonClick() {
@@ -46,11 +50,13 @@ export function useCustomersPage() {
     customerWithAddressDto: CustomerWithAddressDto,
     customerId: string,
   ) {
+    setIsFetching(true)
     const response = await customersService.updateCustomer(
       CustomerWithAddress.create({ id: customerId, ...customerWithAddressDto }),
     )
     if (response.isFailure) {
       toast.error('Erro ao atualizar cliente')
+      setIsFetching(false)
       return
     }
     await fetchCustomers()

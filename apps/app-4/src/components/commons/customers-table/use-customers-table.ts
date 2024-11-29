@@ -21,7 +21,7 @@ export function useCustomersTable({
     if (customersSelection === 'all') {
       selectedCustomersIds = customers.map((customer) => customer.id)
     } else {
-      selectedCustomersIds = Array.from(customersSelection).map(String)
+      selectedCustomersIds = Array.from(customersSelection).map(String).filter(Boolean)
     }
 
     if (onCustomersSelectionChange) onCustomersSelectionChange(selectedCustomersIds)
