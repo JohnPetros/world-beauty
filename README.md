@@ -19,7 +19,7 @@
 
 ## 🖥️ Sobre o projeto
 
-Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi dividido em 5 *branchs*, cada um contendo uma aplicação diferente, que são:
+Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi dividido em 5 *branchs*, cada uma contendo uma aplicação diferente, que são:
 - **app-1**: Aplicação CLI.
 - **app-2**: Aplicação React utilizando class components. 
 - **app-3**: Aplicação React utilizando functional compoments. 
@@ -41,19 +41,19 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 git clone https://github.com/JohnPetros/world-beauty.git
 ```
 
-### Instale as dependências na raiz
+### Instale as dependências na raiz do projeto
 
 ```bash
 npm install
 ```
 
-### Acesse a pasta do projeto
+### Acesse a pasta da aplicação React
 
 ```bash
 cd apps/app-2
 ```
 
-### Execute a aplicação
+### Execute a aplicação React
 
 ```bash
 npm run dev
