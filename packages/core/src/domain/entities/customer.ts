@@ -58,6 +58,14 @@ export class Customer extends Entity<CustomerProps> {
     for (const phone of phones) this.props.phones.push(phone)
   }
 
+  hasRg(rgValue: string) {
+    return this.rgs.find((currentRg) => currentRg.value === rgValue)
+  }
+
+  hasPhone(phoneNumber: string) {
+    return this.phones.find((currentPhone) => currentPhone.number === phoneNumber)
+  }
+
   set spending(spending: number) {
     this.props.spending = spending
   }

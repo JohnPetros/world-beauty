@@ -19,7 +19,7 @@
 
 ## 🖥️ Sobre o projeto
 
-Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi dividido em 5 *branchs*, cada um contendo uma aplicação diferente, que são:
+Este é um app multi-modal de gerenciamento de clientes, produtos e serviços para uma empresa fictícia focada no público feminino chamada World Beauty. O desenvolvimento do projeto foi dividido em 5 *branchs*, cada uma contendo uma aplicação diferente, que são:
 - **app-1**: Aplicação CLI.
 - **app-2**: Aplicação React utilizando class components. 
 - **app-3**: Aplicação React utilizando functional compoments. 
@@ -41,16 +41,16 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 git clone https://github.com/JohnPetros/world-beauty.git
 ```
 
+### Instale as dependências na raíz do projeto
+
+```bash
+npm install
+```
+
 ### Acesse a pasta da aplicação backend
 
 ```bash
 cd apps/node-backend
-```
-
-### Instale as dependências da aplicação backend
-
-```bash
-npm install
 ```
 
 ### Gere os dados no banco de dados
@@ -65,16 +65,12 @@ npm run db:generate
 npm run dev
 ```
 
-### Acesse a pasta da aplicação frontend
+> A aplicação frontend estará rodando no endereço http://localhost:3333
+
+### Abra outro terminal e acesse a pasta da aplicação frontend
 
 ```bash
-cd ../app-5
-```
-
-### Instale as dependências da aplicação frontend
-
-```bash
-npm install
+cd apps/app-5
 ```
 
 ### Execute a aplicação frontend
@@ -82,5 +78,7 @@ npm install
 ```bash
 npm run dev
 ```
+
+> A aplicação frontend estará rodando no endereço http://localhost:5173
 
 ---

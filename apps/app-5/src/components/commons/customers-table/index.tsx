@@ -100,7 +100,9 @@ export const CustomersTable = ({
         >
           {(customer) => (
             <TableRow key={customer.id}>
-              <TableCell>{customer.name}</TableCell>
+              <TableCell>
+                <span className="truncate">{customer.name}</span>
+              </TableCell>
               <TableCell>
                 <span className='truncate'>{customer.cpf.format}</span>
               </TableCell>

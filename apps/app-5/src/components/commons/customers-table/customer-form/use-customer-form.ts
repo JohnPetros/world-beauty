@@ -11,6 +11,7 @@ import {
   phoneSchema,
   rgSchema,
 } from '@world-beauty/validation/schemas'
+import { Customer } from '@world-beauty/core/entities'
 
 const customerSchema = z.object({
   name: nameSchema,
@@ -87,8 +88,8 @@ export function useCustomerForm(
           }
       }
 
-      // if (Object.keys(partialCustomerDto).length > 0)
-      //   onSubmit(partialCustomerDto as CustomerDto)
+      if (Object.keys(partialCustomerDto).length > 0)
+        onSubmit(partialCustomerDto as CustomerDto)
       return
     }
 

@@ -15,14 +15,18 @@ export class UpdateCustomerUseCase {
 
     if (customerDto.rgs)
       for (const rg of customerDto.rgs) {
-        const customer = await this.customersRepository.findByRg(rg.value)
-        if (customer) throw new Error(`RG ${rg.value} já em uso`)
+        if (customer.hasRg(rg.value)) continue
+
+        const existingCustomer = await this.customersRepository.findByRg(rg.value)
+        if (existingCustomer) throw new Error(`RG ${rg.value} já em uso`)
       }
 
     if (customerDto.phones)
       for (const phone of customerDto.phones) {
-        const customer = await this.customersRepository.findByPhone(phone.number)
-        if (customer) throw new Error(`Telefone ${phone.number} já em uso`)
+        if (customer.hasPhone(phone.number)) continue
+
+        const existingCustomer = await this.customersRepository.findByPhone(phone.number)
+        if (existingCustomer) throw new Error(`Telefone ${phone.number} já em uso`)
       }
 
     const updatedCustomer = customer.update(customerDto)
