@@ -94,7 +94,7 @@ export class Customer extends Entity<CustomerProps> {
   }
 
   get rgsList(): string {
-    return this.rgs.map((rg) => rg.value).join('; ')
+    return this.rgs.map((rg) => rg.format).join('; ')
   }
 
   get dto(): CustomerDto {

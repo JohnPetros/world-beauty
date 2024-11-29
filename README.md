@@ -41,22 +41,24 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 git clone https://github.com/JohnPetros/world-beauty.git
 ```
 
-### Acesse a pasta do projeto
-
-```bash
-cd apps/app-3
-```
-
-### Instale as dependências
+### Instale as dependências na raiz do projeto
 
 ```bash
 npm install
 ```
 
-### Execute a aplicação
+### Acesse a pasta da aplicação React
+
+```bash
+cd apps/app-3
+```
+
+### Execute a aplicação React
 
 ```bash
 npm run dev
 ```
+
+> A aplicação React estará rodando no endereço http://localhost:5173
 
 ---
