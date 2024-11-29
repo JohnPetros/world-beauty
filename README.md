@@ -28,7 +28,7 @@ Este é um app multi-modal de gerenciamento de clientes, produtos e serviços pa
 
 ---
 
-## 📖 Guia de instalação do App 2 (Aplicação React utilizando functional compoments)
+## 📖 Guia de instalação do App 3 (Aplicação React utilizando functional compoments)
 
 ### Pré-requisitos
 
