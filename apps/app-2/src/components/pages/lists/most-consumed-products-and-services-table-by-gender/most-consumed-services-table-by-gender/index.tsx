@@ -64,7 +64,7 @@ export class MostConsumedServicesTableByGender extends Component<any, ServicesPa
   }
 
   async handleFemaleCustomersServicesPageChange(page: number) {
-    await this.fetchMaleCustomersServices(page)
+    await this.fetchFemaleCustomersServices(page)
   }
 
   async componentDidMount() {
@@ -80,7 +80,7 @@ export class MostConsumedServicesTableByGender extends Component<any, ServicesPa
             Serviços mais consumidos por clientes do sexo masculino
           </h2>
           <ServicesTable
-            isInteractable={false}
+            hasActions={false}
             services={this.state.maleCustomersServices}
             page={this.state.maleCustomersServicesPage}
             pagesCount={this.state.maleCustomersServicesPagesCount}
@@ -92,7 +92,8 @@ export class MostConsumedServicesTableByGender extends Component<any, ServicesPa
             Serviços mais consumidos por clientes do sexo feminino
           </h2>
           <ServicesTable
-            isInteractable={false}
+            hasSelection={false}
+            hasActions={false}
             services={this.state.femaleCustomersServices}
             page={this.state.femaleCustomersServicesPage}
             pagesCount={this.state.femaleCustomersServicesPagesCount}

@@ -91,21 +91,22 @@ export class ServicesPage extends Component<any, ServicesPageState> {
 
   render() {
     return (
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 pb-24 bg-zinc-50'>
         <PageTitle>Serviços</PageTitle>
 
         <div className='flex items-center gap-2'>
           <Dialog
             title='Adicionar serviço'
-            trigger={
+            trigger={(openDialog) => (
               <Button
                 endContent={<Icon name='add' size={20} />}
                 radius='sm'
+                onClick={openDialog}
                 className='bg-zinc-800 text-zinc-50 w-max'
               >
                 Cadastrar serviço
               </Button>
-            }
+            )}
           >
             {(closeDialog) => (
               <ServiceForm
@@ -130,6 +131,7 @@ export class ServicesPage extends Component<any, ServicesPageState> {
         <div className='w-full'>
           <ServicesTable
             hasActions={true}
+            hasSelection={true}
             services={this.state.services}
             page={this.state.page}
             pagesCount={this.state.pagesCount}

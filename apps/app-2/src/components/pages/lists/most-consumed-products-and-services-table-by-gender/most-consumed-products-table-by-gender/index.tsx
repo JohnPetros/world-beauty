@@ -64,7 +64,7 @@ export class MostConsumedProductsTableByGender extends Component<any, ProductsPa
   }
 
   async handleFemaleCustomersProductsPageChange(page: number) {
-    await this.fetchMaleCustomersProducts(page)
+    await this.fetchFemaleCustomersProducts(page)
   }
 
   async componentDidMount() {
@@ -80,7 +80,8 @@ export class MostConsumedProductsTableByGender extends Component<any, ProductsPa
             Produtos mais consumidos por clientes do sexo masculino
           </h2>
           <ProductsTable
-            isInteractable={false}
+            hasActions={false}
+            hasSelection={false}
             products={this.state.maleCustomersProducts}
             page={this.state.maleCustomersProductsPage}
             pagesCount={this.state.maleCustomersProductsPagesCount}
@@ -92,7 +93,8 @@ export class MostConsumedProductsTableByGender extends Component<any, ProductsPa
             Produtos mais consumidos por clientes do sexo feminino
           </h2>
           <ProductsTable
-            isInteractable={false}
+            hasActions={false}
+            hasSelection={false}
             products={this.state.femaleCustomersProducts}
             page={this.state.femaleCustomersProductsPage}
             pagesCount={this.state.femaleCustomersProductsPagesCount}

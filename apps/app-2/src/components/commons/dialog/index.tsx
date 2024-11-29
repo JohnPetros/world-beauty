@@ -1,11 +1,10 @@
 import { Component, type ReactNode } from 'react'
-import { Slot } from '@radix-ui/react-slot'
 import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
 
 type DialogProps = {
   title: string
   children: (closeDialog: VoidFunction) => ReactNode
-  trigger: ReactNode
+  trigger: (openDialog: VoidFunction) => ReactNode
   isLarge?: boolean
 }
 
@@ -40,7 +39,7 @@ export class Dialog extends Component<DialogProps, DialogState> {
   render() {
     return (
       <>
-        <Slot onClick={() => this.handleTriggerClick()}>{this.props.trigger}</Slot>
+        {this.props.trigger(() => this.handleTriggerClick())}
         <Modal
           isOpen={this.state.isOpen}
           onClose={() => this.close()}

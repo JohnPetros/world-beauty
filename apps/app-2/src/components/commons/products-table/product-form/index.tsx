@@ -79,7 +79,7 @@ export class ProductForm extends Component<ProductFormProps, ProductFormState> {
         />
         <div className='flex items-center gap-2'>
           <Button type='submit' color='primary' className='mt-3'>
-            Cadastrar
+            Enviar
           </Button>
           <Button color='danger' onClick={() => this.props.onCancel()} className='mt-3'>
             Cancelar

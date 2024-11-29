@@ -49,7 +49,8 @@ export class MostConsumedProductsTable extends Component<any, ProductsPageState>
   render() {
     return (
       <ProductsTable
-        isInteractable={false}
+        hasSelection={false}
+        hasActions={false}
         products={this.state.products}
         page={this.state.page}
         pagesCount={this.state.pagesCount}
