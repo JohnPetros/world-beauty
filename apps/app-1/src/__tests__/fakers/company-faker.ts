@@ -13,9 +13,7 @@ export class CompanyFaker {
       customers: [],
     })
 
-
     const fakeCustomers = []
-
 
     for (let index = 0; index < 30; index++) {
       const fakeProducts = []

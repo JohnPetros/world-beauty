@@ -18,12 +18,12 @@ export class DeleteService extends Delete {
     servicesList.list()
 
     while (this.isRunning) {
-      const id = await this.input.text('ID do produto:')
+      const id = await this.input.text('ID do Serviço:')
 
       const service = this.services.find((service) => service.id === id)
 
       if (!service) {
-        this.output.error('Produto não encontrado')
+        this.output.error('Serviço não encontrado')
         continue
       }
 
@@ -42,6 +42,6 @@ export class DeleteService extends Delete {
 
     new ListServices(this.services, this.input, this.output).list()
 
-    this.output.success('Produto deletado com sucesso')
+    this.output.success('Serviço deletado com sucesso')
   }
 }

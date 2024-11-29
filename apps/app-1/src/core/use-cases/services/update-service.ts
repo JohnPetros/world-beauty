@@ -45,40 +45,46 @@ export class UpdateService extends Update {
 
     switch (option) {
       case 'name':
-        let name = ''
-        while (true) {
-          name = await this.input.text('Novo nome do serviço:')
-          if (!validator.validateText(name)) {
-            this.output.error('Nome é obrigatório')
-            continue
+        {
+          let name = ''
+          while (true) {
+            name = await this.input.text('Novo nome do serviço:')
+            if (!validator.validateText(name)) {
+              this.output.error('Nome é obrigatório')
+              continue
+            }
+            break
           }
-          break
+          service.name = name
         }
-        service.name = name
         break
       case 'description':
-        let description = ''
-        while (true) {
-          description = await this.input.text('Nova descrição do serviço:')
-          if (!validator.validateText(description)) {
-            this.output.error('Descrição é obrigatória')
-            continue
+        {
+          let description = ''
+          while (true) {
+            description = await this.input.text('Nova descrição do serviço:')
+            if (!validator.validateText(description)) {
+              this.output.error('Descrição é obrigatória')
+              continue
+            }
+            break
           }
-          break
+          service.description = description
         }
-        service.description = description
         break
       case 'price':
-        let price = ''
-        while (true) {
-          price = await this.input.text('Novo preço do serviço:')
-          if (!validator.validateNumber(price)) {
-            continue
+        {
+          let price = ''
+          while (true) {
+            price = await this.input.text('Novo preço do serviço:')
+            if (!validator.validateNumber(price)) {
+              continue
+            }
+            break
           }
-          break
+
+          service.price = Number(price)
         }
-    
-        service.price = Number(price)
         break
       case 'back':
         return
@@ -92,7 +98,7 @@ export class UpdateService extends Update {
     this.services.splice(serviceIndex, 1, service)
 
     this.output.clear()
-    
+
     new ListServices(this.services, this.input, this.output).list()
 
     this.output.success('Serviço atualizado com sucesso')

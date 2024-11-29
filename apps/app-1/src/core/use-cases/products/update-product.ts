@@ -45,40 +45,46 @@ export class UpdateProduct extends Update {
 
     switch (option) {
       case 'name':
-        let name = ''
-        while (true) {
-          name = await this.input.text('Novo nome do produto:')
-          if (!validator.validateText(name)) {
-            this.output.error('Nome é obrigatório')
-            continue
+        {
+          let name = ''
+          while (true) {
+            name = await this.input.text('Novo nome do produto:')
+            if (!validator.validateText(name)) {
+              this.output.error('Nome é obrigatório')
+              continue
+            }
+            break
           }
-          break
+          product.name = name
         }
-        product.name = name
         break
       case 'description':
-        let description = ''
-        while (true) {
-          description = await this.input.text('Nova descrição do produto:')
-          if (!validator.validateText(description)) {
-            this.output.error('Descrição é obrigatória')
-            continue
+        {
+          let description = ''
+          while (true) {
+            description = await this.input.text('Nova descrição do produto:')
+            if (!validator.validateText(description)) {
+              this.output.error('Descrição é obrigatória')
+              continue
+            }
+            break
           }
-          break
+          product.description = description
         }
-        product.description = description
         break
       case 'price':
-        let price = ''
-        while (true) {
-          price = await this.input.text('Novo preço do produto:')
-          if (!validator.validateNumber(price)) {
-            continue
+        {
+          let price = ''
+          while (true) {
+            price = await this.input.text('Novo preço do produto:')
+            if (!validator.validateNumber(price)) {
+              continue
+            }
+            break
           }
-          break
+
+          product.price = Number(price)
         }
-    
-        product.price = Number(price)
         break
       case 'back':
         return
@@ -92,7 +98,7 @@ export class UpdateProduct extends Update {
     this.products.splice(productIndex, 1, product)
 
     this.output.clear()
-    
+
     new ListProducts(this.products, this.input, this.output).list()
 
     this.output.success('Produto atualizado com sucesso')

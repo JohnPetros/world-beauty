@@ -35,7 +35,7 @@ export class RegisterCustomer extends Register {
       cpfValue = await this.input.text('CPF: (Digite apenas números)')
       if (!validator.validateCpfValue(cpfValue)) continue
 
-      const customer = this.customers.find(customer => customer.cpf.value === cpfValue)
+      const customer = this.customers.find((customer) => customer.cpf.value === cpfValue)
       if (customer) {
         this.output.error('CPF já em uso por outro cliente')
         continue
@@ -46,7 +46,7 @@ export class RegisterCustomer extends Register {
 
     while (true) {
       cpfIssueDate = await this.input.text('Data de emissão do CPF (dd/mm/yyyy):')
-      if (!validator.validateIssueDate(cpfIssueDate))  continue
+      if (!validator.validateIssueDate(cpfIssueDate)) continue
       break
     }
 
@@ -63,20 +63,21 @@ export class RegisterCustomer extends Register {
 
     while (true) {
       rgsCount = await this.input.text("Quantidade de RG's:")
-      if (!validator.validateNumber(rgsCount))  continue
+      if (!validator.validateNumber(rgsCount)) continue
       break
     }
-
 
     for (let count = 0; count < Number(rgsCount); count++) {
       let value = ''
       let issueDate = ''
 
       while (true) {
-        value = await this.input.text(`Por favor, informe o RG ${count + 1}: (Digite apenas números)`)
+        value = await this.input.text(
+          `Por favor, informe o RG ${count + 1}: (Digite apenas números)`,
+        )
         if (!validator.validateRgValue(value)) continue
 
-        const customer = this.customers.find(customer => customer.hasRg(value))
+        const customer = this.customers.find((customer) => customer.hasRg(value))
         if (customer) {
           this.output.error('RG já em uso por outro cliente')
           continue
@@ -85,7 +86,9 @@ export class RegisterCustomer extends Register {
       }
 
       while (true) {
-        issueDate = await this.input.text('Data de emissão do RG (dd/mm/yyyy):')
+        issueDate = await this.input.text(
+          `Data de emissão do RG ${count + 1}: (dd/mm/yyyy)`,
+        )
         if (!validator.validateIssueDate(issueDate)) continue
         break
       }
@@ -95,8 +98,8 @@ export class RegisterCustomer extends Register {
     let phonesCount = ''
 
     while (true) {
-      phonesCount = await this.input.text("Quantidade de telefones:")
-      if (!validator.validateNumber(phonesCount))  continue
+      phonesCount = await this.input.text('Quantidade de telefones:')
+      if (!validator.validateNumber(phonesCount)) continue
       break
     }
 
@@ -114,7 +117,7 @@ export class RegisterCustomer extends Register {
         number = await this.input.text('Número:')
         if (!validator.validatePhoneNumber(number)) continue
 
-        const customer = this.customers.find(customer => customer.hasPhone(number))
+        const customer = this.customers.find((customer) => customer.hasPhone(number))
         if (customer) {
           this.output.error('Telefone já em uso por outro cliente')
           continue

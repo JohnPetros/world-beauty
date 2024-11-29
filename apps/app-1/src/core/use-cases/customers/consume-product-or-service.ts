@@ -52,6 +52,7 @@ export class ConsumeProductrOrService extends UseCase {
         }
       }
 
+      new ListCustomers(this.customers, this.input, this.output).list()
       this.isRunning = false
     }
   }
@@ -59,6 +60,8 @@ export class ConsumeProductrOrService extends UseCase {
   async addProduct(customer: Customer) {
     const productsList = new ListProducts(this.products, this.input, this.output)
     productsList.list()
+
+    if (!this.products.length) return
 
     while (true) {
       const id = await this.input.text('ID do produto:')
@@ -86,6 +89,8 @@ export class ConsumeProductrOrService extends UseCase {
   async addService(customer: Customer) {
     const servicesList = new ListServices(this.services, this.input, this.output)
     servicesList.list()
+
+    if (!this.services.length) return
 
     while (true) {
       const id = await this.input.text('ID do serviço:')
